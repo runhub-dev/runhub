@@ -1,4 +1,5 @@
 brew "argocd"
 brew "colima"
+brew "docker"
 brew "k3d"
 brew "kubernetes-cli"
