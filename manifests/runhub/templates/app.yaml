@@ -1,0 +1,30 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: runhub
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: runhub
+  source:
+    repoURL: {{ .Values.runhubRepoURL }}
+    targetRevision: {{ .Values.runhubRevision }}
+    path: manifests/cluster
+    helm:
+      parameters:
+        - name: runhubRepoURL
+          value: {{ .Values.runhubRepoURL }}
+        - name: runhubRevision
+          value: {{ .Values.runhubRevision }}
+  destination:
+    name: in-cluster
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      - PruneLast=true
+      - PrunePropagationPolicy=background
+      - FailOnSharedResource=true

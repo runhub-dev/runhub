@@ -18,6 +18,9 @@ kubectl apply --server-side --field-manager argocd-controller \
   --kustomize "${SRC_PATH:?}"/manifests/argo-cd
 kubectl rollout status --namespace argocd deployments
 kubectl rollout status --namespace argocd statefulsets
+helm install --create-namespace --namespace runhub runhub "${SRC_PATH:?}"/manifests/runhub \
+  --set runhubRepoURL="$(git remote get-url origin)" \
+  --set runhubRevision="$(git branch --show-current)"
 kubectl config set-context --current --namespace argocd
 argocd login --core
 argocd admin dashboard
