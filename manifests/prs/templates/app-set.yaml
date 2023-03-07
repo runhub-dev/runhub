@@ -8,18 +8,25 @@ spec:
     - matrix:
         generators:
           - scmProvider:
+              cloneProtocol: https
+              filters:
+                - pathsExist:
+                    - runhub.yaml
               github:
                 organization: {{ .Values.reposOwner }}
+                allBranches: true
                 tokenRef:
                   secretName: repos
-                  key: token
+                  key: password
           - pullRequest:
+              filters:
+                - branchMatch: '{{"{{"}} .branch }}'
               github:
                 owner: {{ .Values.reposOwner }}
                 repo: '{{"{{"}} .repository }}'
                 tokenRef:
                   secretName: repos
-                  key: token
+                  key: password
   goTemplate: true
   template:
     metadata:
@@ -29,12 +36,17 @@ spec:
         - resources-finalizer.argocd.argoproj.io
     spec:
       project: rh-gh-{{ lower .Values.reposOwner }}-prs
-      source:
-        repoURL: {{ .Values.runhubRepoURL }}
-        targetRevision: {{ .Values.runhubRevision }}
-        path: manifests/app
-        helm:
-          releaseName: app
+      sources:
+        - repoURL: {{ .Values.runhubRepoURL }}
+          targetRevision: {{ .Values.runhubRevision }}
+          path: manifests/app
+          helm:
+            releaseName: app
+            valueFiles:
+              - $repo/runhub.yaml
+        - repoURL: '{{"{{"}} .url }}'
+          targetRevision: '{{"{{"}} .head_sha }}'
+          ref: repo
       destination:
         name: in-cluster
         namespace: rh-gh-{{ lower .Values.reposOwner }}-{{"{{"}} lower .repository }}-pr-{{"{{"}} .number }}

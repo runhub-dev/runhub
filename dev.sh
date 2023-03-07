@@ -27,7 +27,8 @@ helm install --create-namespace --namespace runhub runhub "${SRC_PATH:?}"/manife
   --set runhubRepoURL="$(git remote get-url origin)" \
   --set runhubRevision="$(git branch --show-current)" \
   --set reposOwner="$(gh repo view --json owner --jq .owner.login)" \
-  --set reposToken="$(gh auth token)"
+  --set reposToken="$(gh auth token)" \
+  --set reposUsername="$(gh api user --jq .login)"
 set -x
 kubectl config set-context --current --namespace argocd
 argocd login --core

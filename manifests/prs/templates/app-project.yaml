@@ -8,6 +8,7 @@ metadata:
 spec:
   sourceRepos:
     - {{ .Values.runhubRepoURL }}
+    - https://github.com/{{ lower .Values.reposOwner }}/*.git
   destinations:
     - name: in-cluster
       namespace: rh-gh-{{ lower .Values.reposOwner }}-*-pr-*
