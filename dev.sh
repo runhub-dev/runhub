@@ -9,6 +9,10 @@ fi
 
 brew bundle --file "${SRC_PATH:?}"/Brewfile
 
+if ! gh auth status; then
+  gh auth login
+fi
+
 trap 'colima delete runhub --force' EXIT
 colima start runhub \
   --cpu $(( $(sysctl -n hw.logicalcpu_max) / 2 )) \
@@ -18,9 +22,13 @@ kubectl apply --server-side --field-manager argocd-controller \
   --kustomize "${SRC_PATH:?}"/manifests/argo-cd
 kubectl rollout status --namespace argocd deployments
 kubectl rollout status --namespace argocd statefulsets
+set +x
 helm install --create-namespace --namespace runhub runhub "${SRC_PATH:?}"/manifests/runhub \
   --set runhubRepoURL="$(git remote get-url origin)" \
-  --set runhubRevision="$(git branch --show-current)"
+  --set runhubRevision="$(git branch --show-current)" \
+  --set reposOwner="$(gh repo view --json owner --jq .owner.login)" \
+  --set reposToken="$(gh auth token)"
+set -x
 kubectl config set-context --current --namespace argocd
 argocd login --core
 argocd admin dashboard

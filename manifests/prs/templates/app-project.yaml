@@ -1,0 +1,16 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: rh-gh-{{ lower .Values.reposOwner }}-prs
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  sourceRepos:
+    - {{ .Values.runhubRepoURL }}
+  destinations:
+    - name: in-cluster
+      namespace: rh-gh-{{ lower .Values.reposOwner }}-*-pr-*
+  clusterResourceWhitelist:
+    - group: ""
+      kind: Namespace

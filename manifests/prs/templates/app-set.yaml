@@ -1,0 +1,49 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: rh-gh-{{ lower .Values.reposOwner }}-prs
+  namespace: argocd
+spec:
+  generators:
+    - matrix:
+        generators:
+          - scmProvider:
+              github:
+                organization: {{ .Values.reposOwner }}
+                tokenRef:
+                  secretName: repos
+                  key: token
+          - pullRequest:
+              github:
+                owner: {{ .Values.reposOwner }}
+                repo: '{{"{{"}} .repository }}'
+                tokenRef:
+                  secretName: repos
+                  key: token
+  goTemplate: true
+  template:
+    metadata:
+      name: rh-gh-{{ lower .Values.reposOwner }}-{{"{{"}} lower .repository }}-pr-{{"{{"}} .number }}
+      namespace: argocd
+      finalizers:
+        - resources-finalizer.argocd.argoproj.io
+    spec:
+      project: rh-gh-{{ lower .Values.reposOwner }}-prs
+      source:
+        repoURL: {{ .Values.runhubRepoURL }}
+        targetRevision: {{ .Values.runhubRevision }}
+        path: manifests/app
+        helm:
+          releaseName: app
+      destination:
+        name: in-cluster
+        namespace: rh-gh-{{ lower .Values.reposOwner }}-{{"{{"}} lower .repository }}-pr-{{"{{"}} .number }}
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - ServerSideApply=true
+          - PruneLast=true
+          - PrunePropagationPolicy=background
+          - FailOnSharedResource=true

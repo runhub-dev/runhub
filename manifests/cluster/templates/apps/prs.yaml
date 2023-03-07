@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: runhub
+  name: rh-gh-{{ lower .Values.reposOwner }}-prs
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: {{ .Values.runhubRepoURL }}
     targetRevision: {{ .Values.runhubRevision }}
-    path: manifests/cluster
+    path: manifests/prs
     helm:
       parameters:
         - name: runhubRepoURL
@@ -19,6 +19,7 @@ spec:
           value: {{ .Values.runhubRevision }}
         - name: reposOwner
           value: {{ .Values.reposOwner }}
+      releaseName: prs
   destination:
     name: in-cluster
   syncPolicy:
