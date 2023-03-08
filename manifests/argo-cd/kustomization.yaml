@@ -4,3 +4,5 @@ namespace: argocd
 resources:
   - namespace.yaml
   - https://raw.githubusercontent.com/argoproj/argo-cd/v2.6.4/manifests/core-install.yaml
+patches:
+  - path: config-map.yaml
