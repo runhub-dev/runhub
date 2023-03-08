@@ -3,4 +3,4 @@ kind: Kustomization
 namespace: argocd
 resources:
   - namespace.yaml
-  - https://raw.githubusercontent.com/argoproj/argo-cd/v2.6.3/manifests/core-install.yaml
+  - https://raw.githubusercontent.com/argoproj/argo-cd/v2.6.4/manifests/core-install.yaml
