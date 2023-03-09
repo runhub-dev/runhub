@@ -41,6 +41,13 @@ spec:
           targetRevision: {{ .Values.runhubRevision }}
           path: manifests/app
           helm:
+            parameters:
+              - name: repoURL
+                value: '{{"{{"}} .url }}'
+              - name: revision
+                value: '{{"{{"}} .head_sha }}'
+              - name: containerRegistryURL
+                value: {{ .Values.containerRegistryURL }}
             releaseName: app
             valueFiles:
               - $repo/runhub.yaml
@@ -59,3 +66,9 @@ spec:
           - PruneLast=true
           - PrunePropagationPolicy=background
           - FailOnSharedResource=true
+      ignoreDifferences:
+        - group: ""
+          kind: Secret
+          jsonPointers:
+            - /metadata/annotations/reflector.v1.k8s.emberstack.com~1reflected-version
+            - /data

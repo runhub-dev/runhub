@@ -19,6 +19,8 @@ spec:
           value: {{ .Values.runhubRevision }}
         - name: reposOwner
           value: {{ .Values.reposOwner }}
+        - name: containerRegistryURL
+          value: {{ .Values.containerRegistryURL }}
       releaseName: prs
   destination:
     name: in-cluster

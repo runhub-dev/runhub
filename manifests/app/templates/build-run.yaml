@@ -1,0 +1,26 @@
+{{ range .Values.services }}
+---
+apiVersion: shipwright.io/v1alpha1
+kind: BuildRun
+metadata:
+  name: {{ .name }}
+spec:
+  buildSpec:
+    strategy:
+      name: buildkit
+      kind: ClusterBuildStrategy
+    source:
+      url: {{ $.Values.repoURL }}
+      revision: {{ $.Values.revision }}
+      credentials:
+        name: repos
+    {{ if .dockerfilePath }}
+    dockerfile: {{ .dockerfilePath }}
+    {{ end }}
+    paramValues:
+      - name: insecure-registry
+        value: "true"
+    output:
+      image: "{{ $.Values.containerRegistryURL }}/{{ $.Release.Namespace }}/{{ .name }}"
+...
+{{ end }}

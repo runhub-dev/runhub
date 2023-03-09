@@ -3,6 +3,9 @@ kind: Simple
 metadata:
   name: runhub
 image: latest
+registries:
+  create:
+    name: k3d-runhub-registry
 options:
   k3d:
     disableLoadbalancer: true

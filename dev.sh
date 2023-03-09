@@ -28,7 +28,8 @@ helm install --create-namespace --namespace runhub runhub "${SRC_PATH:?}"/manife
   --set runhubRevision="$(git branch --show-current)" \
   --set reposOwner="$(gh repo view --json owner --jq .owner.login)" \
   --set reposToken="$(gh auth token)" \
-  --set reposUsername="$(gh api user --jq .login)"
+  --set reposUsername="$(gh api user --jq .login)" \
+  --set containerRegistryURL=k3d-runhub-registry:5000
 set -x
 kubectl config set-context --current --namespace argocd
 argocd login --core
