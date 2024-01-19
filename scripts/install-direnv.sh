@@ -56,10 +56,22 @@ update() {
   install
 }
 
+is_allowed_for_runhub() {
+  (cd "$(dirname "$0")"/.. && direnv status) | grep -Fq 'Found RC allowed 0'
+}
+
+allow_for_runhub() {
+  direnv allow "$(dirname "$0")"/..
+}
+
 if ! is_installed; then
   "$(dirname "$0")"/confirm.sh 'direnv not found, install with Devbox Global?'
   install
 elif ! is_minimum_required_version; then
   "$(dirname "$0")"/confirm.sh 'direnv outdated, update to v'"${version}"' with Devbox Global?'
   update
+fi
+
+if ! is_allowed_for_runhub; then
+  allow_for_runhub
 fi
