@@ -8,8 +8,8 @@ set -o errexit
 set -o nounset
 set -o monitor
 
-version='2.19.2'
-installer_version='0.16.0'
+version='2.18.1'
+installer_version='0.15.1'
 installer_url=https://install.determinate.systems/nix/tag/v"${installer_version}"
 
 is_installed() {
