@@ -3,7 +3,7 @@
 set -o errexit
 set -o nounset
 
-version='0.8.5'
+version='0.8.6'
 launcher_version='0.2.1'
 
 is_installed() {
