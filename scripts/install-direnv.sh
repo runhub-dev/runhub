@@ -10,9 +10,9 @@ is_installed() {
 }
 
 is_installed_with_devbox_global() {
-  direnv_path="$(command -v direnv)"
+  path="$(command -v direnv)"
   devbox_global_path="$(devbox global path 2> /dev/null)"
-  [ "${direnv_path}" != "${direnv_path#"${devbox_global_path}"}" ]
+  [ "${path}" != "${path#"${devbox_global_path}"}" ]
 }
 
 get_version() {
