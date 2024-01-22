@@ -11,19 +11,15 @@ is_installed() {
 }
 
 get_version() {
-  devbox version --quiet --verbose | grep '^Version:' | tr -s ' ' | cut -d ' ' -f 2
-}
-
-get_launcher_version() {
-  devbox version --quiet --verbose | grep '^Launcher:' | tr -s ' ' | cut -d ' ' -f 2
+  devbox version --quiet --verbose | grep '^'"$1"':' | tr -s ' ' | cut -d ' ' -f 2
 }
 
 is_minimum_required_version() {
-  "$(dirname "$0")"/is-version-greater-equal.sh "$(get_version)" "${version}"
+  "$(dirname "$0")"/is-version-greater-equal.sh "$(get_version 'Version')" "${version}"
 }
 
 is_minimum_required_launcher_version() {
-  "$(dirname "$0")"/is-version-greater-equal.sh "$(get_launcher_version)" "${launcher_version}"
+  "$(dirname "$0")"/is-version-greater-equal.sh "$(get_version 'Launcher')" "${launcher_version}"
 }
 
 install() {
