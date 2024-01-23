@@ -24,11 +24,11 @@ get_installer_version() {
   /nix/nix-installer --version | cut -d ' ' -f 2
 }
 
-is_minimum_required_version() {
+is_updated() {
   "$(dirname "$0")"/is-version-greater-equal.sh "$(get_version)" "${version}"
 }
 
-is_minimum_required_installer_version() {
+is_installer_updated() {
   "$(dirname "$0")"/is-version-greater-equal.sh "$(get_installer_version)" "${installer_version}"
 }
 
@@ -47,12 +47,12 @@ update() {
 if ! "$(dirname "$0")"/is-installed.sh 'nix'; then
   "$(dirname "$0")"/confirm.sh 'Nix not found, install with Determinate Nix Installer?'
   install
-elif ! is_minimum_required_version; then
+elif ! is_updated; then
   "$(dirname "$0")"/confirm.sh \
     'Nix outdated, update to v'"${version}"' (uninstall & reinstall) with Determinate Nix Installer?'
   update
 elif is_installer_installed; then
-  if ! is_minimum_required_installer_version; then
+  if ! is_installer_updated; then
     "$(dirname "$0")"/confirm.sh \
       'Determinate Nix Installer outdated, update to v'"${installer_version}"' (uninstall & reinstall)?'
     update

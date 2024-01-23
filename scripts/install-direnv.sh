@@ -15,7 +15,7 @@ get_version() {
   direnv version
 }
 
-is_minimum_required_version() {
+is_updated() {
   "$(dirname "$0")"/is-version-greater-equal.sh "$(get_version)" "${version}"
 }
 
@@ -63,7 +63,7 @@ allow_for_runhub() {
 if ! "$(dirname "$0")"/is-installed.sh 'direnv'; then
   "$(dirname "$0")"/confirm.sh 'direnv not found, install with Devbox Global?'
   install
-elif ! is_minimum_required_version; then
+elif ! is_updated; then
   "$(dirname "$0")"/confirm.sh 'direnv outdated, update to v'"${version}"' with Devbox Global?'
   update
 fi

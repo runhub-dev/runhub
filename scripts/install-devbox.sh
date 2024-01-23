@@ -10,11 +10,11 @@ get_version() {
   devbox version --quiet --verbose | grep '^'"$1"':' | tr -s ' ' | cut -d ' ' -f 2
 }
 
-is_minimum_required_version() {
+is_updated() {
   "$(dirname "$0")"/is-version-greater-equal.sh "$(get_version 'Version')" "${version}"
 }
 
-is_minimum_required_launcher_version() {
+is_launcher_updated() {
   "$(dirname "$0")"/is-version-greater-equal.sh "$(get_version 'Launcher')" "${launcher_version}"
 }
 
@@ -29,7 +29,7 @@ update() {
 if ! "$(dirname "$0")"/is-installed.sh 'devbox'; then
   "$(dirname "$0")"/confirm.sh 'Devbox not found, install?'
   install
-elif ! is_minimum_required_version || ! is_minimum_required_launcher_version; then
+elif ! is_updated || ! is_launcher_updated; then
   "$(dirname "$0")"/confirm.sh 'Devbox outdated, update?'
   update
 fi
