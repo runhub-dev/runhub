@@ -5,10 +5,6 @@ set -o nounset
 
 version='2.33.0'
 
-is_installed() {
-  command -v direnv > /dev/null 2>&1
-}
-
 is_installed_with_devbox_global() {
   path="$(command -v direnv)"
   devbox_global_path="$(devbox global path 2> /dev/null)"
@@ -64,7 +60,7 @@ allow_for_runhub() {
   direnv allow "$(dirname "$0")"/..
 }
 
-if ! is_installed; then
+if ! "$(dirname "$0")"/is-installed.sh 'direnv'; then
   "$(dirname "$0")"/confirm.sh 'direnv not found, install with Devbox Global?'
   install
 elif ! is_minimum_required_version; then

@@ -6,10 +6,6 @@ set -o nounset
 version='0.8.6'
 launcher_version='0.2.1'
 
-is_installed() {
-  command -v devbox > /dev/null 2>&1
-}
-
 get_version() {
   devbox version --quiet --verbose | grep '^'"$1"':' | tr -s ' ' | cut -d ' ' -f 2
 }
@@ -30,7 +26,7 @@ update() {
   devbox version update
 }
 
-if ! is_installed; then
+if ! "$(dirname "$0")"/is-installed.sh 'devbox'; then
   "$(dirname "$0")"/confirm.sh 'Devbox not found, install?'
   install
 elif ! is_minimum_required_version || ! is_minimum_required_launcher_version; then

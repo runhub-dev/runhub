@@ -12,10 +12,6 @@ version='2.18.1'
 installer_version='0.15.1'
 installer_url=https://install.determinate.systems/nix/tag/v"${installer_version}"
 
-is_installed() {
-  command -v nix > /dev/null 2>&1
-}
-
 is_installer_installed() {
   [ -f /nix/nix-installer ]
 }
@@ -48,7 +44,7 @@ update() {
   install
 }
 
-if ! is_installed; then
+if ! "$(dirname "$0")"/is-installed.sh 'nix'; then
   "$(dirname "$0")"/confirm.sh 'Nix not found, install with Determinate Nix Installer?'
   install
 elif ! is_minimum_required_version; then
