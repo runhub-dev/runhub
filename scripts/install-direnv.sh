@@ -15,10 +15,6 @@ get_version() {
   direnv version
 }
 
-is_updated() {
-  "$(dirname "$0")"/is-version-greater-equal.sh "$(get_version)" "${version}"
-}
-
 append_if_not_found() {
   if ! [ -f "$2" ] || ! grep -Fq "$1" "$2"; then
     printf '\n%s\n' "$1" >> "$2"
@@ -60,12 +56,18 @@ allow_for_runhub() {
   direnv allow "$(dirname "$0")"/..
 }
 
-if ! "$(dirname "$0")"/is-installed.sh 'direnv'; then
+is_installed="$("$(dirname "$0")"/is-installed.sh 'direnv')"
+
+if [ "${is_installed}" = 'no' ]; then
   "$(dirname "$0")"/confirm.sh 'direnv not found, install with Devbox Global?'
   install
-elif ! is_updated; then
-  "$(dirname "$0")"/confirm.sh 'direnv outdated, update to v'"${version}"' with Devbox Global?'
-  update
+else
+  is_updated="$("$(dirname "$0")"/is-version-greater-equal.sh "$(get_version)" "${version}")"
+
+  if [ "${is_updated}" = 'no' ]; then
+    "$(dirname "$0")"/confirm.sh 'direnv outdated, update to v'"${version}"' with Devbox Global?'
+    update
+  fi
 fi
 
 if ! is_allowed_for_runhub; then

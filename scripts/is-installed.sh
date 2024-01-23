@@ -3,4 +3,8 @@
 set -o errexit
 set -o nounset
 
-command -v "$1" > /dev/null 2>&1
+if command -v "$1" > /dev/null 2>&1; then
+  echo 'yes'
+else
+  echo 'no'
+fi
