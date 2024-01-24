@@ -10,7 +10,6 @@ set -o monitor
 
 version='2.18.1'
 installer_version='0.15.1'
-installer_url=https://install.determinate.systems/nix/tag/v"${installer_version}"
 
 is_installer_installed() {
   [ -f /nix/nix-installer ]
@@ -27,7 +26,8 @@ get_current_installer_version() {
 }
 
 install() {
-  install_script="$(curl --proto '=https' --tlsv1.2 -sSf -L "${installer_url}")"
+  install_script="$(curl --proto '=https' --tlsv1.2 -sSf -L \
+    https://install.determinate.systems/nix/tag/v"${installer_version}")"
   echo "${install_script}" | sh -s -- install --no-confirm
 }
 
