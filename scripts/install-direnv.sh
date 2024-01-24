@@ -8,7 +8,12 @@ version='2.33.0'
 is_installed_with_devbox_global() {
   path="$(command -v direnv)"
   devbox_global_path="$(devbox global path 2> /dev/null)"
-  [ "${path}" != "${path#"${devbox_global_path}"}" ]
+
+  if [ "${path}" != "${path#"${devbox_global_path}"}" ]; then
+    echo 'yes'
+  else
+    echo 'no'
+  fi
 }
 
 get_version() {
@@ -39,7 +44,9 @@ install() {
 }
 
 update() {
-  if ! is_installed_with_devbox_global; then
+  is_installed_with_devbox_global="$(is_installed_with_devbox_global)"
+
+  if [ "${is_installed_with_devbox_global}" = 'no' ]; then
     "$(dirname "$0")"/print.sh \
       'direnv cannot be updated because it was not installed with Devbox Global, either uninstall it or update it.'
     exit 1
@@ -50,7 +57,12 @@ update() {
 
 is_allowed_for_runhub() {
   runhub_status_output="$(cd "$(dirname "$0")"/.. && direnv status)"
-  echo "${runhub_status_output}" | grep -Fq 'Found RC allowed 0'
+
+  if echo "${runhub_status_output}" | grep -Fq 'Found RC allowed 0'; then
+    echo 'yes'
+  else
+    echo 'no'
+  fi
 }
 
 allow_for_runhub() {
@@ -71,6 +83,8 @@ else
   fi
 fi
 
-if ! is_allowed_for_runhub; then
+is_allowed_for_runhub="$(is_allowed_for_runhub)"
+
+if [ "${is_allowed_for_runhub}" = 'no' ]; then
   allow_for_runhub
 fi

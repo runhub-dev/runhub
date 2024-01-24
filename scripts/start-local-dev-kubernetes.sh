@@ -4,7 +4,11 @@ set -o errexit
 set -o nounset
 
 is_docker_daemon_running() {
-  docker version > /dev/null 2>&1
+  if docker version > /dev/null 2>&1; then
+    echo 'yes'
+  else
+    echo 'no'
+  fi
 }
 
 start_docker_daemon() {
@@ -16,7 +20,9 @@ start_kubernetes() {
 }
 
 if [ "${RUNHUB_IS_DEVBOX_RUN:-'no'}" = 'yes' ]; then
-  if ! is_docker_daemon_running; then
+  is_docker_daemon_running="$(is_docker_daemon_running)"
+
+  if [ "${is_docker_daemon_running}" = 'no' ]; then
     "$(dirname -- "$0")"/print.sh 'Docker daemon not running, starting Colima Docker daemon.'
     start_docker_daemon
   fi

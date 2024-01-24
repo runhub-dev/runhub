@@ -11,10 +11,6 @@ set -o monitor
 version='2.18.1'
 installer_version='0.15.1'
 
-is_installer_installed() {
-  [ -f /nix/nix-installer ]
-}
-
 get_current_version() {
   current_version_output="$(nix --version)"
   echo "${current_version_output}" | cut -d ' ' -f 3
@@ -32,7 +28,9 @@ install() {
 }
 
 update() {
-  if is_installer_installed; then
+  is_installer_installed="$("$(dirname "$0")"/is-installed.sh '/nix/nix-installer')"
+
+  if [ "${is_installer_installed}" = 'yes' ]; then
     /nix/nix-installer uninstall --no-confirm
   fi
 
@@ -52,15 +50,19 @@ else
     "$(dirname "$0")"/confirm.sh \
       'Nix outdated, update to v'"${version}"' (uninstall & reinstall) with Determinate Nix Installer?'
     update
-  elif is_installer_installed; then
-    current_installer_version="$(get_current_installer_version)"
-    is_installer_updated="$("$(dirname "$0")"/is-version-greater-equal.sh \
-      "${current_installer_version}" "${installer_version}")"
+  else
+    is_installer_installed="$("$(dirname "$0")"/is-installed.sh '/nix/nix-installer')"
 
-    if [ "${is_installer_updated}" = 'no' ]; then
-      "$(dirname "$0")"/confirm.sh \
-        'Determinate Nix Installer outdated, update to v'"${installer_version}"' (uninstall & reinstall)?'
-      update
+    if [ "${is_installer_installed}" = 'yes' ]; then
+      current_installer_version="$(get_current_installer_version)"
+      is_installer_updated="$("$(dirname "$0")"/is-version-greater-equal.sh \
+        "${current_installer_version}" "${installer_version}")"
+
+      if [ "${is_installer_updated}" = 'no' ]; then
+        "$(dirname "$0")"/confirm.sh \
+          'Determinate Nix Installer outdated, update to v'"${installer_version}"' (uninstall & reinstall)?'
+        update
+      fi
     fi
   fi
 fi
