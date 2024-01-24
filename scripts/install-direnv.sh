@@ -27,13 +27,7 @@ append_if_not_found() {
 }
 
 install() {
-  output="$(devbox global add direnv@"${version}" 2>&1)" || exit_status="$?"
-
-  if [ "${exit_status:-0}" != 0 ]; then
-    "$(dirname "$0")"/print.sh "${output}"
-    exit "${exit_status}"
-  fi
-
+  "$(dirname "$0")"/hide-unless-error.sh devbox global add direnv@"${version}"
   eval "$(devbox global shellenv)"
   devbox_global_bin_path="$(dirname "$(command -v direnv)")"
   append_if_not_found 'PATH='"${devbox_global_bin_path}"':"${PATH}"' ~/.bashrc
