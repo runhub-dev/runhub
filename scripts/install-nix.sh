@@ -16,16 +16,19 @@ is_installer_installed() {
   [ -f /nix/nix-installer ]
 }
 
-get_version() {
-  nix --version | cut -d ' ' -f 3
+get_current_version() {
+  current_version_output="$(nix --version)"
+  echo "${current_version_output}" | cut -d ' ' -f 3
 }
 
-get_installer_version() {
-  /nix/nix-installer --version | cut -d ' ' -f 2
+get_current_installer_version() {
+  current_installer_version_output="$(/nix/nix-installer --version)"
+  echo "${current_installer_version_output}" | cut -d ' ' -f 2
 }
 
 install() {
-  curl --proto '=https' --tlsv1.2 -sSf -L "${installer_url}" | sh -s -- install --no-confirm
+  install_script="$(curl --proto '=https' --tlsv1.2 -sSf -L "${installer_url}")"
+  echo "${install_script}" | sh -s -- install --no-confirm
 }
 
 update() {
@@ -42,15 +45,17 @@ if [ "${is_installed}" = 'no' ]; then
   "$(dirname "$0")"/confirm.sh 'Nix not found, install with Determinate Nix Installer?'
   install
 else
-  is_updated="$("$(dirname "$0")"/is-version-greater-equal.sh "$(get_version)" "${version}")"
+  current_version="$(get_current_version)"
+  is_updated="$("$(dirname "$0")"/is-version-greater-equal.sh "${current_version}" "${version}")"
 
   if [ "${is_updated}" = 'no' ]; then
     "$(dirname "$0")"/confirm.sh \
       'Nix outdated, update to v'"${version}"' (uninstall & reinstall) with Determinate Nix Installer?'
     update
   elif is_installer_installed; then
+    current_installer_version="$(get_current_installer_version)"
     is_installer_updated="$("$(dirname "$0")"/is-version-greater-equal.sh \
-      "$(get_installer_version)" "${installer_version}")"
+      "${current_installer_version}" "${installer_version}")"
 
     if [ "${is_installer_updated}" = 'no' ]; then
       "$(dirname "$0")"/confirm.sh \

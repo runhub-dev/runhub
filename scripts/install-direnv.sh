@@ -49,7 +49,8 @@ update() {
 }
 
 is_allowed_for_runhub() {
-  (cd "$(dirname "$0")"/.. && direnv status) | grep -Fq 'Found RC allowed 0'
+  runhub_status_output="$(cd "$(dirname "$0")"/.. && direnv status)"
+  echo "${runhub_status_output}" | grep -Fq 'Found RC allowed 0'
 }
 
 allow_for_runhub() {
