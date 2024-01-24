@@ -15,9 +15,13 @@ while [ "${version_part}" -le 3 ]; do
 
   if [ "${version_part_1}" -gt "${version_part_2}" ]; then
     echo 'yes'
+    exit
   elif [ "${version_part_1}" -lt "${version_part_2}" ]; then
     echo 'no'
+    exit
   fi
 
   version_part=$(( version_part + 1 ))
 done
+
+echo 'yes'
