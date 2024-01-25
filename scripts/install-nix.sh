@@ -28,7 +28,7 @@ install() {
 }
 
 update() {
-  is_installer_installed="$("$(dirname "$0")"/is-installed.sh '/nix/nix-installer')"
+  is_installer_installed="$("$(dirname "$0")"/is-found.sh '/nix/nix-installer')"
 
   if [ "${is_installer_installed}" = 'yes' ]; then
     /nix/nix-installer uninstall --no-confirm
@@ -37,7 +37,7 @@ update() {
   install
 }
 
-is_installed="$("$(dirname "$0")"/is-installed.sh 'nix')"
+is_installed="$("$(dirname "$0")"/is-found.sh 'nix')"
 
 if [ "${is_installed}" = 'no' ]; then
   "$(dirname "$0")"/confirm.sh 'Nix not found, install with Determinate Nix Installer?'
@@ -51,7 +51,7 @@ else
       'Nix outdated, update to v'"${version}"' (uninstall & reinstall) with Determinate Nix Installer?'
     update
   else
-    is_installer_installed="$("$(dirname "$0")"/is-installed.sh '/nix/nix-installer')"
+    is_installer_installed="$("$(dirname "$0")"/is-found.sh '/nix/nix-installer')"
 
     if [ "${is_installer_installed}" = 'yes' ]; then
       current_installer_version="$(get_current_installer_version)"

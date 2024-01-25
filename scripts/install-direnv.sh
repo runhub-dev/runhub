@@ -63,7 +63,7 @@ allow_for_runhub() {
   direnv allow "$(dirname "$0")"/..
 }
 
-is_installed="$("$(dirname "$0")"/is-installed.sh 'direnv')"
+is_installed="$("$(dirname "$0")"/is-found.sh 'direnv')"
 
 if [ "${is_installed}" = 'no' ]; then
   "$(dirname "$0")"/confirm.sh 'direnv not found, install with Devbox Global?'

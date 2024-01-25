@@ -22,7 +22,7 @@ update() {
   devbox version update
 }
 
-is_installed="$("$(dirname "$0")"/is-installed.sh 'devbox')"
+is_installed="$("$(dirname "$0")"/is-found.sh 'devbox')"
 
 if [ "${is_installed}" = 'no' ]; then
   "$(dirname "$0")"/confirm.sh 'Devbox not found, install?'
