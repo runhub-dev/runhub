@@ -27,7 +27,7 @@ if [ "${RUNHUB_IS_DEVBOX_RUN:-'no'}" = 'yes' ]; then
     start_docker_daemon
   fi
 
-  "$(dirname -- "$0")"/print.sh 'Starting local dev Kubernetes cluster.'
+  "$(dirname -- "$0")"/print.sh 'Starting local dev Kubernetes cluster in Docker.'
   start_kubernetes
 else
   "$(dirname -- "$0")"/devbox-run.sh "$0" "$@"
