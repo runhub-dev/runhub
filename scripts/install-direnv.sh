@@ -21,7 +21,9 @@ get_current_version() {
 }
 
 append_if_not_found() {
-  if ! [ -f "$2" ] || ! grep -Fq "$1" "$2"; then
+  is_found="$("$(dirname "$0")"/is-found.sh "$2")"
+
+  if [ "${is_found}" = 'no' ] || ! grep -Fq "$1" "$2"; then
     printf '\n%s\n' "$1" >> "$2"
   fi
 }
