@@ -28,8 +28,8 @@ install() {
   "$(dirname "$0")"/print.sh 'Restart shell to activate nix.'
 }
 
-is_installed="$("$(dirname "$0")"/is-found.sh 'nix')"
-is_installer_installed="$("$(dirname "$0")"/is-found.sh '/nix/nix-installer')"
+is_installed="$("$(dirname "$0")"/is-found.sh nix)"
+is_installer_installed="$("$(dirname "$0")"/is-found.sh /nix/nix-installer)"
 
 if [ "${is_installed}" = 'no' ]; then
   "$(dirname "$0")"/confirm.sh 'Nix not found, install with Determinate Nix Installer?'
