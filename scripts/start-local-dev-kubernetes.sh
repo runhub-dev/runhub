@@ -11,10 +11,6 @@ is_docker_daemon_running() {
   fi
 }
 
-start_kubernetes() {
-  k3d cluster create --config "$(dirname -- "$0")"/../k3d.yaml
-}
-
 if [ "${RUNHUB_IS_DEVBOX_RUN:-'no'}" = 'yes' ]; then
   is_docker_daemon_running="$(is_docker_daemon_running)"
 
@@ -24,7 +20,7 @@ if [ "${RUNHUB_IS_DEVBOX_RUN:-'no'}" = 'yes' ]; then
   fi
 
   "$(dirname -- "$0")"/print.sh 'Starting local dev Kubernetes cluster in Docker.'
-  start_kubernetes
+  k3d cluster create --config "$(dirname -- "$0")"/../k3d.yaml
 else
   "$(dirname -- "$0")"/devbox-run.sh "$0" "$@"
 fi
