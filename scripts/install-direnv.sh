@@ -3,7 +3,7 @@
 set -o errexit
 set -o nounset
 
-version='2.33.0'
+VERSION='2.33.0'
 
 is_installed_with_devbox_global() {
   path="$(command -v direnv)"
@@ -21,7 +21,7 @@ get_current_version() {
 }
 
 install() {
-  "$(dirname "$0")"/hide-unless-error.sh devbox global add direnv@"${version}"
+  "$(dirname "$0")"/hide-unless-error.sh devbox global add direnv@"${VERSION}"
   devbox_global_shellenv_script="$(devbox global shellenv)"
   eval "${devbox_global_shellenv_script}"
   devbox_global_bin_path="$(dirname "$(command -v direnv)")"
@@ -66,10 +66,10 @@ main() {
     install
   else
     is_updated="$("$(dirname "$0")"/is-version-greater-equal.sh \
-      "$(get_current_version)" "${version}")"
+      "$(get_current_version)" "${VERSION}")"
 
     if [ "${is_updated}" = 'no' ]; then
-      "$(dirname "$0")"/confirm.sh 'direnv outdated, update to v'"${version}"' with Devbox Global?'
+      "$(dirname "$0")"/confirm.sh 'direnv outdated, update to v'"${VERSION}"' with Devbox Global?'
       update
     fi
   fi

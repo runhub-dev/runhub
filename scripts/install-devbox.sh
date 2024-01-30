@@ -3,8 +3,8 @@
 set -o errexit
 set -o nounset
 
-version='0.8.7'
-launcher_version='0.2.1'
+VERSION='0.8.7'
+LAUNCHER_VERSION='0.2.1'
 
 get_current_version() {
   current_version_output="$(devbox version --verbose)"
@@ -31,10 +31,10 @@ main() {
   else
     current_version="$(get_current_version 'Version')"
     is_updated="$("$(dirname "$0")"/is-version-greater-equal.sh \
-      "${current_version}" "${version}")"
+      "${current_version}" "${VERSION}")"
     current_launcher_version="$(get_current_version 'Launcher')"
     is_launcher_updated="$("$(dirname "$0")"/is-version-greater-equal.sh \
-      "${current_launcher_version}" "${launcher_version}")"
+      "${current_launcher_version}" "${LAUNCHER_VERSION}")"
 
     if [ "${is_updated}" = 'no' ] || [ "${is_launcher_updated}" = 'no' ]; then
       "$(dirname "$0")"/confirm.sh 'Devbox outdated, update?'
