@@ -7,7 +7,7 @@ get_version_part() {
   echo "$1" | cut -d '.' -f "$2"
 }
 
-main () {
+main() {
   version_part=1
 
   while [ "${version_part}" -le 3 ]; do
