@@ -3,11 +3,15 @@
 set -o errexit
 set -o nounset
 
-if [ "${RUNHUB_IS_DEVBOX_RUN:-'no'}" = 'yes' ]; then
+main() {
   "$(dirname -- "$0")"/print.sh 'Stopping local dev Kubernetes cluster in Docker (if started).'
   k3d cluster delete dev-runhub || true
   "$(dirname -- "$0")"/print.sh 'Stopping Colima Docker daemon (if started).'
   colima delete --force --profile dev-runhub || true
+}
+
+if [ "${RUNHUB_IS_DEVBOX_RUN:-'no'}" = 'yes' ]; then
+  main "$@"
 else
   "$(dirname -- "$0")"/devbox-run.sh "$0" "$@"
 fi

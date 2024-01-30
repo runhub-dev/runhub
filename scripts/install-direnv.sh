@@ -58,22 +58,27 @@ allow_for_runhub() {
   direnv allow "$(dirname "$0")"/..
 }
 
-is_installed="$("$(dirname "$0")"/is-found.sh direnv)"
+main() {
+  is_installed="$("$(dirname "$0")"/is-found.sh direnv)"
 
-if [ "${is_installed}" = 'no' ]; then
-  "$(dirname "$0")"/confirm.sh 'direnv not found, install with Devbox Global?'
-  install
-else
-  is_updated="$("$(dirname "$0")"/is-version-greater-equal.sh "$(get_current_version)" "${version}")"
+  if [ "${is_installed}" = 'no' ]; then
+    "$(dirname "$0")"/confirm.sh 'direnv not found, install with Devbox Global?'
+    install
+  else
+    is_updated="$("$(dirname "$0")"/is-version-greater-equal.sh \
+      "$(get_current_version)" "${version}")"
 
-  if [ "${is_updated}" = 'no' ]; then
-    "$(dirname "$0")"/confirm.sh 'direnv outdated, update to v'"${version}"' with Devbox Global?'
-    update
+    if [ "${is_updated}" = 'no' ]; then
+      "$(dirname "$0")"/confirm.sh 'direnv outdated, update to v'"${version}"' with Devbox Global?'
+      update
+    fi
   fi
-fi
 
-is_allowed_for_runhub="$(is_allowed_for_runhub)"
+  is_allowed_for_runhub="$(is_allowed_for_runhub)"
 
-if [ "${is_allowed_for_runhub}" = 'no' ]; then
-  allow_for_runhub
-fi
+  if [ "${is_allowed_for_runhub}" = 'no' ]; then
+    allow_for_runhub
+  fi
+}
+
+main "$@"

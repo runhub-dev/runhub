@@ -28,31 +28,35 @@ install() {
   "$(dirname "$0")"/print.sh 'Restart shell to activate Nix.'
 }
 
-is_installed="$("$(dirname "$0")"/is-found.sh nix)"
-is_installer_installed="$("$(dirname "$0")"/is-found.sh /nix/nix-installer)"
+main() {
+  is_installed="$("$(dirname "$0")"/is-found.sh nix)"
+  is_installer_installed="$("$(dirname "$0")"/is-found.sh /nix/nix-installer)"
 
-if [ "${is_installed}" = 'no' ]; then
-  "$(dirname "$0")"/confirm.sh 'Nix not found, install with Determinate Nix Installer?'
-  install
-else
-  current_version="$(get_current_version)"
-  is_updated="$("$(dirname "$0")"/is-version-greater-equal.sh "${current_version}" "${version}")"
-
-  if [ "${is_updated}" = 'no' ]; then
-    "$(dirname "$0")"/confirm.sh \
-      'Nix outdated, update to v'"${version}"' (uninstall & reinstall) with Determinate Nix Installer?'
+  if [ "${is_installed}" = 'no' ]; then
+    "$(dirname "$0")"/confirm.sh 'Nix not found, install with Determinate Nix Installer?'
     install
   else
-    if [ "${is_installer_installed}" = 'yes' ]; then
-      current_installer_version="$(get_current_installer_version)"
-      is_installer_updated="$("$(dirname "$0")"/is-version-greater-equal.sh \
-        "${current_installer_version}" "${installer_version}")"
+    current_version="$(get_current_version)"
+    is_updated="$("$(dirname "$0")"/is-version-greater-equal.sh "${current_version}" "${version}")"
 
-      if [ "${is_installer_updated}" = 'no' ]; then
-        "$(dirname "$0")"/confirm.sh \
-          'Determinate Nix Installer outdated, update to v'"${installer_version}"' (uninstall & reinstall)?'
-        install
+    if [ "${is_updated}" = 'no' ]; then
+      "$(dirname "$0")"/confirm.sh \
+        'Nix outdated, update to v'"${version}"' (uninstall & reinstall) with Determinate Nix Installer?'
+      install
+    else
+      if [ "${is_installer_installed}" = 'yes' ]; then
+        current_installer_version="$(get_current_installer_version)"
+        is_installer_updated="$("$(dirname "$0")"/is-version-greater-equal.sh \
+          "${current_installer_version}" "${installer_version}")"
+
+        if [ "${is_installer_updated}" = 'no' ]; then
+          "$(dirname "$0")"/confirm.sh \
+            'Determinate Nix Installer outdated, update to v'"${installer_version}"' (uninstall & reinstall)?'
+          install
+        fi
       fi
     fi
   fi
-fi
+}
+
+main "$@"

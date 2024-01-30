@@ -22,21 +22,25 @@ update() {
   devbox version update
 }
 
-is_installed="$("$(dirname "$0")"/is-found.sh devbox)"
+main() {
+  is_installed="$("$(dirname "$0")"/is-found.sh devbox)"
 
-if [ "${is_installed}" = 'no' ]; then
-  "$(dirname "$0")"/confirm.sh 'Devbox not found, install?'
-  install
-else
-  current_version="$(get_current_version 'Version')"
-  is_updated="$("$(dirname "$0")"/is-version-greater-equal.sh \
-    "${current_version}" "${version}")"
-  current_launcher_version="$(get_current_version 'Launcher')"
-  is_launcher_updated="$("$(dirname "$0")"/is-version-greater-equal.sh \
-    "${current_launcher_version}" "${launcher_version}")"
+  if [ "${is_installed}" = 'no' ]; then
+    "$(dirname "$0")"/confirm.sh 'Devbox not found, install?'
+    install
+  else
+    current_version="$(get_current_version 'Version')"
+    is_updated="$("$(dirname "$0")"/is-version-greater-equal.sh \
+      "${current_version}" "${version}")"
+    current_launcher_version="$(get_current_version 'Launcher')"
+    is_launcher_updated="$("$(dirname "$0")"/is-version-greater-equal.sh \
+      "${current_launcher_version}" "${launcher_version}")"
 
-  if [ "${is_updated}" = 'no' ] || [ "${is_launcher_updated}" = 'no' ]; then
-    "$(dirname "$0")"/confirm.sh 'Devbox outdated, update?'
-    update
+    if [ "${is_updated}" = 'no' ] || [ "${is_launcher_updated}" = 'no' ]; then
+      "$(dirname "$0")"/confirm.sh 'Devbox outdated, update?'
+      update
+    fi
   fi
-fi
+}
+
+main "$@"
