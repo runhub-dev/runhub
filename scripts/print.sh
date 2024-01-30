@@ -3,4 +3,4 @@
 set -o errexit
 set -o nounset
 
-printf '\n%s\n\n' "$1"
+printf '\n%s\n' "$1"
