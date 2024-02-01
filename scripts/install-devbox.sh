@@ -3,7 +3,7 @@
 set -o errexit
 set -o nounset
 
-VERSION='0.8.7'
+VERSION='0.9.0'
 LAUNCHER_VERSION='0.2.1'
 
 get_current_version() {
