@@ -7,7 +7,7 @@ VERSION='0.9.0'
 LAUNCHER_VERSION='0.2.1'
 
 get_current_version() {
-  current_version_output="$(devbox version --verbose)"
+  current_version_output="$(devbox version --quiet --verbose)"
   current_version_grep="$(echo "${current_version_output}" | grep '^'"$1"':')"
   current_version_tr="$(echo "${current_version_grep}" | tr -s ' ')"
   echo "${current_version_tr}" | cut -d ' ' -f 2
