@@ -18,10 +18,6 @@ install() {
   echo "${install_script}" | bash -s -- --force
 }
 
-update() {
-  devbox version update
-}
-
 main() {
   is_installed="$("$(dirname "$0")"/is-found.sh devbox)"
 
@@ -38,7 +34,7 @@ main() {
 
     if [ "${is_updated}" = 'no' ] || [ "${is_launcher_updated}" = 'no' ]; then
       "$(dirname "$0")"/confirm.sh 'Devbox outdated, update?'
-      update
+      devbox version update
     fi
   fi
 }
