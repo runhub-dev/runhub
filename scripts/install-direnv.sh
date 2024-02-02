@@ -9,12 +9,16 @@ get_current_version() {
   direnv version
 }
 
-install() {
-  "$(dirname "$0")"/hide-unless-error.sh devbox global add direnv@"${VERSION}"
+get_devbox_global_bin_path() {
   devbox_global_shellenv_script="$(devbox global shellenv --recompute)"
   eval "${devbox_global_shellenv_script}"
   devbox_global_direnv_path="$(command -v direnv)"
-  devbox_global_bin_path="$(dirname "${devbox_global_direnv_path}")"
+  dirname "${devbox_global_direnv_path}"
+}
+
+install() {
+  "$(dirname "$0")"/hide-unless-error.sh devbox global add direnv@"${VERSION}"
+  devbox_global_bin_path="$(get_devbox_global_bin_path)"
   "$(dirname "$0")"/append-if-not-found.sh 'PATH='"${devbox_global_bin_path}"':"${PATH}"' ~/.bashrc
   "$(dirname "$0")"/append-if-not-found.sh 'PATH='"${devbox_global_bin_path}"':"${PATH}"' ~/.zshrc
   "$(dirname "$0")"/append-if-not-found.sh 'eval "$(direnv hook bash)"' ~/.bashrc
