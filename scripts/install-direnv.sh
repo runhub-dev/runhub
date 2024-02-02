@@ -6,10 +6,10 @@ set -o nounset
 VERSION='2.33.0'
 
 is_installed_with_devbox_global() {
-  path="$(command -v direnv)"
+  direnv_path="$(command -v direnv)"
   devbox_global_path="$(devbox global path 2> /dev/null)"
 
-  if [ "${path}" != "${path#"${devbox_global_path}"}" ]; then
+  if [ "${direnv_path}" != "${direnv_path#"${devbox_global_path}"}" ]; then
     echo 'yes'
   else
     echo 'no'
