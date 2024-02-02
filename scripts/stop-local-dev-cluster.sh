@@ -3,6 +3,8 @@
 set -o errexit
 set -o nounset
 
+SCRIPTS_DIR="$(dirname -- "$0")"
+
 is_colima_docker_daemon_running() {
   colima_docker_daemon="$(colima list --json --profile dev-runhub)"
 
@@ -25,7 +27,7 @@ main() {
   is_colima_docker_daemon_running="$(is_colima_docker_daemon_running)"
 
   if [ "${is_colima_docker_daemon_running}" = 'yes' ]; then
-    "$(dirname -- "$0")"/print.sh \
+    "${SCRIPTS_DIR}"/print.sh \
       'Stopping Colima Docker daemon and local dev Kubernetes cluster in Docker.'
     colima delete --force --profile dev-runhub
   fi
@@ -33,7 +35,7 @@ main() {
   is_local_dev_cluster_running="$(is_local_dev_cluster_running)"
 
   if [ "${is_local_dev_cluster_running}" = 'yes' ]; then
-    "$(dirname -- "$0")"/print.sh 'Stopping local dev Kubernetes cluster in Docker.'
+    "${SCRIPTS_DIR}"/print.sh 'Stopping local dev Kubernetes cluster in Docker.'
     k3d cluster delete dev-runhub
   fi
 }
@@ -41,5 +43,5 @@ main() {
 if [ "${RUNHUB_IS_DEVBOX_RUN:-'no'}" = 'yes' ]; then
   main "$@"
 else
-  "$(dirname -- "$0")"/devbox-run.sh "$0" "$@"
+  "${SCRIPTS_DIR}"/devbox-run.sh "$0" "$@"
 fi

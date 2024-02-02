@@ -3,6 +3,7 @@
 set -o errexit
 set -o nounset
 
+SCRIPTS_DIR="$(dirname -- "$0")"
 VERSION='0.9.0'
 LAUNCHER_VERSION='0.2.1'
 
@@ -19,21 +20,20 @@ install() {
 }
 
 main() {
-  is_installed="$("$(dirname "$0")"/is-found.sh devbox)"
+  is_installed="$("${SCRIPTS_DIR}"/is-found.sh devbox)"
 
   if [ "${is_installed}" = 'no' ]; then
-    "$(dirname "$0")"/confirm.sh 'Devbox not found, install?'
+    "${SCRIPTS_DIR}"/confirm.sh 'Devbox not found, install?'
     install
   else
     current_version="$(get_current_version 'Version')"
-    is_updated="$("$(dirname "$0")"/is-version-greater-equal.sh \
-      "${current_version}" "${VERSION}")"
+    is_updated="$("${SCRIPTS_DIR}"/is-version-greater-equal.sh "${current_version}" "${VERSION}")"
     current_launcher_version="$(get_current_version 'Launcher')"
-    is_launcher_updated="$("$(dirname "$0")"/is-version-greater-equal.sh \
+    is_launcher_updated="$("${SCRIPTS_DIR}"/is-version-greater-equal.sh \
       "${current_launcher_version}" "${LAUNCHER_VERSION}")"
 
     if [ "${is_updated}" = 'no' ] || [ "${is_launcher_updated}" = 'no' ]; then
-      "$(dirname "$0")"/confirm.sh 'Devbox outdated, update?'
+      "${SCRIPTS_DIR}"/confirm.sh 'Devbox outdated, update?'
       devbox version update
     fi
   fi

@@ -3,4 +3,7 @@
 set -o errexit
 set -o nounset
 
-devbox run --config "$(dirname -- "$0")"/.. --env RUNHUB_IS_DEVBOX_RUN='yes' "$@"
+SCRIPTS_DIR="$(dirname -- "$0")"
+RUNHUB_DIR="${SCRIPTS_DIR}"/..
+
+devbox run --config "${RUNHUB_DIR}" --env RUNHUB_IS_DEVBOX_RUN='yes' "$@"

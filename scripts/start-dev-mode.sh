@@ -3,5 +3,7 @@
 set -o errexit
 set -o nounset
 
-"$(dirname "$0")"/print.sh 'Starting dev mode.'
-"$(dirname "$0")"/start-local-dev-cluster.sh
+SCRIPTS_DIR="$(dirname -- "$0")"
+
+"${SCRIPTS_DIR}"/print.sh 'Starting dev mode.'
+"${SCRIPTS_DIR}"/start-local-dev-cluster.sh

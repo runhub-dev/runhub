@@ -3,7 +3,10 @@
 set -o errexit
 set -o nounset
 
-"$(dirname "$0")"/install-nix.sh
-"$(dirname "$0")"/install-devbox.sh
-"$(dirname "$0")"/install-direnv.sh
-"$(dirname "$0")"/direnv-allow.sh "$(dirname "$0")"/..
+SCRIPTS_DIR="$(dirname -- "$0")"
+RUNHUB_DIR="${SCRIPTS_DIR}"/..
+
+"${SCRIPTS_DIR}"/install-nix.sh
+"${SCRIPTS_DIR}"/install-devbox.sh
+"${SCRIPTS_DIR}"/install-direnv.sh
+"${SCRIPTS_DIR}"/direnv-allow.sh "${RUNHUB_DIR}"

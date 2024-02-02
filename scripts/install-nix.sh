@@ -4,6 +4,7 @@ set -o errexit
 set -o nounset
 set -o monitor
 
+SCRIPTS_DIR="$(dirname -- "$0")"
 VERSION='2.18.1'
 INSTALLER_VERSION='0.15.1'
 
@@ -25,32 +26,32 @@ install() {
   install_script="$(curl --proto '=https' --tlsv1.2 -sSf -L \
     https://install.determinate.systems/nix/tag/v"${INSTALLER_VERSION}")"
   echo "${install_script}" | sh -s -- install --no-confirm
-  "$(dirname "$0")"/print.sh 'Restart shell to activate Nix.'
+  "${SCRIPTS_DIR}"/print.sh 'Restart shell to activate Nix.'
 }
 
 main() {
-  is_installed="$("$(dirname "$0")"/is-found.sh nix)"
-  is_installer_installed="$("$(dirname "$0")"/is-found.sh /nix/nix-installer)"
+  is_installed="$("${SCRIPTS_DIR}"/is-found.sh nix)"
+  is_installer_installed="$("${SCRIPTS_DIR}"/is-found.sh /nix/nix-installer)"
 
   if [ "${is_installed}" = 'no' ]; then
-    "$(dirname "$0")"/confirm.sh 'Nix not found, install with Determinate Nix Installer?'
+    "${SCRIPTS_DIR}"/confirm.sh 'Nix not found, install with Determinate Nix Installer?'
     install
   else
     current_version="$(get_current_version)"
-    is_updated="$("$(dirname "$0")"/is-version-greater-equal.sh "${current_version}" "${VERSION}")"
+    is_updated="$("${SCRIPTS_DIR}"/is-version-greater-equal.sh "${current_version}" "${VERSION}")"
 
     if [ "${is_updated}" = 'no' ]; then
-      "$(dirname "$0")"/confirm.sh \
+      "${SCRIPTS_DIR}"/confirm.sh \
         'Nix outdated, update to v'"${VERSION}"' (uninstall & reinstall) with Determinate Nix Installer?'
       install
     else
       if [ "${is_installer_installed}" = 'yes' ]; then
         current_installer_version="$(get_current_installer_version)"
-        is_installer_updated="$("$(dirname "$0")"/is-version-greater-equal.sh \
+        is_installer_updated="$("${SCRIPTS_DIR}"/is-version-greater-equal.sh \
           "${current_installer_version}" "${INSTALLER_VERSION}")"
 
         if [ "${is_installer_updated}" = 'no' ]; then
-          "$(dirname "$0")"/confirm.sh \
+          "${SCRIPTS_DIR}"/confirm.sh \
             'Determinate Nix Installer outdated, update to v'"${INSTALLER_VERSION}"' (uninstall & reinstall)?'
           install
         fi
