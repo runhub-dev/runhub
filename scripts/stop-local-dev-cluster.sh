@@ -3,7 +3,7 @@
 set -o errexit
 set -o nounset
 
-SCRIPTS_DIR="$(dirname -- "$0")"
+SCRIPTS_DIR="$(dirname "$0")"
 
 is_colima_docker_daemon_running() {
   colima_docker_daemon="$(colima list --json --profile dev-runhub)"

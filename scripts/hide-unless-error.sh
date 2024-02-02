@@ -3,7 +3,7 @@
 set -o errexit
 set -o nounset
 
-SCRIPTS_DIR="$(dirname -- "$0")"
+SCRIPTS_DIR="$(dirname "$0")"
 
 output="$("$@" 2>&1)" || exit_status="$?"
 

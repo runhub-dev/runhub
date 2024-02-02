@@ -4,7 +4,7 @@ set -o errexit
 set -o nounset
 set -o monitor
 
-SCRIPTS_DIR="$(dirname -- "$0")"
+SCRIPTS_DIR="$(dirname "$0")"
 VERSION='2.18.1'
 INSTALLER_VERSION='0.15.1'
 

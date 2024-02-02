@@ -3,7 +3,7 @@
 set -o errexit
 set -o nounset
 
-SCRIPTS_DIR="$(dirname -- "$0")"
+SCRIPTS_DIR="$(dirname "$0")"
 VERSION='0.9.0'
 LAUNCHER_VERSION='0.2.1'
 

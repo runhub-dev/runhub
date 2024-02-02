@@ -3,7 +3,7 @@
 set -o errexit
 set -o nounset
 
-SCRIPTS_DIR="$(dirname -- "$0")"
+SCRIPTS_DIR="$(dirname "$0")"
 VERSION='2.33.0'
 
 get_devbox_global_bin_path() {
