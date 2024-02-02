@@ -5,17 +5,6 @@ set -o nounset
 
 VERSION='2.33.0'
 
-is_installed_with_devbox_global() {
-  direnv_path="$(command -v direnv)"
-  devbox_global_path="$(devbox global path 2> /dev/null)"
-
-  if [ "${direnv_path}" != "${direnv_path#"${devbox_global_path}"}" ]; then
-    echo 'yes'
-  else
-    echo 'no'
-  fi
-}
-
 get_current_version() {
   direnv version
 }
@@ -31,6 +20,17 @@ install() {
   "$(dirname "$0")"/append-if-not-found.sh 'eval "$(direnv hook bash)"' ~/.bashrc
   "$(dirname "$0")"/append-if-not-found.sh 'eval "$(direnv hook zsh)"' ~/.zshrc
   "$(dirname "$0")"/print.sh 'Restart shell to activate direnv.'
+}
+
+is_installed_with_devbox_global() {
+  direnv_path="$(command -v direnv)"
+  devbox_global_path="$(devbox global path 2> /dev/null)"
+
+  if [ "${direnv_path}" != "${direnv_path#"${devbox_global_path}"}" ]; then
+    echo 'yes'
+  else
+    echo 'no'
+  fi
 }
 
 update() {
