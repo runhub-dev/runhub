@@ -5,10 +5,6 @@ set -o nounset
 
 VERSION='2.33.0'
 
-get_current_version() {
-  direnv version
-}
-
 get_devbox_global_bin_path() {
   devbox_global_shellenv_script="$(devbox global shellenv --recompute)"
   eval "${devbox_global_shellenv_script}"
@@ -56,7 +52,7 @@ main() {
     "$(dirname "$0")"/confirm.sh 'direnv not found, install with Devbox Global?'
     install
   else
-    current_version="$(get_current_version)"
+    current_version="$(direnv version)"
     is_updated="$("$(dirname "$0")"/is-version-greater-equal.sh "${current_version}" "${VERSION}")"
 
     if [ "${is_updated}" = 'no' ]; then
