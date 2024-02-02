@@ -45,20 +45,6 @@ update() {
   install
 }
 
-is_allowed_for_runhub() {
-  runhub_status_output="$(cd "$(dirname "$0")"/.. && direnv status)"
-
-  if echo "${runhub_status_output}" | grep -Fq 'Found RC allowed 0'; then
-    echo 'yes'
-  else
-    echo 'no'
-  fi
-}
-
-allow_for_runhub() {
-  direnv allow "$(dirname "$0")"/..
-}
-
 main() {
   is_installed="$("$(dirname "$0")"/is-found.sh direnv)"
 
@@ -75,11 +61,7 @@ main() {
     fi
   fi
 
-  is_allowed_for_runhub="$(is_allowed_for_runhub)"
-
-  if [ "${is_allowed_for_runhub}" = 'no' ]; then
-    allow_for_runhub
-  fi
+  "$(dirname "$0")"/direnv-allow.sh "$(dirname "$0")"/..
 }
 
 main "$@"
