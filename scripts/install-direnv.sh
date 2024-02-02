@@ -64,8 +64,6 @@ main() {
       update
     fi
   fi
-
-  "$(dirname "$0")"/direnv-allow.sh "$(dirname "$0")"/..
 }
 
 main "$@"
