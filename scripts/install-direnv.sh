@@ -22,7 +22,7 @@ get_current_version() {
 
 install() {
   "$(dirname "$0")"/hide-unless-error.sh devbox global add direnv@"${VERSION}"
-  devbox_global_shellenv_script="$(devbox global shellenv)"
+  devbox_global_shellenv_script="$(devbox global shellenv --recompute)"
   eval "${devbox_global_shellenv_script}"
   devbox_global_direnv_path="$(command -v direnv)"
   devbox_global_bin_path="$(dirname "${devbox_global_direnv_path}")"
