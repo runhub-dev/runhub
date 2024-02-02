@@ -56,8 +56,8 @@ main() {
     "$(dirname "$0")"/confirm.sh 'direnv not found, install with Devbox Global?'
     install
   else
-    is_updated="$("$(dirname "$0")"/is-version-greater-equal.sh \
-      "$(get_current_version)" "${VERSION}")"
+    current_version="$(get_current_version)"
+    is_updated="$("$(dirname "$0")"/is-version-greater-equal.sh "${current_version}" "${VERSION}")"
 
     if [ "${is_updated}" = 'no' ]; then
       "$(dirname "$0")"/confirm.sh 'direnv outdated, update to v'"${VERSION}"' with Devbox Global?'
