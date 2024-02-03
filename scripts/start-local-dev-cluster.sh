@@ -6,18 +6,8 @@ set -o nounset
 SCRIPTS_DIR="$(dirname "$0")"
 RUNHUB_DIR="${SCRIPTS_DIR}"/..
 
-is_docker_daemon_running() {
-  if docker version > /dev/null 2>&1; then
-    echo 'yes'
-  else
-    echo 'no'
-  fi
-}
-
 main() {
-  is_docker_daemon_running="$(is_docker_daemon_running)"
-
-  if [ "${is_docker_daemon_running}" = 'no' ]; then
+  if ! docker version > /dev/null 2>&1; then
     total_number_cpus="$(getconf _NPROCESSORS_CONF)"
     total_gibibytes_memory="$("${SCRIPTS_DIR}"/get-total-gibibytes-memory.sh)"
     half_total_gibibytes_memory="$(echo "${total_gibibytes_memory}"' / 2' | bc)"
