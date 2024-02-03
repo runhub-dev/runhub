@@ -7,7 +7,7 @@ SCRIPTS_DIR="$(dirname "$0")"
 VERSION='2.33.0'
 
 get_devbox_global_bin_path() {
-  devbox_global_shellenv_script="$(devbox global shellenv --recompute)"
+  devbox_global_shellenv_script="$(devbox global shellenv --recompute 2> /dev/null)"
   eval "${devbox_global_shellenv_script}"
   devbox_global_direnv_path="$(command -v direnv)"
   dirname "${devbox_global_direnv_path}"
