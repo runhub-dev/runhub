@@ -13,13 +13,25 @@ get_devbox_global_bin_path() {
   dirname "${devbox_global_direnv_path}"
 }
 
+append_if_not_found() {
+  if [ -e "$2" ]; then
+    grep -Fq "$1" "$2" || is_found="${?:-0}"
+
+    if [ "${is_found}" != 1 ]; then
+      exit "${is_found}"
+    fi
+  fi
+
+  printf '\n%s\n' "$1" >> "$2"
+}
+
 install() {
   devbox global add direnv@"${VERSION}" > /dev/null 2>&1
   devbox_global_bin_path="$(get_devbox_global_bin_path)"
-  "${SCRIPTS_DIR}"/append-if-not-found.sh 'PATH='"${devbox_global_bin_path}"':"${PATH}"' ~/.bashrc
-  "${SCRIPTS_DIR}"/append-if-not-found.sh 'PATH='"${devbox_global_bin_path}"':"${PATH}"' ~/.zshrc
-  "${SCRIPTS_DIR}"/append-if-not-found.sh 'eval "$(direnv hook bash)"' ~/.bashrc
-  "${SCRIPTS_DIR}"/append-if-not-found.sh 'eval "$(direnv hook zsh)"' ~/.zshrc
+  append_if_not_found 'PATH='"${devbox_global_bin_path}"':"${PATH}"' ~/.bashrc
+  append_if_not_found 'PATH='"${devbox_global_bin_path}"':"${PATH}"' ~/.zshrc
+  append_if_not_found 'eval "$(direnv hook bash)"' ~/.bashrc
+  append_if_not_found 'eval "$(direnv hook zsh)"' ~/.zshrc
   echo 'Restart shell to activate direnv.'
 }
 
