@@ -20,7 +20,6 @@ main() {
   "${SCRIPTS_DIR}"/install-nix.sh
   "${SCRIPTS_DIR}"/install-devbox.sh
   "${SCRIPTS_DIR}"/install-direnv.sh
-  "${SCRIPTS_DIR}"/direnv-allow.sh "${RUNHUB_DIR}"
   trap 'echo ; exit' INT
   trap 'stop_dev_mode' EXIT
   start_dev_mode

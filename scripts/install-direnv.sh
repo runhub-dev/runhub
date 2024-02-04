@@ -4,6 +4,7 @@ set -o errexit
 set -o nounset
 
 SCRIPTS_DIR="$(dirname "$0")"
+RUNHUB_DIR="${SCRIPTS_DIR}"/..
 VERSION='2.33.0'
 
 get_devbox_global_bin_path() {
@@ -58,6 +59,18 @@ update() {
   install
 }
 
+allow() {
+  status_output="$(cd "$1" && direnv status)"
+  echo "${status_output}" | grep -Fq 'Found RC allowed 0' \
+    || is_allowed="$?" ; is_allowed="${is_allowed:-0}"
+
+  if [ "${is_allowed}" != 1 ]; then
+    exit "${is_allowed}"
+  fi
+
+  direnv allow "$1"
+}
+
 main() {
   if ! command -v direnv > /dev/null; then
     "${SCRIPTS_DIR}"/confirm.sh 'direnv not found, install with Devbox Global?'
@@ -71,6 +84,8 @@ main() {
       update
     fi
   fi
+
+  allow "${RUNHUB_DIR}"
 }
 
 main "$@"
