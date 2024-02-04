@@ -19,7 +19,7 @@ get_current_installer_version() {
 }
 
 install() {
-  if [ "${is_installer_installed}" = 'yes' ]; then
+  if command -v /nix/nix-installer > /dev/null; then
     /nix/nix-installer uninstall --no-confirm
   fi
 
@@ -30,10 +30,7 @@ install() {
 }
 
 main() {
-  is_installed="$("${SCRIPTS_DIR}"/is-found.sh nix)"
-  is_installer_installed="$("${SCRIPTS_DIR}"/is-found.sh /nix/nix-installer)"
-
-  if [ "${is_installed}" = 'no' ]; then
+  if ! command -v nix > /dev/null; then
     "${SCRIPTS_DIR}"/confirm.sh 'Nix not found, install with Determinate Nix Installer?'
     install
   else
@@ -45,7 +42,7 @@ main() {
         'Nix outdated, update to v'"${VERSION}"' (uninstall & reinstall) with Determinate Nix Installer?'
       install
     else
-      if [ "${is_installer_installed}" = 'yes' ]; then
+      if command -v /nix/nix-installer > /dev/null; then
         current_installer_version="$(get_current_installer_version)"
         is_installer_updated="$("${SCRIPTS_DIR}"/is-version-greater-equal.sh \
           "${current_installer_version}" "${INSTALLER_VERSION}")"

@@ -20,9 +20,7 @@ install() {
 }
 
 main() {
-  is_installed="$("${SCRIPTS_DIR}"/is-found.sh devbox)"
-
-  if [ "${is_installed}" = 'no' ]; then
+  if ! command -v devbox > /dev/null; then
     "${SCRIPTS_DIR}"/confirm.sh 'Devbox not found, install?'
     install
   else

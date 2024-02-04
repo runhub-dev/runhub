@@ -47,9 +47,7 @@ update() {
 }
 
 main() {
-  is_installed="$("${SCRIPTS_DIR}"/is-found.sh direnv)"
-
-  if [ "${is_installed}" = 'no' ]; then
+  if ! command -v direnv > /dev/null; then
     "${SCRIPTS_DIR}"/confirm.sh 'direnv not found, install with Devbox Global?'
     install
   else
