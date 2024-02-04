@@ -14,7 +14,7 @@ get_devbox_global_bin_path() {
 }
 
 install() {
-  "${SCRIPTS_DIR}"/hide-unless-error.sh devbox global add direnv@"${VERSION}"
+  devbox global add direnv@"${VERSION}" > /dev/null 2>&1
   devbox_global_bin_path="$(get_devbox_global_bin_path)"
   "${SCRIPTS_DIR}"/append-if-not-found.sh 'PATH='"${devbox_global_bin_path}"':"${PATH}"' ~/.bashrc
   "${SCRIPTS_DIR}"/append-if-not-found.sh 'PATH='"${devbox_global_bin_path}"':"${PATH}"' ~/.zshrc
