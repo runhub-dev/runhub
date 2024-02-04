@@ -8,12 +8,12 @@ SCRIPTS_DIR="${RUNHUB_DIR}"/scripts
 
 start_dev_mode() {
   "${SCRIPTS_DIR}"/print.sh 'Starting dev mode.'
-  "${SCRIPTS_DIR}"/start-local-dev-cluster.sh
+  devbox run --config "${RUNHUB_DIR}" "${SCRIPTS_DIR}"/start-local-dev-cluster.sh
 }
 
 stop_dev_mode() {
   "${SCRIPTS_DIR}"/print.sh 'Stopping dev mode.'
-  "${SCRIPTS_DIR}"/stop-local-dev-cluster.sh
+  devbox run --config "${RUNHUB_DIR}" "${SCRIPTS_DIR}"/stop-local-dev-cluster.sh
 }
 
 main() {

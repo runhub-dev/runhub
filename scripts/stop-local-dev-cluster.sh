@@ -30,8 +30,4 @@ main() {
   fi
 }
 
-if [ "${RUNHUB_IS_DEVBOX_RUN:-'no'}" = 'yes' ]; then
-  main "$@"
-else
-  "${SCRIPTS_DIR}"/devbox-run.sh "$0" "$@"
-fi
+main "$@"
