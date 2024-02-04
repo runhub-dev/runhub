@@ -15,7 +15,7 @@ get_devbox_global_bin_path() {
 
 append_if_not_found() {
   if [ -e "$2" ]; then
-    grep -Fq "$1" "$2" || is_found="${?:-0}"
+    grep -Fq "$1" "$2" || is_found="$?" ; is_found="${is_found:-0}"
 
     if [ "${is_found}" != 1 ]; then
       exit "${is_found}"
