@@ -3,9 +3,8 @@
 set -o errexit
 set -o nounset
 
-printf '\n%s ([y]es/[n]o): ' "$1"
+printf '%s ([y]es/[n]o): ' "$1"
 read -r yes_no < /dev/tty
-printf '\n'
 yes_no="$(echo "${yes_no}" | tr '[:upper:]' '[:lower:]')"
 
 if [ "${yes_no}" != 'y' ] && [ "${yes_no}" != 'yes' ]; then
