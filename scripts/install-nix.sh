@@ -26,7 +26,7 @@ install() {
   install_script="$(curl --proto '=https' --tlsv1.2 -sSf -L \
     https://install.determinate.systems/nix/tag/v"${INSTALLER_VERSION}")"
   echo "${install_script}" | sh -s -- install --no-confirm
-  "${SCRIPTS_DIR}"/print.sh 'Restart shell to activate Nix.'
+  echo 'Restart shell to activate Nix.'
 }
 
 main() {

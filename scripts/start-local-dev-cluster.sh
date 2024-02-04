@@ -11,10 +11,10 @@ if ! docker version > /dev/null 2>&1; then
   total_gibibytes_memory="$("${SCRIPTS_DIR}"/get-total-gibibytes-memory.sh)"
   half_total_gibibytes_memory="$(echo "${total_gibibytes_memory}"' / 2' | bc)"
 
-  "${SCRIPTS_DIR}"/print.sh 'Docker daemon not running, starting Colima Docker daemon.'
+  echo 'Docker daemon not running, starting Colima Docker daemon.'
   colima start --profile dev-runhub \
     --cpu "${total_number_cpus}" --memory "${half_total_gibibytes_memory}" --disk 64
 fi
 
-"${SCRIPTS_DIR}"/print.sh 'Starting local dev Kubernetes cluster in Docker.'
+echo 'Starting local dev Kubernetes cluster in Docker.'
 k3d cluster create --config "${RUNHUB_DIR}"/k3d.yaml

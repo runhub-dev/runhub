@@ -20,7 +20,7 @@ install() {
   "${SCRIPTS_DIR}"/append-if-not-found.sh 'PATH='"${devbox_global_bin_path}"':"${PATH}"' ~/.zshrc
   "${SCRIPTS_DIR}"/append-if-not-found.sh 'eval "$(direnv hook bash)"' ~/.bashrc
   "${SCRIPTS_DIR}"/append-if-not-found.sh 'eval "$(direnv hook zsh)"' ~/.zshrc
-  "${SCRIPTS_DIR}"/print.sh 'Restart shell to activate direnv.'
+  echo 'Restart shell to activate direnv.'
 }
 
 is_installed_with_devbox_global() {
@@ -38,7 +38,7 @@ update() {
   is_installed_with_devbox_global="$(is_installed_with_devbox_global)"
 
   if [ "${is_installed_with_devbox_global}" = 'no' ]; then
-    "${SCRIPTS_DIR}"/print.sh \
+    echo \
       'direnv cannot be updated because it was not installed with Devbox Global, either uninstall it or update it.'
     exit 1
   fi
