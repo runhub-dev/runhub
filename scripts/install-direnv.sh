@@ -49,18 +49,6 @@ update() {
   install
 }
 
-allow() {
-  status_output="$(cd "$1" && direnv status)"
-  echo "${status_output}" | grep -Fq 'Found RC allowed 0' \
-    || is_allowed="$?" ; is_allowed="${is_allowed:-0}"
-
-  if [ "${is_allowed}" != 1 ]; then
-    exit "${is_allowed}"
-  fi
-
-  direnv allow "$1"
-}
-
 main() {
   if ! command -v direnv > /dev/null; then
     "${SCRIPTS_DIR}"/confirm.sh 'direnv not found, install with Devbox Global?'
@@ -75,7 +63,11 @@ main() {
     fi
   fi
 
-  allow "${RUNHUB_DIR}"
+  status_output="$(cd "${RUNHUB_DIR}" && direnv status)"
+
+  if ! echo "${status_output}" | grep -F 'Found RC allowed 0' > /dev/null; then
+    direnv allow "${RUNHUB_DIR}"
+  fi
 }
 
 main "$@"
