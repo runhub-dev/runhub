@@ -5,7 +5,7 @@ set -o nounset
 
 get_colima_docker_daemon="$(colima list --json --profile dev-runhub)"
 
-if [ "${get_colima_docker_daemon=}" ]; then
+if [ "${get_colima_docker_daemon}" ]; then
   echo 'Stopping Colima Docker daemon and local dev Kubernetes cluster in Docker.'
   colima delete --force --profile dev-runhub
 fi
