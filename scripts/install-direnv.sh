@@ -15,15 +15,9 @@ get_devbox_global_bin_path() {
 }
 
 append_if_not_found() {
-  if [ -e "$2" ]; then
-    grep -Fq "$1" "$2" || is_found="$?" ; is_found="${is_found:-0}"
-
-    if [ "${is_found}" != 1 ]; then
-      exit "${is_found}"
-    fi
+  if ! grep -Fs "$1" "$2" > /dev/null; then
+    printf '\n%s\n' "$1" >> "$2"
   fi
-
-  printf '\n%s\n' "$1" >> "$2"
 }
 
 install() {
