@@ -37,7 +37,7 @@ main() {
     current_version="$(get_current_version)"
     is_updated="$("${SCRIPTS_DIR}"/is-version-greater-equal.sh "${current_version}" "${VERSION}")"
 
-    if [ "${is_updated}" = 'no' ]; then
+    if ! "${is_updated}"; then
       "${SCRIPTS_DIR}"/confirm.sh \
         'Nix outdated, update to v'"${VERSION}"' (uninstall & reinstall) with Determinate Nix Installer?'
       install
@@ -47,7 +47,7 @@ main() {
         is_installer_updated="$("${SCRIPTS_DIR}"/is-version-greater-equal.sh \
           "${current_installer_version}" "${INSTALLER_VERSION}")"
 
-        if [ "${is_installer_updated}" = 'no' ]; then
+        if ! "${is_installer_updated}"; then
           "${SCRIPTS_DIR}"/confirm.sh \
             'Determinate Nix Installer outdated, update to v'"${INSTALLER_VERSION}"' (uninstall & reinstall)?'
           install

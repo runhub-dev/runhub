@@ -30,7 +30,7 @@ main() {
     is_launcher_updated="$("${SCRIPTS_DIR}"/is-version-greater-equal.sh \
       "${current_launcher_version}" "${LAUNCHER_VERSION}")"
 
-    if [ "${is_updated}" = 'no' ] || [ "${is_launcher_updated}" = 'no' ]; then
+    if ! "${is_updated}" || ! "${is_launcher_updated}"; then
       "${SCRIPTS_DIR}"/confirm.sh 'Devbox outdated, update?'
       devbox version update
     fi

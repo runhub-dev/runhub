@@ -15,17 +15,17 @@ main() {
     version_part_2="$(get_version_part "$2" "${version_part}")"
 
     if [ "${version_part_1}" -gt "${version_part_2}" ]; then
-      echo 'yes'
+      echo true
       exit
     elif [ "${version_part_1}" -lt "${version_part_2}" ]; then
-      echo 'no'
+      echo false
       exit
     fi
 
     version_part=$(( version_part + 1 ))
   done
 
-  echo 'yes'
+  echo true
 }
 
 main "$@"

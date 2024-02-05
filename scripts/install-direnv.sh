@@ -51,7 +51,7 @@ main() {
     current_version="$(direnv version)"
     is_updated="$("${SCRIPTS_DIR}"/is-version-greater-equal.sh "${current_version}" "${VERSION}")"
 
-    if [ "${is_updated}" = 'no' ]; then
+    if ! "${is_updated}"; then
       "${SCRIPTS_DIR}"/confirm.sh 'direnv outdated, update to v'"${VERSION}"' with Devbox Global?'
       update
     fi
