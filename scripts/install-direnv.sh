@@ -36,21 +36,11 @@ install() {
   echo 'Restart shell to activate direnv.'
 }
 
-is_installed_with_devbox_global() {
+update() {
   direnv_path="$(command -v direnv)"
   devbox_global_path="$(devbox global path 2> /dev/null)"
 
-  if [ "${direnv_path}" != "${direnv_path#"${devbox_global_path}"}" ]; then
-    echo 'yes'
-  else
-    echo 'no'
-  fi
-}
-
-update() {
-  is_installed_with_devbox_global="$(is_installed_with_devbox_global)"
-
-  if [ "${is_installed_with_devbox_global}" = 'no' ]; then
+  if [ "${direnv_path}" = "${direnv_path#"${devbox_global_path}"}" ]; then
     echo \
       'direnv cannot be updated because it was not installed with Devbox Global, either uninstall it or update it.'
     exit 1
