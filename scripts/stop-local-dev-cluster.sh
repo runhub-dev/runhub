@@ -10,7 +10,7 @@ if [ "${is_colima_docker_daemon_running}" ]; then
   colima delete --force --profile dev-runhub
 fi
 
-if k3d cluster list dev-runhub > /dev/null 2>&1; then
+if k3d cluster get dev-runhub > /dev/null 2>&1; then
   echo 'Stopping local dev Kubernetes cluster in Docker.'
   k3d cluster delete dev-runhub
 fi
