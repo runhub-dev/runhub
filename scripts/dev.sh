@@ -4,17 +4,64 @@ set -o errexit
 set -o nounset
 
 SCRIPTS_DIR="$(dirname "$0")"
+RUNHUB_DIR="${SCRIPTS_DIR}"/..
+
+get_total_gibibytes_memory() {
+  darwin_memory_output="$(sysctl -n hw.memsize 2> /dev/null || true)"
+
+  if [ "${darwin_memory_output}" ]; then
+    echo "${darwin_memory_output}"' / 1024^3' | bc
+  else
+    linux_memory_output="$(cat /proc/meminfo 2> /dev/null || true)"
+
+    if [ "${linux_memory_output}" ]; then
+      linux_memory_output_grep="$(echo "${linux_memory_output}" | grep '^MemTotal:')"
+      linux_memory_output_tr="$(echo "${linux_memory_output_grep}" | tr -s ' ')"
+      linux_memory_output_cut="$(echo "${linux_memory_output_tr}" | cut -d ' ' -f 2)"
+      echo "${linux_memory_output_cut}"' / 1024^2 + 1' | bc
+    else
+      exit 1
+    fi
+  fi
+}
 
 start() {
-  previous_docker_context="$(docker context show)"
+  if ! docker version > /dev/null 2>&1; then
+    total_number_cpus="$(getconf _NPROCESSORS_CONF)"
+    total_gibibytes_memory="$(get_total_gibibytes_memory)"
+    half_total_gibibytes_memory="$(echo "${total_gibibytes_memory}"' / 2' | bc)"
+
+    echo 'Docker daemon not running, starting Colima Docker daemon.'
+    previous_docker_context="$(docker context show)"
+    colima start --profile dev-runhub \
+      --cpu "${total_number_cpus}" --memory "${half_total_gibibytes_memory}" --disk 64
+  fi
+
+  echo 'Starting local dev Kubernetes cluster in Docker.'
   previous_kube_context="$(kubectl config current-context 2> /dev/null || true)"
-  "${SCRIPTS_DIR}"/start-local-dev-cluster.sh
+  k3d cluster create --config "${RUNHUB_DIR}"/k3d.yaml
 }
 
 stop() {
-  "${SCRIPTS_DIR}"/stop-local-dev-cluster.sh
-  docker context use "${previous_docker_context}" > /dev/null 2>&1 || true
-  kubectl config use-context "${previous_kube_context}" > /dev/null 2>&1 || true
+  get_colima_docker_daemon="$(colima list --json --profile dev-runhub)"
+
+  if [ "${get_colima_docker_daemon}" ]; then
+    echo 'Stopping Colima Docker daemon and local dev Kubernetes cluster in Docker.'
+    colima delete --force --profile dev-runhub
+    docker context use "${previous_docker_context}" > /dev/null 2>&1 || true
+    docker context rm --force colima-dev-runhub > /dev/null
+  fi
+
+  if k3d cluster get dev-runhub > /dev/null 2>&1; then
+    echo 'Stopping local dev Kubernetes cluster in Docker.'
+    k3d cluster delete dev-runhub
+  fi
+
+  kubectl config use-context "${previous_kube_context}" > /dev/null 2>&1 \
+    || kubectl config unset current-context > /dev/null
+  kubectl config delete-context k3d-dev-runhub > /dev/null 2>&1 || true
+  kubectl config delete-cluster k3d-dev-runhub > /dev/null 2>&1 || true
+  kubectl config delete-user admin@k3d-dev-runhub > /dev/null 2>&1 || true
 }
 
 main() {
