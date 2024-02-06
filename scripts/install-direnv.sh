@@ -58,6 +58,7 @@ main() {
 
   if ! command -v direnv > /dev/null; then
     echo 'Restart shell and rerun to complete direnv install and continue.'
+    exit 1
   else
     status_output="$(cd "${RUNHUB_DIR}" && direnv status)"
 
