@@ -27,6 +27,8 @@ install() {
   append_if_not_found 'PATH='"${devbox_global_bin_path}"':"${PATH}"' ~/.zshrc
   append_if_not_found 'eval "$(direnv hook bash)"' ~/.bashrc
   append_if_not_found 'eval "$(direnv hook zsh)"' ~/.zshrc
+  echo 'Restart shell and rerun to complete direnv install and continue.'
+  exit 1
 }
 
 update() {
@@ -56,15 +58,10 @@ main() {
     fi
   fi
 
-  if ! command -v direnv > /dev/null; then
-    echo 'Restart shell and rerun to complete direnv install and continue.'
-    exit 1
-  else
-    status_output="$(cd "${RUNHUB_DIR}" && direnv status)"
+  status_output="$(cd "${RUNHUB_DIR}" && direnv status)"
 
-    if ! echo "${status_output}" | grep -F 'Found RC allowed 0' > /dev/null; then
-      direnv allow "${RUNHUB_DIR}"
-    fi
+  if ! echo "${status_output}" | grep -F 'Found RC allowed 0' > /dev/null; then
+    direnv allow "${RUNHUB_DIR}"
   fi
 }
 
