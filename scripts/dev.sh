@@ -18,9 +18,6 @@ stop() {
 }
 
 main() {
-  "${SCRIPTS_DIR}"/install-nix.sh
-  "${SCRIPTS_DIR}"/install-devbox.sh
-  "${SCRIPTS_DIR}"/install-direnv.sh
   trap 'echo ; exit' INT
   trap 'stop' EXIT
   start
