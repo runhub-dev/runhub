@@ -7,13 +7,6 @@ SCRIPTS_DIR="$(dirname "$0")"
 RUNHUB_DIR="${SCRIPTS_DIR}"/..
 VERSION='2.33.0'
 
-get_devbox_global_bin_path() {
-  devbox_global_shellenv_script="$(devbox global shellenv --recompute 2> /dev/null)"
-  eval "${devbox_global_shellenv_script}"
-  devbox_global_direnv_path="$(command -v direnv)"
-  dirname "${devbox_global_direnv_path}"
-}
-
 append_if_not_found() {
   if ! grep -Fs "$1" "$2" > /dev/null; then
     printf '\n%s\n' "$1" >> "$2"
@@ -30,12 +23,14 @@ append_if_not_found() {
 
 install() {
   devbox global add direnv@"${VERSION}" > /dev/null 2>&1
-  devbox_global_bin_path="$(get_devbox_global_bin_path)"
+  devbox_global_shellenv_script="$(devbox global shellenv --recompute 2> /dev/null)"
+  eval "${devbox_global_shellenv_script}"
+  devbox_global_direnv_path="$(command -v direnv)"
+  devbox_global_bin_path="$(dirname "${devbox_global_direnv_path}")"
   append_if_not_found 'PATH='"${devbox_global_bin_path}"':"${PATH}"' ~/.bashrc
   append_if_not_found 'PATH='"${devbox_global_bin_path}"':"${PATH}"' ~/.zshrc
   append_if_not_found 'eval "$(direnv hook bash)"' ~/.bashrc
   append_if_not_found 'eval "$(direnv hook zsh)"' ~/.zshrc
-  PATH="${devbox_global_bin_path}":"${PATH}"
   allow_direnv_for_runhub
   echo 'Restart shell and rerun to complete direnv install and continue.'
   exit 1
