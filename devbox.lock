@@ -1,46 +1,46 @@
 {
   "lockfile_version": "1",
   "packages": {
-    "colima@0.6.7": {
-      "last_modified": "2024-01-31T06:48:05Z",
-      "resolved": "github:NixOS/nixpkgs/5ad9903c16126a7d949101687af0aa589b1d7d3d#colima",
+    "colima@latest": {
+      "last_modified": "2024-02-05T02:15:44Z",
+      "resolved": "github:NixOS/nixpkgs/0a254180b4cad6be45aa46dce896bdb8db5d2930#colima",
       "source": "devbox-search",
-      "version": "0.6.7",
+      "version": "0.6.8",
       "systems": {
         "aarch64-darwin": {
-          "store_path": "/nix/store/fvin94c98wgw0jp3rwc3890821nhywz4-colima-0.6.7"
+          "store_path": "/nix/store/2036lcflxkzs1b29k485a6bpwvfga0x5-colima-0.6.8"
         },
         "aarch64-linux": {
-          "store_path": "/nix/store/lzy6xpw6xahwdrnqry3zcg39ayyzyrzx-colima-0.6.7"
+          "store_path": "/nix/store/6bddkg9aiifa7cp3xsz0rxgmh6yspsx2-colima-0.6.8"
         },
         "x86_64-linux": {
-          "store_path": "/nix/store/40jf691dxj13qfn5lan7sxwsbiharxkq-colima-0.6.7"
+          "store_path": "/nix/store/6lg37gnkifnxllx98zmjb4bb2x91rzx2-colima-0.6.8"
         }
       }
     },
-    "docker-client@24.0.5": {
-      "last_modified": "2024-01-29T00:15:04Z",
-      "resolved": "github:NixOS/nixpkgs/90f456026d284c22b3e3497be980b2e47d0b28ac#docker-client",
+    "docker-client@latest": {
+      "last_modified": "2024-02-01T15:59:28Z",
+      "resolved": "github:NixOS/nixpkgs/f38bca1ca559974b36863d0ff4bb710b7bc12890#docker-client",
       "source": "devbox-search",
       "version": "24.0.5",
       "systems": {
         "aarch64-darwin": {
-          "store_path": "/nix/store/b1wvdq94zxwkpjsxdzhm9hf9igb83siz-docker-24.0.5"
+          "store_path": "/nix/store/wvqrlsfz745bywbgj6bhxfw2w03hhdph-docker-24.0.5"
         },
         "aarch64-linux": {
-          "store_path": "/nix/store/wb7icw3xllz5bjffsa97g6l406ybckzl-docker-24.0.5"
+          "store_path": "/nix/store/qjisi2f58qsvq4xpjh1qbjpj7hgx36gf-docker-24.0.5"
         },
         "x86_64-darwin": {
-          "store_path": "/nix/store/16wz1cd6kz75rs0fnhihaqn1c7a5l8fy-docker-24.0.5"
+          "store_path": "/nix/store/92xla9kyppim4m17qa2kbilswb1mlsma-docker-24.0.5"
         },
         "x86_64-linux": {
-          "store_path": "/nix/store/k2d075lvhdsvwqi0k0y38xy97y1yhhxa-docker-24.0.5"
+          "store_path": "/nix/store/yxl7wil0s31j9b03jnhlqkfggzz4aljn-docker-24.0.5"
         }
       }
     },
-    "k3d@5.6.0": {
-      "last_modified": "2024-01-14T03:55:27Z",
-      "resolved": "github:NixOS/nixpkgs/dd5621df6dcb90122b50da5ec31c411a0de3e538#k3d",
+    "k3d@latest": {
+      "last_modified": "2024-01-27T14:55:31Z",
+      "resolved": "github:NixOS/nixpkgs/160b762eda6d139ac10ae081f8f78d640dd523eb#k3d",
       "source": "devbox-search",
       "version": "5.6.0",
       "systems": {
@@ -48,33 +48,33 @@
           "store_path": "/nix/store/dfaxrb0csmqxq0fdg6s81jg2zmlv6hij-k3d-5.6.0"
         },
         "aarch64-linux": {
-          "store_path": "/nix/store/4zq0fyv8xi9h15lqxg2nl38cp3znc074-k3d-5.6.0"
+          "store_path": "/nix/store/53m3y75ncc7iyzlz8828z2fhlaf8c90l-k3d-5.6.0"
         },
         "x86_64-darwin": {
-          "store_path": "/nix/store/4yy8x5plx9fgajaj45fznq88ldk1hyrx-k3d-5.6.0"
+          "store_path": "/nix/store/vpvhkz1y1sppgsg2i9nk4mjsy7g9a38i-k3d-5.6.0"
         },
         "x86_64-linux": {
-          "store_path": "/nix/store/2kh4w0jk043s2fk2px08c12f8l7shgqk-k3d-5.6.0"
+          "store_path": "/nix/store/5q10krqivwbggwbrwc1lrqav1nsk78fs-k3d-5.6.0"
         }
       }
     },
-    "kubectl@1.28.4": {
+    "kubectl@latest": {
       "last_modified": "2024-01-27T14:55:31Z",
       "resolved": "github:NixOS/nixpkgs/160b762eda6d139ac10ae081f8f78d640dd523eb#kubectl",
       "source": "devbox-search",
       "version": "1.28.4",
       "systems": {
         "aarch64-darwin": {
-          "store_path": "/nix/store/hrnn94y7mlmlb5jwqbrarfk529ml09bx-kubectl-1.28.4"
+          "store_path": "/nix/store/xhfs94kdg9v6p4gbnfn5xk4c862jhipl-kubectl-1.28.4"
         },
         "aarch64-linux": {
-          "store_path": "/nix/store/4gc3mgbd1d11xfzm8mglhv2mcww7qnw2-kubectl-1.28.4"
+          "store_path": "/nix/store/r9kj0y745xz6dygjrvrbwf3cqzcs9zay-kubectl-1.28.4"
         },
         "x86_64-darwin": {
           "store_path": "/nix/store/8h8yj0mc216paxkpqp4aqf5yc2yklmv0-kubectl-1.28.4"
         },
         "x86_64-linux": {
-          "store_path": "/nix/store/45s4wws5favhjq4hr26k8giyx59lskqb-kubectl-1.28.4"
+          "store_path": "/nix/store/dgbjz1q86g8kr7pxqrw81gjhnkkwh375-kubectl-1.28.4"
         }
       }
     }
