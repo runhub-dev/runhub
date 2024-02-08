@@ -33,7 +33,6 @@ start() {
     total_number_cpus="$(getconf _NPROCESSORS_CONF)"
     total_gibibytes_memory="$(get_total_gibibytes_memory)"
     half_total_gibibytes_memory="$(echo "${total_gibibytes_memory}"' / 2' | bc)"
-
     echo 'Docker daemon not running, starting Colima Docker daemon.'
     colima start --profile dev-runhub \
       --cpu "${total_number_cpus}" --memory "${half_total_gibibytes_memory}" --disk 64
