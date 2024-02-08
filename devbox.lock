@@ -1,20 +1,20 @@
 {
   "lockfile_version": "1",
   "packages": {
-    "colima@latest": {
-      "last_modified": "2024-02-05T02:15:44Z",
-      "resolved": "github:NixOS/nixpkgs/0a254180b4cad6be45aa46dce896bdb8db5d2930#colima",
+    "colima@0.6.7": {
+      "last_modified": "2024-01-31T06:48:05Z",
+      "resolved": "github:NixOS/nixpkgs/5ad9903c16126a7d949101687af0aa589b1d7d3d#colima",
       "source": "devbox-search",
-      "version": "0.6.8",
+      "version": "0.6.7",
       "systems": {
         "aarch64-darwin": {
-          "store_path": "/nix/store/2036lcflxkzs1b29k485a6bpwvfga0x5-colima-0.6.8"
+          "store_path": "/nix/store/fvin94c98wgw0jp3rwc3890821nhywz4-colima-0.6.7"
         },
         "aarch64-linux": {
-          "store_path": "/nix/store/6bddkg9aiifa7cp3xsz0rxgmh6yspsx2-colima-0.6.8"
+          "store_path": "/nix/store/lzy6xpw6xahwdrnqry3zcg39ayyzyrzx-colima-0.6.7"
         },
         "x86_64-linux": {
-          "store_path": "/nix/store/6lg37gnkifnxllx98zmjb4bb2x91rzx2-colima-0.6.8"
+          "store_path": "/nix/store/40jf691dxj13qfn5lan7sxwsbiharxkq-colima-0.6.7"
         }
       }
     },

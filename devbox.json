@@ -1,6 +1,6 @@
 {
   "packages": [
-    "colima@latest",
+    "colima@0.6.7",
     "docker-client@latest",
     "k3d@latest",
     "kubectl@latest"
