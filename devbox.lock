@@ -1,26 +1,6 @@
 {
   "lockfile_version": "1",
   "packages": {
-    "argocd@latest": {
-      "last_modified": "2024-02-05T02:15:44Z",
-      "resolved": "github:NixOS/nixpkgs/0a254180b4cad6be45aa46dce896bdb8db5d2930#argocd",
-      "source": "devbox-search",
-      "version": "2.9.6",
-      "systems": {
-        "aarch64-darwin": {
-          "store_path": "/nix/store/zw155iskmlagx55ar65cm5d7031mfpq0-argocd-2.9.6"
-        },
-        "aarch64-linux": {
-          "store_path": "/nix/store/14i71iv4v46cgzi83l008zfk4p52a3bv-argocd-2.9.6"
-        },
-        "x86_64-darwin": {
-          "store_path": "/nix/store/2j6djp46c85kw45ldlknmr9av77jrjz3-argocd-2.9.6"
-        },
-        "x86_64-linux": {
-          "store_path": "/nix/store/76k6mrdfj1ci5v7qn6nh6pq1731qnn7i-argocd-2.9.6"
-        }
-      }
-    },
     "colima@0.6.7": {
       "last_modified": "2024-01-31T06:48:05Z",
       "resolved": "github:NixOS/nixpkgs/5ad9903c16126a7d949101687af0aa589b1d7d3d#colima",
@@ -95,26 +75,6 @@
         },
         "x86_64-linux": {
           "store_path": "/nix/store/dgbjz1q86g8kr7pxqrw81gjhnkkwh375-kubectl-1.28.4"
-        }
-      }
-    },
-    "kubernetes-helm@latest": {
-      "last_modified": "2024-02-05T02:15:44Z",
-      "resolved": "github:NixOS/nixpkgs/0a254180b4cad6be45aa46dce896bdb8db5d2930#kubernetes-helm",
-      "source": "devbox-search",
-      "version": "3.14.0",
-      "systems": {
-        "aarch64-darwin": {
-          "store_path": "/nix/store/yf7yqb2vj1lz3gak1ks3y49jc3s4lvrf-kubernetes-helm-3.14.0"
-        },
-        "aarch64-linux": {
-          "store_path": "/nix/store/l7792lmxgplsdmv4j3725p24cbg64r85-kubernetes-helm-3.14.0"
-        },
-        "x86_64-darwin": {
-          "store_path": "/nix/store/d7mv4rrivbg149q7cdsp6nnlxnv00pw8-kubernetes-helm-3.14.0"
-        },
-        "x86_64-linux": {
-          "store_path": "/nix/store/4pmm72nvdd2i0cs67y0sbg7b1lk5f84d-kubernetes-helm-3.14.0"
         }
       }
     }
