@@ -3,7 +3,7 @@
 set -o errexit
 set -o nounset
 
-ARGO_CD_CHART_VERSION='6.0.3'
+ARGO_CD_CHART_VERSION='6.0.5'
 
 echo 'Installing Argo CD.'
 
