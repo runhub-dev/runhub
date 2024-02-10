@@ -1,0 +1,55 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: runhub
+  namespace: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions:
+    - missingkey=error
+  generators:
+    - list:
+        elements:
+          - name: argo-cd
+            repoURL: https://argoproj.github.io/argo-helm
+            chart: argo-cd
+            targetRevision: 6.0.5
+            values: |
+              configs:
+                cm:
+                  admin.enabled: false
+                  users.anonymous.enabled: true
+                params:
+                  applicationsetcontroller.enable.progressive.syncs: true
+                  server.insecure: true
+                rbac:
+                  policy.default: role:admin
+              server:
+                service:
+                  type: LoadBalancer
+            namespace: argocd
+  strategy:
+    type: RollingSync
+    rollingSync:
+      steps:
+        - matchExpressions:
+            - key: app.kubernetes.io/name
+              operator: In
+              values:
+                - argo-cd
+  template:
+    metadata:
+      name: "{{ `{{ .name }}` }}"
+      labels:
+        app.kubernetes.io/name: "{{ `{{ .name }}` }}"
+    spec:
+      project: runhub
+      source:
+        repoURL: "{{ `{{ .repoURL }}` }}"
+        chart: "{{ `{{ .chart }}` }}"
+        targetRevision: "{{ `{{ .targetRevision }}` }}"
+        helm:
+          values: "{{ `{{ .values }}` }}"
+      destination:
+        name: in-cluster
+        namespace: "{{ `{{ .namespace }}` }}"

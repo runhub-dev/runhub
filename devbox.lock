@@ -117,6 +117,26 @@
           "store_path": "/nix/store/4pmm72nvdd2i0cs67y0sbg7b1lk5f84d-kubernetes-helm-3.14.0"
         }
       }
+    },
+    "yq-go@latest": {
+      "last_modified": "2024-01-27T14:55:31Z",
+      "resolved": "github:NixOS/nixpkgs/160b762eda6d139ac10ae081f8f78d640dd523eb#yq-go",
+      "source": "devbox-search",
+      "version": "4.40.5",
+      "systems": {
+        "aarch64-darwin": {
+          "store_path": "/nix/store/h0dr2y40vj6vk0cjx0l4cvsm227br3sv-yq-go-4.40.5"
+        },
+        "aarch64-linux": {
+          "store_path": "/nix/store/699la83y6crya2dd0yw8w55mky4hcc5w-yq-go-4.40.5"
+        },
+        "x86_64-darwin": {
+          "store_path": "/nix/store/njjvd2znc9brb5jmkw2wfrq2ki0g273l-yq-go-4.40.5"
+        },
+        "x86_64-linux": {
+          "store_path": "/nix/store/77m8g26hanpgibld8wynmdpb6nicslbq-yq-go-4.40.5"
+        }
+      }
     }
   }
 }

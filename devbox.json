@@ -5,7 +5,8 @@
     "docker-client@latest",
     "k3d@latest",
     "kubectl@latest",
-    "kubernetes-helm@latest"
+    "kubernetes-helm@latest",
+    "yq-go@latest"
   ],
   "env": {
     "ARGOCD_OPTS": "--plaintext",

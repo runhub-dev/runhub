@@ -40,8 +40,8 @@ start() {
 
   echo 'Starting local dev Kubernetes cluster in Docker.'
   k3d cluster create --config "${RUNHUB_DIR}"/k3d.yaml
-  "${SCRIPTS_DIR}"/install-argo-cd.sh
-  echo 'Serving Argo CD at http://localhost:8080.'
+  "${SCRIPTS_DIR}"/install.sh
+  echo 'Serving at http://localhost:8080.'
 }
 
 stop() {

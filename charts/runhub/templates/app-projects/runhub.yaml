@@ -1,0 +1,19 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: runhub
+  namespace: argocd
+spec:
+  sourceNamespaces:
+    - argocd
+  sourceRepos:
+    - https://argoproj.github.io/argo-helm
+  destinations:
+    - name: in-cluster
+      namespace: "*"
+  namespaceResourceWhitelist:
+    - group: "*"
+      kind: "*"
+  clusterResourceWhitelist:
+    - group: "*"
+      kind: "*"
