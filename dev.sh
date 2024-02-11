@@ -3,7 +3,6 @@
 set -o errexit
 set -o nounset
 
-RUNHUB_DIR="$(dirname "$0")"
-SCRIPTS_DIR="${RUNHUB_DIR}"/scripts
+SCRIPTS_DIR="$(dirname "$0")"/scripts
 
 "${SCRIPTS_DIR}"/direnv-exec.sh "${SCRIPTS_DIR}"/dev.sh
