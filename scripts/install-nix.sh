@@ -8,16 +8,6 @@ SCRIPTS_DIR="$(dirname "$0")"
 VERSION='2.18.1'
 INSTALLER_VERSION='0.15.1'
 
-get_current_version() {
-  current_version_output="$(nix --version)"
-  echo "${current_version_output}" | cut -d ' ' -f 3
-}
-
-get_current_installer_version() {
-  current_installer_version_output="$(/nix/nix-installer --version)"
-  echo "${current_installer_version_output}" | cut -d ' ' -f 2
-}
-
 install() {
   if command -v /nix/nix-installer > /dev/null; then
     /nix/nix-installer uninstall --no-confirm
@@ -33,7 +23,8 @@ main() {
     "${SCRIPTS_DIR}"/confirm.sh 'Nix not found, install with Determinate Nix Installer?'
     install
   else
-    current_version="$(get_current_version)"
+    current_version_output="$(nix --version)"
+    current_version="$(echo "${current_version_output}" | cut -d ' ' -f 3)"
     is_updated="$("${SCRIPTS_DIR}"/is-version-greater-equal.sh "${current_version}" "${VERSION}")"
 
     if ! "${is_updated}"; then
@@ -42,7 +33,8 @@ main() {
       install
     else
       if command -v /nix/nix-installer > /dev/null; then
-        current_installer_version="$(get_current_installer_version)"
+        current_installer_version_output="$(/nix/nix-installer --version)"
+        current_installer_version="$(echo "${current_installer_version_output}" | cut -d ' ' -f 2)"
         is_installer_updated="$("${SCRIPTS_DIR}"/is-version-greater-equal.sh \
           "${current_installer_version}" "${INSTALLER_VERSION}")"
 
