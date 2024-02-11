@@ -12,8 +12,8 @@ spec:
         elements:
           - name: argo-cd
             repoURL: https://argoproj.github.io/argo-helm
-            chart: argo-cd
             targetRevision: 6.0.5
+            chart: argo-cd
             values: |
               configs:
                 cm:
@@ -46,8 +46,8 @@ spec:
       project: runhub
       source:
         repoURL: "{{ `{{ .repoURL }}` }}"
-        chart: "{{ `{{ .chart }}` }}"
         targetRevision: "{{ `{{ .targetRevision }}` }}"
+        chart: "{{ `{{ .chart }}` }}"
         helm:
           values: "{{ `{{ .values }}` }}"
       destination:

@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "repoURL": {
+      "type": "string",
+      "minLength": 1
+    },
+    "revision": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "required": [
+    "repoURL",
+    "revision"
+  ],
+  "additionalProperties": false
+}

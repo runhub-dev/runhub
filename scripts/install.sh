@@ -16,9 +16,11 @@ echo 'Installing Argo CD and waiting until ready.'
 echo "${argo_cd_values}" | helm install --wait --create-namespace --namespace argocd argo-cd \
   --repo https://argoproj.github.io/argo-helm argo-cd --version "${argo_cd_version}" \
   --values - > /dev/null
-kubectl delete --wait AppProject --namespace argocd default > /dev/null
 echo 'Installing runhub.'
-helm install --create-namespace --namespace runhub runhub "${RUNHUB_DIR}"/charts/runhub
+helm install --create-namespace --namespace runhub \
+  runhub-operator "${RUNHUB_DIR}"/charts/runhub-operator \
+  --set repoURL="$(git remote get-url origin)" --set revision="$(git rev-parse --verify HEAD)" \
+  > /dev/null
 echo 'Waiting until runhub is ready.'
 
 while [ "${status:-}" != 'Healthy' ]; do
