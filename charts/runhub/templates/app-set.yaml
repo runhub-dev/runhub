@@ -12,7 +12,7 @@ spec:
         elements:
           - name: argo-cd
             repoURL: https://argoproj.github.io/argo-helm
-            targetRevision: 6.0.5
+            targetRevision: 6.0.7
             chart: argo-cd
             values: |
               configs:
