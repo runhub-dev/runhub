@@ -5,4 +5,4 @@ set -o nounset
 
 SCRIPTS_DIR="$(dirname "$0")"/../scripts
 
-"${SCRIPTS_DIR}"/direnv-exec.sh "${SCRIPTS_DIR}"/git-hook-pre-push.sh
+"${SCRIPTS_DIR}"/direnv-exec.sh "${SCRIPTS_DIR}"/git-hook-post-commit.sh

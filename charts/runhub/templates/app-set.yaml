@@ -24,6 +24,16 @@ spec:
                   server.insecure: true
                 rbac:
                   policy.default: role:admin
+              repoServer:
+                volumeMounts:
+                  - mountPath: /runhub
+                    name: runhub
+                    readOnly: true
+                volumes:
+                  - name: runhub
+                    hostPath:
+                      path: /runhub
+                      type: Directory
               server:
                 service:
                   type: LoadBalancer

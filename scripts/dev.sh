@@ -35,7 +35,11 @@ start() {
   colima start --profile dev-runhub \
     --cpu "${total_number_cpus}" --memory "${half_total_gibibytes_memory}" --disk 64
   echo 'Starting local dev Kubernetes cluster in Docker.'
-  k3d cluster create --config "${RUNHUB_DIR}"/k3d.yaml
+  (
+    ABSOLUTE_RUNHUB_DIR="$(cd "${RUNHUB_DIR}" && pwd)"
+    export ABSOLUTE_RUNHUB_DIR
+    k3d cluster create --config "${RUNHUB_DIR}"/k3d.yaml
+  )
   "${SCRIPTS_DIR}"/install.sh
   echo 'Serving runhub at http://localhost:8080.'
 }

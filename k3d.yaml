@@ -3,6 +3,11 @@ kind: Simple
 metadata:
   name: dev-runhub
 image: rancher/k3s:v1.29.1-k3s2
+volumes:
+  - volume: ${ABSOLUTE_RUNHUB_DIR}:/runhub
+    nodeFilters:
+      - server:*
+      - agent:*
 ports:
   - port: 8080:80
     nodeFilters:

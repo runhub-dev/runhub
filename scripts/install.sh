@@ -35,7 +35,7 @@ fi
 
 helm upgrade --install --create-namespace --namespace runhub \
   runhub-operator "${RUNHUB_DIR}"/charts/runhub-operator \
-  --set repoURL="$(git remote get-url origin)" --set revision="$(git rev-parse --verify HEAD)" \
+  --set repoURL=file:///runhub --set revision="$(git rev-parse --verify HEAD)" \
   > /dev/null
 
 if ! [ "${runhub_operator_release}" ]; then
