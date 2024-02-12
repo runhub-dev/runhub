@@ -28,16 +28,12 @@ get_total_gibibytes_memory() {
 start() {
   previous_docker_context="$(docker context show)"
   previous_kube_context="$(kubectl config current-context 2> /dev/null || true)"
-
-  if ! docker version > /dev/null 2>&1; then
-    total_number_cpus="$(getconf _NPROCESSORS_CONF)"
-    total_gibibytes_memory="$(get_total_gibibytes_memory)"
-    half_total_gibibytes_memory="$(echo "${total_gibibytes_memory}"' / 2' | bc)"
-    echo 'Docker daemon not running, starting Colima Docker daemon.'
-    colima start --profile dev-runhub \
-      --cpu "${total_number_cpus}" --memory "${half_total_gibibytes_memory}" --disk 64
-  fi
-
+  total_number_cpus="$(getconf _NPROCESSORS_CONF)"
+  total_gibibytes_memory="$(get_total_gibibytes_memory)"
+  half_total_gibibytes_memory="$(echo "${total_gibibytes_memory}"' / 2' | bc)"
+  echo 'Starting Colima Docker daemon.'
+  colima start --profile dev-runhub \
+    --cpu "${total_number_cpus}" --memory "${half_total_gibibytes_memory}" --disk 64
   echo 'Starting local dev Kubernetes cluster in Docker.'
   k3d cluster create --config "${RUNHUB_DIR}"/k3d.yaml
   "${SCRIPTS_DIR}"/install.sh
@@ -45,18 +41,8 @@ start() {
 }
 
 stop() {
-  colima_docker_daemon="$(colima list --json --profile dev-runhub)"
-
-  if [ "${colima_docker_daemon}" ]; then
-    echo 'Stopping Colima Docker daemon and local dev Kubernetes cluster in Docker.'
-    colima delete --force --profile dev-runhub
-  fi
-
-  if k3d cluster get dev-runhub > /dev/null 2>&1; then
-    echo 'Stopping local dev Kubernetes cluster in Docker.'
-    k3d cluster delete dev-runhub
-  fi
-
+  echo 'Stopping Colima Docker daemon and local dev Kubernetes cluster in Docker.'
+  colima delete --force --profile dev-runhub
   docker context use "${previous_docker_context}" > /dev/null 2>&1 || true
   docker context rm --force colima-dev-runhub > /dev/null
   kubectl config use-context "${previous_kube_context}" > /dev/null 2>&1 \
