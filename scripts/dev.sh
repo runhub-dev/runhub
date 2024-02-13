@@ -36,8 +36,9 @@ start() {
     --cpu "${total_number_cpus}" --memory "${half_total_gibibytes_memory}" --disk 64
   echo 'Starting local dev Kubernetes cluster in Docker.'
   (
-    ABSOLUTE_RUNHUB_DIR="$(cd "${RUNHUB_DIR}" && pwd)"
-    export ABSOLUTE_RUNHUB_DIR
+    RUNHUB_ABSOLUTE_DIR="$(cd "${RUNHUB_DIR}" && pwd)"
+    export RUNHUB_ABSOLUTE_DIR
+
     k3d cluster create --config "${RUNHUB_DIR}"/k3d.yaml
   )
   kubectl config set-context k3d-dev-runhub-argocd \
