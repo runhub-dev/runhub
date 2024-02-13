@@ -18,4 +18,5 @@ spec:
     name: in-cluster
     namespace: runhub
   syncPolicy:
-    automated: {}
+    automated:
+      prune: true
