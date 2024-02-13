@@ -39,7 +39,7 @@ start() {
     RUNHUB_ABSOLUTE_DIR="$(cd "${RUNHUB_DIR}" && pwd)"
     export RUNHUB_ABSOLUTE_DIR
 
-    k3d cluster create --config "${RUNHUB_DIR}"/k3d.yaml
+    k3d cluster create --config "${RUNHUB_DIR}"/dev-cluster.yaml
   )
   kubectl config set-context k3d-dev-runhub-argocd \
     --cluster k3d-dev-runhub --user admin@k3d-dev-runhub --namespace argocd > /dev/null
