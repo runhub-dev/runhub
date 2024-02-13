@@ -2,8 +2,6 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: runhub
-  labels:
-    app.kubernetes.io/name: runhub
   namespace: argocd
 spec:
   project: runhub
