@@ -40,6 +40,8 @@ start() {
     export ABSOLUTE_RUNHUB_DIR
     k3d cluster create --config "${RUNHUB_DIR}"/k3d.yaml
   )
+  kubectl config set-context k3d-dev-runhub-argocd \
+    --cluster k3d-dev-runhub --user admin@k3d-dev-runhub --namespace argocd > /dev/null
   "${SCRIPTS_DIR}"/install.sh
   echo 'Serving runhub at http://localhost:8080.'
 }
@@ -51,6 +53,7 @@ stop() {
   docker context rm --force colima-dev-runhub > /dev/null
   kubectl config use-context "${previous_kube_context}" > /dev/null 2>&1 \
     || kubectl config unset current-context > /dev/null
+  kubectl config delete-context k3d-dev-runhub-argocd > /dev/null 2>&1 || true
   kubectl config delete-context k3d-dev-runhub > /dev/null 2>&1 || true
   kubectl config delete-cluster k3d-dev-runhub > /dev/null 2>&1 || true
   kubectl config delete-user admin@k3d-dev-runhub > /dev/null 2>&1 || true

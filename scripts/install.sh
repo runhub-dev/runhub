@@ -41,9 +41,8 @@ helm upgrade --install --create-namespace --namespace runhub \
 if ! [ "${runhub_operator_release}" ]; then
   echo 'Waiting until runhub is ready.'
 
-  while [ "${status:-}" != 'Healthy' ]; do
-    status="$(kubectl get ApplicationSet --namespace argocd runhub --output yaml 2> /dev/null \
-      | yq '.status.applicationStatus.[] | select(.application == "argo-cd") | .status')"
-    sleep 1
-  done
+  kubectl config use-context k3d-dev-runhub-argocd > /dev/null
+  argocd --core app wait runhub > /dev/null
+  argocd --core app wait argo-cd > /dev/null
+  kubectl config use-context k3d-dev-runhub > /dev/null
 fi
