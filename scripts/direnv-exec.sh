@@ -6,7 +6,7 @@ set -o nounset
 SCRIPTS_DIR="$(dirname "$0")"
 RUNHUB_DIR="${SCRIPTS_DIR}"/..
 
-git config core.hooksPath git-hooks
+git -C "${RUNHUB_DIR}" config core.hooksPath git-hooks
 "${SCRIPTS_DIR}"/install-nix.sh
 "${SCRIPTS_DIR}"/install-devbox.sh
 "${SCRIPTS_DIR}"/install-direnv.sh
