@@ -3,7 +3,7 @@
 set -o errexit
 set -o nounset
 
-SCRIPTS_DIR="$(dirname "$0")"
+scripts_dir="$(dirname "$0")"
 VERSION='0.9.1'
 LAUNCHER_VERSION='0.2.1'
 
@@ -20,18 +20,18 @@ install() {
 
 main() {
   if ! command -v devbox > /dev/null; then
-    "${SCRIPTS_DIR}"/confirm.sh 'Devbox not found, install?'
+    "${scripts_dir}"/confirm.sh 'Devbox not found, install?'
     install
   else
     current_version_output="$(devbox version --quiet --verbose)"
     current_version="$(get_current_version 'Version' "${current_version_output}")"
-    is_updated="$("${SCRIPTS_DIR}"/is-version-greater-equal.sh "${current_version}" "${VERSION}")"
+    is_updated="$("${scripts_dir}"/is-version-greater-equal.sh "${current_version}" "${VERSION}")"
     current_launcher_version="$(get_current_version 'Launcher' "${current_version_output}")"
-    is_launcher_updated="$("${SCRIPTS_DIR}"/is-version-greater-equal.sh \
+    is_launcher_updated="$("${scripts_dir}"/is-version-greater-equal.sh \
       "${current_launcher_version}" "${LAUNCHER_VERSION}")"
 
     if ! "${is_updated}" || ! "${is_launcher_updated}"; then
-      "${SCRIPTS_DIR}"/confirm.sh 'Devbox outdated, update?'
+      "${scripts_dir}"/confirm.sh 'Devbox outdated, update?'
       devbox version update
     fi
   fi

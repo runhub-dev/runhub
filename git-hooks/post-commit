@@ -3,7 +3,7 @@
 set -o errexit
 set -o nounset
 
-RUNHUB_DIR="$(dirname "$0")"/..
-SCRIPTS_DIR="${RUNHUB_DIR}"/scripts
+runhub_dir="$(dirname "$0")"/..
+scripts_dir="${runhub_dir}"/scripts
 
-direnv exec "${RUNHUB_DIR}" "${SCRIPTS_DIR}"/upgrade-dev-cluster.sh
+direnv exec "${runhub_dir}" "${scripts_dir}"/upgrade-dev-cluster.sh

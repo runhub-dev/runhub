@@ -4,7 +4,7 @@ set -o errexit
 set -o nounset
 set -o monitor
 
-SCRIPTS_DIR="$(dirname "$0")"
+scripts_dir="$(dirname "$0")"
 VERSION='2.18.1'
 INSTALLER_VERSION='0.15.1'
 
@@ -20,26 +20,26 @@ install() {
 
 main() {
   if ! command -v nix > /dev/null; then
-    "${SCRIPTS_DIR}"/confirm.sh 'Nix not found, install with Determinate Nix Installer?'
+    "${scripts_dir}"/confirm.sh 'Nix not found, install with Determinate Nix Installer?'
     install
   else
     current_version_output="$(nix --version)"
     current_version="$(echo "${current_version_output}" | cut -d ' ' -f 3)"
-    is_updated="$("${SCRIPTS_DIR}"/is-version-greater-equal.sh "${current_version}" "${VERSION}")"
+    is_updated="$("${scripts_dir}"/is-version-greater-equal.sh "${current_version}" "${VERSION}")"
 
     if ! "${is_updated}"; then
-      "${SCRIPTS_DIR}"/confirm.sh \
+      "${scripts_dir}"/confirm.sh \
         'Nix outdated, update to v'"${VERSION}"' (uninstall & reinstall) with Determinate Nix Installer?'
       install
     else
       if command -v /nix/nix-installer > /dev/null; then
         current_installer_version_output="$(/nix/nix-installer --version)"
         current_installer_version="$(echo "${current_installer_version_output}" | cut -d ' ' -f 2)"
-        is_installer_updated="$("${SCRIPTS_DIR}"/is-version-greater-equal.sh \
+        is_installer_updated="$("${scripts_dir}"/is-version-greater-equal.sh \
           "${current_installer_version}" "${INSTALLER_VERSION}")"
 
         if ! "${is_installer_updated}"; then
-          "${SCRIPTS_DIR}"/confirm.sh \
+          "${scripts_dir}"/confirm.sh \
             'Determinate Nix Installer outdated, update to v'"${INSTALLER_VERSION}"' (uninstall & reinstall)?'
           install
         fi

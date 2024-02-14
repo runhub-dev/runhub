@@ -3,16 +3,16 @@
 set -o errexit
 set -o nounset
 
-RUNHUB_DIR="$(dirname "$0")"
-SCRIPTS_DIR="${RUNHUB_DIR}"/scripts
+runhub_dir="$(dirname "$0")"
+scripts_dir="${runhub_dir}"/scripts
 
-"${SCRIPTS_DIR}"/install-nix.sh
-"${SCRIPTS_DIR}"/install-devbox.sh
-"${SCRIPTS_DIR}"/install-direnv.sh
+"${scripts_dir}"/install-nix.sh
+"${scripts_dir}"/install-devbox.sh
+"${scripts_dir}"/install-direnv.sh
 
 if ! command -v nix > /dev/null || ! command -v direnv > /dev/null; then
   echo 'Restart shell and rerun to complete install and continue.'
   exit 1
 fi
 
-direnv exec "${RUNHUB_DIR}" "${SCRIPTS_DIR}"/dev.sh
+direnv exec "${runhub_dir}" "${scripts_dir}"/dev.sh

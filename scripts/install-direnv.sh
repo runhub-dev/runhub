@@ -3,8 +3,8 @@
 set -o errexit
 set -o nounset
 
-SCRIPTS_DIR="$(dirname "$0")"
-RUNHUB_DIR="${SCRIPTS_DIR}"/..
+scripts_dir="$(dirname "$0")"
+runhub_dir="${scripts_dir}"/..
 VERSION='2.33.0'
 
 append_if_not_found() {
@@ -40,22 +40,22 @@ update() {
 
 main() {
   if ! command -v direnv > /dev/null; then
-    "${SCRIPTS_DIR}"/confirm.sh 'direnv not found, install with Devbox Global?'
+    "${scripts_dir}"/confirm.sh 'direnv not found, install with Devbox Global?'
     install
   else
     current_version="$(direnv version)"
-    is_updated="$("${SCRIPTS_DIR}"/is-version-greater-equal.sh "${current_version}" "${VERSION}")"
+    is_updated="$("${scripts_dir}"/is-version-greater-equal.sh "${current_version}" "${VERSION}")"
 
     if ! "${is_updated}"; then
-      "${SCRIPTS_DIR}"/confirm.sh 'direnv outdated, update to v'"${VERSION}"' with Devbox Global?'
+      "${scripts_dir}"/confirm.sh 'direnv outdated, update to v'"${VERSION}"' with Devbox Global?'
       update
     fi
   fi
 
-  status_output="$(cd "${RUNHUB_DIR}" && direnv status)"
+  status_output="$(cd "${runhub_dir}" && direnv status)"
 
   if ! echo "${status_output}" | grep -F 'Found RC allowed 0' > /dev/null; then
-    direnv allow "${RUNHUB_DIR}"
+    direnv allow "${runhub_dir}"
   fi
 }
 

@@ -3,7 +3,7 @@
 set -o errexit
 set -o nounset
 
-RUNHUB_DIR="$(dirname "$0")"/..
+runhub_dir="$(dirname "$0")"/..
 
 get_total_gibibytes_memory() {
   darwin_memory_output="$(sysctl -n hw.memsize 2> /dev/null || true)"
@@ -36,13 +36,13 @@ start() {
   echo 'Starting local dev Kubernetes cluster in Docker.'
 
   (
-    RUNHUB_ABSOLUTE_DIR="$(cd "${RUNHUB_DIR}" && pwd)"
+    RUNHUB_ABSOLUTE_DIR="$(cd "${runhub_dir}" && pwd)"
     export RUNHUB_ABSOLUTE_DIR
 
-    k3d cluster create --config "${RUNHUB_DIR}"/dev-cluster.yaml
+    k3d cluster create --config "${runhub_dir}"/dev-cluster.yaml
   )
 
-  runhub_yaml="$(helm template runhub "${RUNHUB_DIR}"/charts/runhub)"
+  runhub_yaml="$(helm template runhub "${runhub_dir}"/charts/runhub)"
   argo_cd_yaml="$(echo "${runhub_yaml}" | yq --exit-status '
     select(.kind == "ApplicationSet" and .metadata.name == "runhub").spec.generators.[] |
     select(.list).list.elements.[] | select(.name == "argo-cd")')"
@@ -54,7 +54,7 @@ start() {
     --values - > /dev/null
   echo 'Installing runhub.'
   helm install --create-namespace \
-    --namespace runhub runhub-operator "${RUNHUB_DIR}"/charts/runhub-operator \
+    --namespace runhub runhub-operator "${runhub_dir}"/charts/runhub-operator \
     --set repoURL=file:///runhub --set revision="$(git rev-parse --verify HEAD)" > /dev/null
   echo 'Waiting until runhub is ready.'
   kubectl config set-context k3d-dev-runhub-argocd \
@@ -80,7 +80,7 @@ stop() {
 }
 
 main() {
-  git -C "${RUNHUB_DIR}" config core.hooksPath git-hooks
+  git -C "${runhub_dir}" config core.hooksPath git-hooks
   trap 'echo ; exit' INT
   trap 'stop' EXIT
   start
