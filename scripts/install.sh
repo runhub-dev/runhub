@@ -6,13 +6,7 @@ set -o nounset
 SCRIPTS_DIR="$(dirname "$0")"
 RUNHUB_DIR="${SCRIPTS_DIR}"/..
 
-get_release() {
-  helm list --deployed --short --namespace "$1" --filter ^"$2"$
-}
-
-argo_cd_release="$(get_release argocd argo-cd)"
-
-if ! [ "${argo_cd_release}" ]; then
+if ! kubectl get Namespace argocd > /dev/null 2>&1; then
   runhub_yaml="$(helm template runhub "${RUNHUB_DIR}"/charts/runhub)"
   argo_cd_yaml="$(echo "${runhub_yaml}" | yq --exit-status '
     select(.kind == "ApplicationSet" and .metadata.name == "runhub").spec.generators.[] |
@@ -25,14 +19,13 @@ if ! [ "${argo_cd_release}" ]; then
     --values - > /dev/null
 fi
 
-runhub_operator_release="$(get_release runhub runhub-operator)"
+runhub_namespace="$(kubectl get Namespace runhub 2> /dev/null || true)"
 echo 'Installing runhub.'
-helm upgrade --install --create-namespace --namespace runhub \
-  runhub-operator "${RUNHUB_DIR}"/charts/runhub-operator \
-  --set repoURL=file:///runhub --set revision="$(git rev-parse --verify HEAD)" \
-  > /dev/null
+helm upgrade --install --create-namespace \
+  --namespace runhub runhub-operator "${RUNHUB_DIR}"/charts/runhub-operator \
+  --set repoURL=file:///runhub --set revision="$(git rev-parse --verify HEAD)" > /dev/null
 
-if ! [ "${runhub_operator_release}" ]; then
+if ! [ "${runhub_namespace}" ]; then
   echo 'Waiting until runhub is ready.'
 
   kubectl config use-context k3d-dev-runhub-argocd > /dev/null
