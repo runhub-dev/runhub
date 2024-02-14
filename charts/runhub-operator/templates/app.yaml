@@ -9,9 +9,6 @@ spec:
     repoURL: "{{ .Values.repoURL }}"
     targetRevision: "{{ .Values.revision }}"
     path: charts/runhub
-    helm:
-      values: |
-        {{- toYaml .Values | nindent 8 }}
   destination:
     name: in-cluster
     namespace: runhub
