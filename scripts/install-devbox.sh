@@ -4,8 +4,8 @@ set -o errexit
 set -o nounset
 
 scripts_dir="$(dirname "$0")"
-VERSION='0.9.1'
-LAUNCHER_VERSION='0.2.1'
+version='0.9.1'
+launcher_version='0.2.1'
 
 get_current_version() {
   current_version_grep="$(echo "$2" | grep '^'"$1"':')"
@@ -13,22 +13,18 @@ get_current_version() {
   echo "${current_version_tr}" | cut -d ' ' -f 2
 }
 
-install() {
-  install_script="$(curl -fsSL https://get.jetpack.io/devbox)"
-  echo "${install_script}" | bash -s -- --force
-}
-
 main() {
   if ! command -v devbox > /dev/null; then
     "${scripts_dir}"/confirm.sh 'Devbox not found, install?'
-    install
+    install_script="$(curl -fsSL https://get.jetpack.io/devbox)"
+    echo "${install_script}" | bash -s -- --force
   else
     current_version_output="$(devbox version --quiet --verbose)"
     current_version="$(get_current_version 'Version' "${current_version_output}")"
-    is_updated="$("${scripts_dir}"/is-version-greater-equal.sh "${current_version}" "${VERSION}")"
+    is_updated="$("${scripts_dir}"/is-version-greater-equal.sh "${current_version}" "${version}")"
     current_launcher_version="$(get_current_version 'Launcher' "${current_version_output}")"
     is_launcher_updated="$("${scripts_dir}"/is-version-greater-equal.sh \
-      "${current_launcher_version}" "${LAUNCHER_VERSION}")"
+      "${current_launcher_version}" "${launcher_version}")"
 
     if ! "${is_updated}" || ! "${is_launcher_updated}"; then
       "${scripts_dir}"/confirm.sh 'Devbox outdated, update?'
