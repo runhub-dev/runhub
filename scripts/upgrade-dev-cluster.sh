@@ -3,6 +3,8 @@
 set -o errexit
 set -o nounset
 
+RUNHUB_DIR="$(dirname "$0")"/..
+
 current_cluster="$(kubectl config view --minify \
   --output jsonpath='{.clusters[].name}' 2> /dev/null || true)"
 
