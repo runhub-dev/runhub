@@ -26,13 +26,7 @@ if ! [ "${argo_cd_release}" ]; then
 fi
 
 runhub_operator_release="$(get_release runhub runhub-operator)"
-
-if ! [ "${runhub_operator_release}" ]; then
-  echo 'Installing runhub.'
-else
-  echo 'Upgrading runhub.'
-fi
-
+echo 'Installing runhub.'
 helm upgrade --install --create-namespace --namespace runhub \
   runhub-operator "${RUNHUB_DIR}"/charts/runhub-operator \
   --set repoURL=file:///runhub --set revision="$(git rev-parse --verify HEAD)" \
