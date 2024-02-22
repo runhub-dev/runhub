@@ -14,7 +14,7 @@ spec:
             repoURL: https://argoproj.github.io/argo-helm
             targetRevision: 6.2.3
             chart: argo-cd
-            values: |
+            valuesObject:
               configs:
                 cm:
                   admin.enabled: false
@@ -58,11 +58,14 @@ spec:
         repoURL: "{{ `{{ .repoURL }}` }}"
         targetRevision: "{{ `{{ .targetRevision }}` }}"
         chart: "{{ `{{ .chart }}` }}"
-        helm:
-          values: "{{ `{{ .values }}` }}"
       destination:
         name: in-cluster
         namespace: "{{ `{{ .namespace }}` }}"
       syncPolicy:
         automated:
           prune: true
+  templatePatch: |
+    spec:
+      source:
+        helm:
+          valuesObject: {{ `{{ toYaml .valuesObject | nindent 12 }}` }}

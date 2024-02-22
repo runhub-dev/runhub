@@ -30,7 +30,7 @@ install_argo_cd() {
     select(.kind == "ApplicationSet" and .metadata.name == "runhub").spec.generators.[] |
     select(.list).list.elements.[] | select(.name == "argo-cd")')"
   argo_cd_version="$(echo "${argo_cd_yaml}" | yq --exit-status '.targetRevision')"
-  argo_cd_values="$(echo "${argo_cd_yaml}" | yq --exit-status '.values')"
+  argo_cd_values="$(echo "${argo_cd_yaml}" | yq --exit-status '.valuesObject')"
 
   echo 'Installing Argo CD and waiting until ready.'
   echo "${argo_cd_values}" | helm install --wait --create-namespace --namespace argocd argo-cd \
