@@ -1,0 +1,39 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: runhub-operator
+  namespace: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions:
+    - missingkey=error
+  generators:
+    - list:
+        elements:
+          - name: runhub
+            repoURL: "{{ .Values.repoURL }}"
+            targetRevision: "{{ .Values.revision }}"
+            path: charts/runhub
+            valuesObject: {{ toYaml .Values | nindent 14 }}
+
+            namespace: runhub
+  template:
+    metadata:
+      name: "{{ `{{ .name }}` }}"
+    spec:
+      project: runhub-operator
+      source:
+        repoURL: "{{ `{{ .repoURL }}` }}"
+        targetRevision: "{{ `{{ .targetRevision }}` }}"
+        path: "{{ `{{ .path }}` }}"
+      destination:
+        name: in-cluster
+        namespace: "{{ `{{ .namespace }}` }}"
+      syncPolicy:
+        automated:
+          prune: true
+  templatePatch: |
+    spec:
+      source:
+        helm:
+          valuesObject: {{ `{{ toYaml .valuesObject | nindent 12 }}` }}
