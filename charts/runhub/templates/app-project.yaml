@@ -1,11 +1,12 @@
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
-  name: runhub-operator
+  name: runhub
   namespace: argocd
 spec:
   sourceRepos:
     - "{{ .Values.repoURL }}"
+    - https://argoproj.github.io/argo-helm
   destinations:
     - name: in-cluster
       namespace: "*"

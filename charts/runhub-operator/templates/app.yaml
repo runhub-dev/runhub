@@ -4,11 +4,13 @@ metadata:
   name: runhub
   namespace: argocd
 spec:
-  project: runhub
+  project: runhub-operator
   source:
     repoURL: "{{ .Values.repoURL }}"
     targetRevision: "{{ .Values.revision }}"
     path: charts/runhub
+    helm:
+      valuesObject: {{ toYaml .Values | nindent 8 }}
   destination:
     name: in-cluster
     namespace: runhub
