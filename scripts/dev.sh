@@ -61,7 +61,7 @@ start() {
 
   echo 'Starting Colima Docker daemon.'
   colima start --profile dev-runhub \
-    --cpu "${total_number_cpus}" --memory "${half_total_gibibytes_memory}" --disk 64
+    --cpu "${total_number_cpus}" --memory "${half_total_gibibytes_memory}"
   echo 'Starting local dev Kubernetes cluster in Docker.'
 
   (
