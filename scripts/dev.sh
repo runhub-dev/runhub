@@ -25,7 +25,8 @@ get_total_gibibytes_memory() {
 }
 
 install_argo_cd() {
-  runhub_yaml="$(helm template "${runhub_dir}"/charts/runhub)"
+  runhub_yaml="$(helm template "${runhub_dir}"/charts/runhub \
+    --set repoURL=file:///runhub --set revision="$(git rev-parse --verify HEAD)")"
   argo_cd_yaml="$(echo "${runhub_yaml}" | yq --exit-status '
     select(.kind == "ApplicationSet" and .metadata.name == "runhub").spec.generators.[] |
     select(.list).list.elements.[] | select(.name == "argo-cd")')"
