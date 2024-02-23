@@ -15,7 +15,6 @@ spec:
             targetRevision: "{{ .Values.revision }}"
             path: charts/runhub
             valuesObject: {{ toYaml .Values | nindent 14 }}
-
             namespace: runhub
   template:
     metadata:
