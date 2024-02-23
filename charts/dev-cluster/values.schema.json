@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "k3dVersion": {
+      "type": "string",
+      "minLength": 1
+    },
+    "runhubAbsoluteDir": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "required": [
+    "k3dVersion",
+    "runhubAbsoluteDir"
+  ],
+  "additionalProperties": false
+}

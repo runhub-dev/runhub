@@ -4,6 +4,7 @@ set -o errexit
 set -o nounset
 
 runhub_dir="$(dirname "$0")"/..
+runub_absolute_dir="$(cd "${runhub_dir}" && pwd)"
 
 get_total_gibibytes_memory() {
   darwin_memory_output="$(sysctl -n hw.memsize 2> /dev/null || true)"
@@ -62,15 +63,13 @@ start() {
   colima start --profile dev-runhub \
     --cpu "${total_number_cpus}" --memory "${half_total_gibibytes_memory}"
 
+  k3d_version_output="$(k3d version --output json)"
+  k3d_version="$(echo "${k3d_version_output}" | yq --exit-status '.k3d')"
+  dev_cluster_yaml="$(helm template "${runhub_dir}"/charts/dev-cluster \
+    --set k3dVersion="${k3d_version}" --set runhubAbsoluteDir="${runub_absolute_dir}")"
   echo 'Starting local dev Kubernetes cluster in Docker.'
-
-  (
-    RUNHUB_ABSOLUTE_DIR="$(cd "${runhub_dir}" && pwd)"
-    export RUNHUB_ABSOLUTE_DIR
-
-    k3d cluster create --config "${runhub_dir}"/dev-cluster.yaml
-  )
-
+  k3d kubeconfig merge --kubeconfig-merge-default dev-runhub > /dev/null 2>&1 || true
+  echo "${dev_cluster_yaml}" | ctlptl apply --filename -
   kubectl config set-context k3d-dev-runhub-argocd-core \
     --cluster k3d-dev-runhub --user admin@k3d-dev-runhub --namespace argocd > /dev/null
 }

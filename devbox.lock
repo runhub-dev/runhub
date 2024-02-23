@@ -38,6 +38,26 @@
         }
       }
     },
+    "ctlptl@latest": {
+      "last_modified": "2024-02-16T14:24:08Z",
+      "resolved": "github:NixOS/nixpkgs/c7763249f02b7786b4ca36e13a4d7365cfba162f#ctlptl",
+      "source": "devbox-search",
+      "version": "0.8.27",
+      "systems": {
+        "aarch64-darwin": {
+          "store_path": "/nix/store/hmcjsqvsgh4d09d1jaxhh4rnjr9c24fb-ctlptl-0.8.27"
+        },
+        "aarch64-linux": {
+          "store_path": "/nix/store/7z2gf1n7sr5dk5v1ascmyq2q3jwsvl2i-ctlptl-0.8.27"
+        },
+        "x86_64-darwin": {
+          "store_path": "/nix/store/2ry0s41wrrs40747d3bdm1qbpbkvhymp-ctlptl-0.8.27"
+        },
+        "x86_64-linux": {
+          "store_path": "/nix/store/v42g5ilq4g0svc31cqc3l4wc8fnf14l1-ctlptl-0.8.27"
+        }
+      }
+    },
     "docker-client@latest": {
       "last_modified": "2024-02-17T06:30:20Z",
       "resolved": "github:NixOS/nixpkgs/6e2f00c83911461438301db0dba5281197fe4b3a#docker-client",
