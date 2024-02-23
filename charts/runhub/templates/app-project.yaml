@@ -5,7 +5,7 @@ metadata:
   namespace: argocd
 spec:
   sourceRepos:
-    - "{{ .Values.repoURL }}"
+    - "{{ .Values.repository }}"
     - https://argoproj.github.io/argo-helm
   destinations:
     - name: in-cluster

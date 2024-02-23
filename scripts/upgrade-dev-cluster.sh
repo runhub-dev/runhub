@@ -10,5 +10,5 @@ current_cluster="$(kubectl config view --minify \
 if [ "${current_cluster}" = 'k3d-dev-runhub' ]; then
   echo 'Upgrading runhub.'
   helm upgrade --namespace runhub runhub-operator "${runhub_dir}"/charts/runhub-operator \
-    --set repoURL=file:///runhub --set revision="$(git rev-parse --verify HEAD)" > /dev/null
+    --set repository=file:///runhub --set revision="$(git rev-parse --verify HEAD)" > /dev/null
 fi

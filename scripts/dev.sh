@@ -26,7 +26,7 @@ get_total_gibibytes_memory() {
 
 install_argo_cd() {
   runhub_yaml="$(helm template "${runhub_dir}"/charts/runhub \
-    --set repoURL=file:///runhub --set revision="$(git rev-parse --verify HEAD)")"
+    --set repository=file:///runhub --set revision="$(git rev-parse --verify HEAD)")"
   argo_cd_yaml="$(echo "${runhub_yaml}" | yq --exit-status '
     select(.kind == "ApplicationSet" and .metadata.name == "runhub").spec.generators.[] |
     select(.list).list.elements.[] | select(.name == "argo-cd")')"
@@ -43,7 +43,7 @@ install_runhub() {
   echo 'Installing runhub.'
   helm install --create-namespace \
     --namespace runhub runhub-operator "${runhub_dir}"/charts/runhub-operator \
-    --set repoURL=file:///runhub --set revision="$(git rev-parse --verify HEAD)" > /dev/null
+    --set repository=file:///runhub --set revision="$(git rev-parse --verify HEAD)" > /dev/null
 
   echo 'Waiting until runhub is ready.'
   kubectl config use-context k3d-dev-runhub-argocd-core > /dev/null

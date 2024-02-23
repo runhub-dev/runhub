@@ -5,7 +5,7 @@ metadata:
   namespace: argocd
 spec:
   sourceRepos:
-    - "{{ .Values.repoURL }}"
+    - "{{ .Values.repository }}"
   destinations:
     - name: in-cluster
       namespace: "*"

@@ -11,7 +11,7 @@ spec:
     - list:
         elements:
           - name: runhub
-            repoURL: "{{ .Values.repoURL }}"
+            repoURL: "{{ .Values.repository }}"
             targetRevision: "{{ .Values.revision }}"
             path: charts/runhub
             valuesObject: {{ toYaml .Values | nindent 14 }}
