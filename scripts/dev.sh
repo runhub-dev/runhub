@@ -44,12 +44,6 @@ install_runhub() {
   helm install --create-namespace --namespace runhub runhub-operator \
     "${runhub_dir}"/charts/runhub-operator \
     --set repository=file:///runhub --set revision="$(git rev-parse --verify HEAD)" > /dev/null
-
-  echo 'Waiting until runhub is ready.'
-  kubectl config use-context k3d-dev-runhub-argocd-core > /dev/null
-  argocd --core app wait runhub > /dev/null
-  argocd --core app wait argo-cd > /dev/null
-  kubectl config use-context k3d-dev-runhub > /dev/null
 }
 
 start() {
@@ -70,8 +64,6 @@ start() {
     --set k3dVersion="${k3d_version}" --set runhubAbsoluteDir="${runub_absolute_dir}")"
   k3d kubeconfig merge --kubeconfig-merge-default dev-runhub > /dev/null 2>&1 || true
   echo "${dev_cluster_yaml}" | ctlptl apply --filename -
-  kubectl config set-context k3d-dev-runhub-argocd-core \
-    --cluster k3d-dev-runhub --user admin@k3d-dev-runhub --namespace argocd > /dev/null
 }
 
 stop() {
@@ -83,7 +75,6 @@ stop() {
 
   kubectl config use-context "${previous_kube_context}" > /dev/null 2>&1 \
     || kubectl config unset current-context > /dev/null
-  kubectl config delete-context k3d-dev-runhub-argocd-core > /dev/null 2>&1 || true
   kubectl config delete-context k3d-dev-runhub > /dev/null 2>&1 || true
   kubectl config delete-cluster k3d-dev-runhub > /dev/null 2>&1 || true
   kubectl config delete-user admin@k3d-dev-runhub > /dev/null 2>&1 || true
