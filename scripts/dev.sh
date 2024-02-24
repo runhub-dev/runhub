@@ -50,14 +50,14 @@ start() {
   previous_docker_context="$(docker context show)"
   previous_kube_context="$(kubectl config current-context 2> /dev/null || true)"
 
-  echo 'Starting Colima Docker daemon.'
+  echo 'Starting dev runhub docker.'
   total_number_cpus="$(getconf _NPROCESSORS_CONF)"
   total_gibibytes_memory="$(get_total_gibibytes_memory)"
   half_total_gibibytes_memory="$(echo "${total_gibibytes_memory}"' / 2' | bc)"
   colima start --profile dev-runhub \
     --cpu "${total_number_cpus}" --memory "${half_total_gibibytes_memory}"
 
-  echo 'Starting local dev Kubernetes cluster in Docker.'
+  echo 'Starting dev runhub cluster.'
   k3d_version_output="$(k3d version --output json)"
   k3d_version="$(echo "${k3d_version_output}" | yq --exit-status '.k3d')"
   dev_cluster_yaml="$(helm template "${runhub_dir}"/charts/dev-cluster \
@@ -67,7 +67,7 @@ start() {
 }
 
 stop() {
-  echo 'Stopping Colima Docker daemon and local dev Kubernetes cluster in Docker.'
+  echo 'Stopping dev runhub docker and cluster.'
   colima delete --force --profile dev-runhub
 
   docker context use "${previous_docker_context}" > /dev/null 2>&1 || true
