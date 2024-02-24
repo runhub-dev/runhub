@@ -26,6 +26,7 @@ get_total_gibibytes_memory() {
 }
 
 install_argo_cd() {
+  echo 'Installing Argo CD and waiting until ready.'
   runhub_yaml="$(helm template "${runhub_dir}"/charts/runhub \
     --set repository=file:///runhub --set revision="$(git rev-parse --verify HEAD)")"
   argo_cd_yaml="$(echo "${runhub_yaml}" | yq --exit-status '
@@ -33,7 +34,6 @@ install_argo_cd() {
     select(.list).list.elements.[] | select(.name == "argo-cd")')"
   argo_cd_version="$(echo "${argo_cd_yaml}" | yq --exit-status '.targetRevision')"
   argo_cd_values="$(echo "${argo_cd_yaml}" | yq --exit-status '.valuesObject')"
-  echo 'Installing Argo CD and waiting until ready.'
   echo "${argo_cd_values}" | helm install --wait --create-namespace --namespace argocd argo-cd \
     --repo https://argoproj.github.io/argo-helm argo-cd --version "${argo_cd_version}" \
     --values - > /dev/null
@@ -56,18 +56,18 @@ start() {
   previous_docker_context="$(docker context show)"
   previous_kube_context="$(kubectl config current-context 2> /dev/null || true)"
 
+  echo 'Starting Colima Docker daemon.'
   total_number_cpus="$(getconf _NPROCESSORS_CONF)"
   total_gibibytes_memory="$(get_total_gibibytes_memory)"
   half_total_gibibytes_memory="$(echo "${total_gibibytes_memory}"' / 2' | bc)"
-  echo 'Starting Colima Docker daemon.'
   colima start --profile dev-runhub \
     --cpu "${total_number_cpus}" --memory "${half_total_gibibytes_memory}"
 
+  echo 'Starting local dev Kubernetes cluster in Docker.'
   k3d_version_output="$(k3d version --output json)"
   k3d_version="$(echo "${k3d_version_output}" | yq --exit-status '.k3d')"
   dev_cluster_yaml="$(helm template "${runhub_dir}"/charts/dev-cluster \
     --set k3dVersion="${k3d_version}" --set runhubAbsoluteDir="${runub_absolute_dir}")"
-  echo 'Starting local dev Kubernetes cluster in Docker.'
   k3d kubeconfig merge --kubeconfig-merge-default dev-runhub > /dev/null 2>&1 || true
   echo "${dev_cluster_yaml}" | ctlptl apply --filename -
   kubectl config set-context k3d-dev-runhub-argocd-core \
