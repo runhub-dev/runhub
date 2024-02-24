@@ -41,8 +41,8 @@ install_argo_cd() {
 
 install_runhub() {
   echo 'Installing runhub.'
-  helm install --create-namespace \
-    --namespace runhub runhub-operator "${runhub_dir}"/charts/runhub-operator \
+  helm install --create-namespace --namespace runhub runhub-operator \
+    "${runhub_dir}"/charts/runhub-operator \
     --set repository=file:///runhub --set revision="$(git rev-parse --verify HEAD)" > /dev/null
 
   echo 'Waiting until runhub is ready.'
