@@ -55,10 +55,7 @@ install_runhub() {
   done
 }
 
-start() {
-  previous_docker_context="$(docker context show)"
-  previous_kube_context="$(kubectl config current-context 2> /dev/null || true)"
-
+start_dev_docker() {
   echo 'Starting dev runhub docker.'
   colima_version_output="$(colima version)"
   colima_version_grep="$(echo "${colima_version_output}" | grep '^colima version ')"
@@ -85,7 +82,9 @@ start() {
 
   colima start --profile dev-runhub --env RUNHUB_COLIMA_VERSION="${colima_version}" \
     --cpu "${total_number_cpus}" --memory "${half_total_gibibytes_memory}"
+}
 
+start_dev_cluster() {
   echo 'Starting dev runhub cluster.'
   k3d_version_output="$(k3d version --output json)"
   k3d_version="$(echo "${k3d_version_output}" | yq --exit-status '.k3d')"
@@ -113,7 +112,10 @@ main() {
   git -C "${runhub_dir}" config core.hooksPath git-hooks
   trap 'echo ; exit' INT
   trap 'stop' EXIT
-  start
+  previous_docker_context="$(docker context show)"
+  previous_kube_context="$(kubectl config current-context 2> /dev/null || true)"
+  start_dev_docker
+  start_dev_cluster
   install_argo_cd
   install_runhub
   echo 'Serving runhub at http://localhost:8080.'
