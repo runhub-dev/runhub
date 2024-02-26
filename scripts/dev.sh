@@ -26,24 +26,33 @@ get_total_gibibytes_memory() {
 }
 
 install_argo_cd() {
-  echo 'Installing Argo CD and waiting until ready.'
-  runhub_yaml="$(helm template "${runhub_dir}"/charts/runhub \
-    --set repository=file:///runhub --set revision="$(git rev-parse --verify HEAD)")"
-  argo_cd_yaml="$(echo "${runhub_yaml}" | yq --exit-status '
-    select(.kind == "ApplicationSet" and .metadata.name == "runhub").spec.generators.[] |
-    select(.list).list.elements.[] | select(.name == "argo-cd")')"
-  argo_cd_version="$(echo "${argo_cd_yaml}" | yq --exit-status '.targetRevision')"
-  argo_cd_values="$(echo "${argo_cd_yaml}" | yq --exit-status '.valuesObject')"
-  echo "${argo_cd_values}" | helm install --wait --create-namespace --namespace argocd argo-cd \
-    --repo https://argoproj.github.io/argo-helm argo-cd --version "${argo_cd_version}" \
-    --values - > /dev/null
+  if ! kubectl get applications.argoproj.io --namespace argocd argo-cd > /dev/null 2>&1; then
+    echo 'Installing Argo CD and waiting until ready.'
+    runhub_yaml="$(helm template "${runhub_dir}"/charts/runhub \
+      --set repository=file:///runhub --set revision="$(git rev-parse --verify HEAD)")"
+    argo_cd_yaml="$(echo "${runhub_yaml}" | yq --exit-status '
+      select(.kind == "ApplicationSet" and .metadata.name == "runhub").spec.generators.[] |
+      select(.list).list.elements.[] | select(.name == "argo-cd")')"
+    argo_cd_version="$(echo "${argo_cd_yaml}" | yq --exit-status '.targetRevision')"
+    argo_cd_values="$(echo "${argo_cd_yaml}" | yq --exit-status '.valuesObject')"
+    echo "${argo_cd_values}" | helm upgrade --install --create-namespace --wait \
+      --namespace argocd argo-cd \
+      --repo https://argoproj.github.io/argo-helm argo-cd --version "${argo_cd_version}" \
+      --values - > /dev/null
+  fi
 }
 
 install_runhub() {
   echo 'Installing runhub.'
-  helm install --create-namespace --namespace runhub runhub-operator \
+  helm upgrade --install --create-namespace \
+    --namespace runhub runhub-operator \
     "${runhub_dir}"/charts/runhub-operator \
     --set repository=file:///runhub --set revision="$(git rev-parse --verify HEAD)" > /dev/null
+
+  echo 'Waiting until runhub is ready.'
+  while ! curl http://localhost:8080 > /dev/null 2>&1; do
+    sleep 1
+  done
 }
 
 start() {
@@ -51,10 +60,30 @@ start() {
   previous_kube_context="$(kubectl config current-context 2> /dev/null || true)"
 
   echo 'Starting dev runhub docker.'
+  colima_version_output="$(colima version)"
+  colima_version_grep="$(echo "${colima_version_output}" | grep '^colima version ')"
+  colima_version="$(echo "${colima_version_grep}" | cut -d ' ' -f 3)"
   total_number_cpus="$(getconf _NPROCESSORS_CONF)"
   total_gibibytes_memory="$(get_total_gibibytes_memory)"
   half_total_gibibytes_memory="$(echo "${total_gibibytes_memory}"' / 2' | bc)"
-  colima start --profile dev-runhub \
+  colima_template="$(colima template --print)"
+  colima_template_dir="$(dirname "${colima_template}")"
+  colima_lima_dir="${colima_template_dir}"/../_lima
+  dev_docker="$(LIMA_HOME="${LIMA_HOME:-"${colima_lima_dir}"}" \
+    limactl list --format yaml colima-dev-runhub 2> /dev/null)"
+  
+  if [ "${dev_docker}" ]; then
+      dev_docker_colima_version="$(echo "${dev_docker}" \
+        | yq --exit-status '.instance.config.env.RUNHUB_COLIMA_VERSION')"
+
+    if [ "${dev_docker_colima_version}" != "${colima_version}" ]; then
+      colima delete --force --profile dev-runhub > /dev/null 2>&1
+    else
+      colima stop --profile dev-runhub > /dev/null 2>&1
+    fi
+  fi
+
+  colima start --profile dev-runhub --env RUNHUB_COLIMA_VERSION="${colima_version}" \
     --cpu "${total_number_cpus}" --memory "${half_total_gibibytes_memory}"
 
   echo 'Starting dev runhub cluster.'
@@ -68,7 +97,7 @@ start() {
 
 stop() {
   echo 'Stopping dev runhub docker and cluster.'
-  colima delete --force --profile dev-runhub
+  colima stop --profile dev-runhub > /dev/null 2>&1
 
   docker context use "${previous_docker_context}" > /dev/null 2>&1 || true
   docker context rm --force colima-dev-runhub > /dev/null
