@@ -66,8 +66,8 @@ start_dev_docker() {
   colima_version="$(echo "${colima_version_grep}" | cut -d ' ' -f 3)"
   
   if [ "${dev_docker}" ]; then
-      dev_docker_colima_version="$(echo "${dev_docker}" \
-        | yq --exit-status '.instance.config.env.RUNHUB_COLIMA_VERSION')"
+    dev_docker_colima_version="$(echo "${dev_docker}" \
+      | yq --exit-status '.instance.config.env.RUNHUB_COLIMA_VERSION')"
 
     if [ "${dev_docker_colima_version}" != "${colima_version}" ]; then
       colima delete --force --profile dev-runhub > /dev/null 2>&1
