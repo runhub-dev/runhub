@@ -4,7 +4,6 @@ set -o errexit
 set -o nounset
 
 runhub_dir="$(dirname "$0")"/..
-runub_absolute_dir="$(cd "${runhub_dir}" && pwd)"
 
 get_total_gibibytes_memory() {
   darwin_memory_output="$(sysctl -n hw.memsize 2> /dev/null || true)"
@@ -57,17 +56,14 @@ install_runhub() {
 
 start_dev_docker() {
   echo 'Starting dev runhub docker.'
-  colima_version_output="$(colima version)"
-  colima_version_grep="$(echo "${colima_version_output}" | grep '^colima version ')"
-  colima_version="$(echo "${colima_version_grep}" | cut -d ' ' -f 3)"
-  total_number_cpus="$(getconf _NPROCESSORS_CONF)"
-  total_gibibytes_memory="$(get_total_gibibytes_memory)"
-  half_total_gibibytes_memory="$(echo "${total_gibibytes_memory}"' / 2' | bc)"
   colima_template="$(colima template --print)"
   colima_template_dir="$(dirname "${colima_template}")"
   colima_lima_dir="${colima_template_dir}"/../_lima
   dev_docker="$(LIMA_HOME="${LIMA_HOME:-"${colima_lima_dir}"}" \
     limactl list --format yaml colima-dev-runhub 2> /dev/null)"
+  colima_version_output="$(colima version)"
+  colima_version_grep="$(echo "${colima_version_output}" | grep '^colima version ')"
+  colima_version="$(echo "${colima_version_grep}" | cut -d ' ' -f 3)"
   
   if [ "${dev_docker}" ]; then
       dev_docker_colima_version="$(echo "${dev_docker}" \
@@ -80,6 +76,9 @@ start_dev_docker() {
     fi
   fi
 
+  total_number_cpus="$(getconf _NPROCESSORS_CONF)"
+  total_gibibytes_memory="$(get_total_gibibytes_memory)"
+  half_total_gibibytes_memory="$(echo "${total_gibibytes_memory}"' / 2' | bc)"
   colima start --profile dev-runhub --env RUNHUB_COLIMA_VERSION="${colima_version}" \
     --cpu "${total_number_cpus}" --memory "${half_total_gibibytes_memory}"
 }
@@ -88,6 +87,7 @@ start_dev_cluster() {
   echo 'Starting dev runhub cluster.'
   k3d_version_output="$(k3d version --output json)"
   k3d_version="$(echo "${k3d_version_output}" | yq --exit-status '.k3d')"
+  runub_absolute_dir="$(cd "${runhub_dir}" && pwd)"
   dev_cluster_yaml="$(helm template "${runhub_dir}"/charts/dev-cluster \
     --set k3dVersion="${k3d_version}" --set runhubAbsoluteDir="${runub_absolute_dir}")"
   k3d kubeconfig merge --kubeconfig-merge-default dev-runhub > /dev/null 2>&1 || true
