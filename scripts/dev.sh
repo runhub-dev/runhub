@@ -42,13 +42,12 @@ install_argo_cd() {
 }
 
 install_runhub() {
-  echo 'Installing runhub.'
+  echo 'Installing runhub and waiting until ready.'
   helm upgrade --install --create-namespace \
     --namespace runhub runhub-operator \
     "${runhub_dir}"/charts/runhub-operator \
     --set repository=file:///runhub --set revision="$(git rev-parse --verify HEAD)" > /dev/null
 
-  echo 'Waiting until runhub is ready.'
   while ! curl http://localhost:8080 > /dev/null 2>&1; do
     sleep 1
   done
