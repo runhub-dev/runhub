@@ -83,6 +83,14 @@ start_dev_docker() {
     --cpu "${total_number_cpus}" --memory "${half_total_gibibytes_memory}"
 }
 
+get_dev_cluster() {
+  ctlptl get cluster --output yaml k3d-dev-runhub 2> /dev/null || true
+}
+
+get_dev_cluster_creation_timestamp() {
+  echo "$1" | yq --exit-status '.status.creationTimestamp'
+}
+
 start_dev_cluster() {
   echo 'Starting dev runhub cluster.'
   k3d_version_output="$(k3d version --output json)"
@@ -91,7 +99,19 @@ start_dev_cluster() {
   dev_cluster_yaml="$(helm template "${runhub_dir}"/charts/dev-cluster \
     --set k3dVersion="${k3d_version}" --set runhubAbsoluteDir="${runub_absolute_dir}")"
   k3d kubeconfig merge --kubeconfig-merge-default dev-runhub > /dev/null 2>&1 || true
+  previous_dev_cluster="$(get_dev_cluster)"
   echo "${dev_cluster_yaml}" | ctlptl apply --filename -
+
+  if [ "${previous_dev_cluster}" ]; then
+    previous_dev_cluster_timestamp="$(get_dev_cluster_creation_timestamp "${previous_dev_cluster}")"
+    current_dev_cluster="$(get_dev_cluster)"
+    current_dev_cluster_timestamp="$(get_dev_cluster_creation_timestamp "${current_dev_cluster}")"
+
+    if [ "${previous_dev_cluster_timestamp}" = "${current_dev_cluster_timestamp}" ]; then
+      k3d cluster stop dev-runhub > /dev/null
+      k3d cluster start dev-runhub
+    fi
+  fi
 }
 
 stop() {
