@@ -89,7 +89,6 @@ start_dev_cluster() {
   runub_absolute_dir="$(cd "${runhub_dir}" && pwd)"
   dev_cluster_yaml="$(helm template "${runhub_dir}"/charts/dev-cluster \
     --set k3dVersion="${k3d_version}" --set runhubAbsoluteDir="${runub_absolute_dir}")"
-  k3d cluster start dev-runhub > /dev/null 2>&1 || true
   k3d kubeconfig merge --kubeconfig-merge-default dev-runhub > /dev/null 2>&1 || true
   echo "${dev_cluster_yaml}" | ctlptl apply --filename -
 }
