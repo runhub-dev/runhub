@@ -25,8 +25,9 @@ get_total_gibibytes_memory() {
 }
 
 install_argo_cd() {
+  echo 'Installing Argo CD and waiting until ready.'
+
   if ! kubectl get applications.argoproj.io --namespace argocd argo-cd > /dev/null 2>&1; then
-    echo 'Installing Argo CD and waiting until ready.'
     runhub_yaml="$(helm template "${runhub_dir}"/charts/runhub \
       --set repository=file:///runhub --set revision="$(git rev-parse --verify HEAD)")"
     argo_cd_yaml="$(echo "${runhub_yaml}" | yq --exit-status '
@@ -38,6 +39,8 @@ install_argo_cd() {
       --namespace argocd argo-cd \
       --repo https://argoproj.github.io/argo-helm argo-cd --version "${argo_cd_version}" \
       --values - > /dev/null
+  else
+    kubectl wait --all --namespace argocd pods --for condition=Ready > /dev/null
   fi
 }
 
@@ -47,10 +50,6 @@ install_runhub() {
     --namespace runhub runhub-operator \
     "${runhub_dir}"/charts/runhub-operator \
     --set repository=file:///runhub --set revision="$(git rev-parse --verify HEAD)" > /dev/null
-
-  while ! curl http://localhost:8080 > /dev/null 2>&1; do
-    sleep 1
-  done
 }
 
 start_dev_docker() {
