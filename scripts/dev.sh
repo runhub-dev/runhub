@@ -108,7 +108,7 @@ start_dev_cluster() {
     current_dev_cluster_timestamp="$(get_dev_cluster_creation_timestamp "${current_dev_cluster}")"
 
     if [ "${previous_dev_cluster_timestamp}" = "${current_dev_cluster_timestamp}" ]; then
-      k3d cluster stop dev-runhub > /dev/null
+      docker restart k3d-dev-runhub-server-0 > /dev/null
       k3d cluster start dev-runhub
     fi
   fi
