@@ -2,20 +2,23 @@
 
 set -o errexit
 set -o nounset
-set -o monitor
 
 scripts_dir="$(dirname "$0")"
 version='2.18.1'
 installer_version='0.15.1'
 
 install() {
-  if command -v /nix/nix-installer > /dev/null; then
-    /nix/nix-installer uninstall --no-confirm
-  fi
+  (
+    set -o monitor
 
-  install_script="$(curl --proto '=https' --tlsv1.2 -sSf -L \
-    https://install.determinate.systems/nix/tag/v"${installer_version}")"
-  echo "${install_script}" | sh -s -- install --no-confirm
+    if command -v /nix/nix-installer > /dev/null; then
+      /nix/nix-installer uninstall --no-confirm
+    fi
+
+    install_script="$(curl --proto '=https' --tlsv1.2 -sSf -L \
+      https://install.determinate.systems/nix/tag/v"${installer_version}")"
+    echo "${install_script}" | sh -s -- install --no-confirm
+  )
 }
 
 main() {
