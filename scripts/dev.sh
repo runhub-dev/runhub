@@ -108,10 +108,10 @@ stop() {
 
 main() {
   git -C "${runhub_dir}" config core.hooksPath git-hooks
-  trap 'echo ; exit' INT
-  trap 'stop' EXIT
   previous_docker_context="$(docker context show)"
   previous_kube_context="$(kubectl config current-context 2> /dev/null || true)"
+  trap 'echo ; exit' INT
+  trap 'stop' EXIT
   start_dev_docker
   start_dev_cluster
   install_argo_cd
