@@ -79,7 +79,7 @@ start_dev_docker() {
   total_gibibytes_memory="$(get_total_gibibytes_memory)"
   half_total_gibibytes_memory="$(echo "${total_gibibytes_memory}"' / 2' | bc)"
   colima start --profile dev-runhub --env RUNHUB_COLIMA_VERSION="${colima_version}" \
-    --cpu "${total_number_cpus}" --memory "${half_total_gibibytes_memory}" --mount-type '9p'
+    --cpu "${total_number_cpus}" --memory "${half_total_gibibytes_memory}"
 }
 
 start_dev_cluster() {
