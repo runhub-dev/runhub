@@ -1,0 +1,24 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: argo-cd
+spec:
+  gateways:
+    - runhub
+  hosts:
+    - "*"
+  http:
+    - match:
+        - headers:
+            content-type:
+              exact: application/grpc
+      route:
+        - destination:
+            host: argo-cd-argocd-server.argocd.svc.cluster.local
+            port:
+              number: 443
+    - route:
+        - destination:
+            host: argo-cd-argocd-server.argocd.svc.cluster.local
+            port:
+              number: 80

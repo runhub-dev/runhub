@@ -47,10 +47,20 @@ install_argo_cd() {
 
 install_runhub() {
   echo 'Installing runhub and waiting until ready.'
+  runhub_operator="$(helm list --short --deployed --namespace runhub --filter '^runhub-operator$')"
   helm upgrade --install --create-namespace \
     --namespace runhub runhub-operator \
     "${runhub_dir}"/charts/runhub-operator \
     --set repository=file:///runhub --set revision="$(git rev-parse --verify HEAD)" > /dev/null
+
+  if ! [ "${runhub_operator}" ]; then
+    kubectl config use-context k3d-dev-runhub-argocd-core > /dev/null
+    argocd --core app wait runhub > /dev/null
+    argocd --core app wait runhub-network > /dev/null
+    kubectl config use-context k3d-dev-runhub > /dev/null
+  else
+    kubectl wait --all --namespace istio-system pods --for condition=Ready > /dev/null
+  fi
 }
 
 start_dev_docker() {
@@ -99,12 +109,15 @@ start_dev_cluster() {
   fi
 
   echo "${dev_cluster_yaml}" | ctlptl apply --filename -
+  kubectl config set-context k3d-dev-runhub-argocd-core \
+    --cluster k3d-dev-runhub --user admin@k3d-dev-runhub --namespace argocd > /dev/null
 }
 
 stop_dev_cluster() {
   echo 'Stopping dev runhub cluster.'
   kubectl config use-context "${previous_kube_context}" > /dev/null 2>&1 \
     || kubectl config unset current-context > /dev/null || true
+  kubectl config delete-context k3d-dev-runhub-argocd-core > /dev/null 2>&1 || true
   kubectl config delete-context k3d-dev-runhub > /dev/null 2>&1 || true
   kubectl config delete-cluster k3d-dev-runhub > /dev/null 2>&1 || true
   kubectl config delete-user admin@k3d-dev-runhub > /dev/null 2>&1 || true

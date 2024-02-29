@@ -36,8 +36,33 @@ spec:
                       type: Directory
               server:
                 service:
-                  type: LoadBalancer
+                  servicePortHttpsName: grpc
             namespace: argocd
+          - name: istio-base
+            repoURL: https://istio-release.storage.googleapis.com/charts
+            targetRevision: 1.20.3
+            chart: base
+            namespace: istio-system
+            ignoreDifferences:
+              - group: "*"
+                kind: "*"
+                managedFieldsManagers:
+                  - pilot-discovery
+          - name: istiod
+            repoURL: https://istio-release.storage.googleapis.com/charts
+            targetRevision: 1.20.3
+            chart: istiod
+            namespace: istio-system
+          - name: istio-ingressgateway
+            repoURL: https://istio-release.storage.googleapis.com/charts
+            targetRevision: 1.20.3
+            chart: gateway
+            namespace: istio-system
+          - name: runhub-network
+            repoURL: "{{ .Values.repository }}"
+            targetRevision: "{{ .Values.revision }}"
+            path: charts/runhub-network
+            namespace: runhub
   strategy:
     type: RollingSync
     rollingSync:
@@ -47,6 +72,26 @@ spec:
               operator: In
               values:
                 - argo-cd
+        - matchExpressions:
+            - key: app.kubernetes.io/name
+              operator: In
+              values:
+                - istio-base
+        - matchExpressions:
+            - key: app.kubernetes.io/name
+              operator: In
+              values:
+                - istiod
+        - matchExpressions:
+            - key: app.kubernetes.io/name
+              operator: In
+              values:
+                - istio-ingressgateway
+        - matchExpressions:
+            - key: app.kubernetes.io/name
+              operator: In
+              values:
+                - runhub-network
   template:
     metadata:
       name: "{{ `{{ .name }}` }}"
@@ -57,7 +102,6 @@ spec:
       source:
         repoURL: "{{ `{{ .repoURL }}` }}"
         targetRevision: "{{ `{{ .targetRevision }}` }}"
-        chart: "{{ `{{ .chart }}` }}"
       destination:
         name: in-cluster
         namespace: "{{ `{{ .namespace }}` }}"
@@ -67,5 +111,15 @@ spec:
   templatePatch: |
     spec:
       source:
+        {{ `{{- if hasKey . "chart" }}` }}
+        chart: {{ `{{ .chart }}` }}
+        {{ `{{- else }}` }}
+        path: {{ `{{ .path }}` }}
+        {{ `{{- end }}` }}
+        {{ `{{- if hasKey . "valuesObject" }}` }}
         helm:
           valuesObject: {{ `{{ toYaml .valuesObject | nindent 12 }}` }}
+        {{ `{{- end }}` }}
+      {{ `{{- if hasKey . "ignoreDifferences" }}` }}
+      ignoreDifferences: {{ `{{ toYaml .ignoreDifferences | nindent 8 }}` }}
+      {{ `{{- end }}` }}
