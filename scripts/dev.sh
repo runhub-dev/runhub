@@ -26,7 +26,7 @@ get_total_gibibytes_memory() {
 
 install_argo_cd() {
   echo 'Installing Argo CD and waiting until ready.'
-  argo_cd="$(kubectl get --ignore-not-found applications.argoproj.io --namespace argocd argo-cd)"
+  argo_cd="$(helm list --short --deployed --namespace argocd --filter '^argo-cd$')"
 
   if ! [ "${argo_cd}" ]; then
     runhub_yaml="$(helm template "${runhub_dir}"/charts/runhub \
