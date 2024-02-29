@@ -88,37 +88,49 @@ start_dev_cluster() {
   runub_absolute_dir="$(cd "${runhub_dir}" && pwd)"
   dev_cluster_yaml="$(helm template "${runhub_dir}"/charts/dev-cluster \
     --set k3dVersion="${k3d_version}" --set runhubAbsoluteDir="${runub_absolute_dir}")"
-  k3d kubeconfig merge --kubeconfig-merge-default dev-runhub > /dev/null 2>&1 || true
+
+  if k3d cluster get dev-runhub > /dev/null 2>&1; then
+    k3d cluster start dev-runhub
+    k3d kubeconfig merge --kubeconfig-merge-default dev-runhub > /dev/null
+  fi
+
   echo "${dev_cluster_yaml}" | ctlptl apply --filename -
 }
 
-stop() {
-  echo 'Stopping dev runhub docker and cluster.'
-  colima stop --profile dev-runhub > /dev/null 2>&1
-
-  docker context use "${previous_docker_context}" > /dev/null 2>&1 || true
-  docker context rm --force colima-dev-runhub > /dev/null
-
+stop_dev_cluster() {
+  echo 'Stopping dev runhub cluster.'
   kubectl config use-context "${previous_kube_context}" > /dev/null 2>&1 \
-    || kubectl config unset current-context > /dev/null
+    || kubectl config unset current-context > /dev/null || true
   kubectl config delete-context k3d-dev-runhub > /dev/null 2>&1 || true
   kubectl config delete-cluster k3d-dev-runhub > /dev/null 2>&1 || true
   kubectl config delete-user admin@k3d-dev-runhub > /dev/null 2>&1 || true
+  k3d cluster stop dev-runhub || true
+}
+
+stop_dev_docker() {
+  echo 'Stopping dev runhub docker.'
+  docker context use "${previous_docker_context}" > /dev/null 2>&1 || true
+  docker context rm --force colima-dev-runhub > /dev/null || true
+  colima stop --profile dev-runhub
 }
 
 main() {
   git -C "${runhub_dir}" config core.hooksPath git-hooks
   previous_docker_context="$(docker context show)"
   previous_kube_context="$(kubectl config current-context 2> /dev/null || true)"
-  trap 'stop' EXIT
-  start_dev_docker
-  start_dev_cluster
-  install_argo_cd
-  install_runhub
-  echo 'Serving runhub at http://localhost:8080.'
-  trap 'echo ; exit' INT
-  echo 'Press Ctrl+C to stop.'
-  sleep 2147483647
+
+  (
+    set -o monitor
+
+    trap 'echo ; stop_dev_cluster ; stop_dev_docker ; exit 0' EXIT
+    start_dev_docker
+    start_dev_cluster
+    install_argo_cd
+    install_runhub
+    echo 'Serving runhub at http://localhost:8080.'
+    echo 'Press Ctrl+C to stop.'
+    sleep 2147483647
+  )
 }
 
 main "$@"
