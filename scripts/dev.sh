@@ -41,7 +41,7 @@ install_argo_cd() {
       --repo https://argoproj.github.io/argo-helm argo-cd --version "${argo_cd_version}" \
       --values - > /dev/null
   else
-    kubectl wait --all --namespace argocd pods --for condition=Ready > /dev/null
+    kubectl wait --timeout -1s --all --namespace argocd pods --for condition=Ready > /dev/null
   fi
 }
 
@@ -59,7 +59,7 @@ install_runhub() {
     argocd --core app wait runhub-network > /dev/null
     kubectl config use-context k3d-dev-runhub > /dev/null
   else
-    kubectl wait --all --namespace istio-system pods --for condition=Ready > /dev/null
+    kubectl wait --timeout -1s --all --namespace istio-system pods --for condition=Ready > /dev/null
   fi
 }
 
