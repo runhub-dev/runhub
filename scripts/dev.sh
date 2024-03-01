@@ -3,10 +3,11 @@
 set -o errexit
 set -o nounset
 
-runhub_dir="$(dirname "$0")"/..
+scripts_dir="$(dirname "$0")"
+runhub_dir="${scripts_dir}"/..
 
-is_argo_cd_ready() {
-  kubectl get --namespace argocd deployments,statefulsets --output yaml \
+is_ready() {
+  kubectl get --namespace "$1" "$2" --output yaml \
     | yq --exit-status '[.items[].status.availableReplicas // 0] | all_c(. >= 1)' > /dev/null 2>&1
 }
 
@@ -27,29 +28,32 @@ install_argo_cd() {
       --repo https://argoproj.github.io/argo-helm argo-cd --version "${argo_cd_version}" \
       --values - > /dev/null
   else
-    while is_argo_cd_ready; do sleep 1; done
+    while is_ready argocd deployments,statefulsets; do sleep 1; done
   fi
 
   echo 'Waiting until Argo CD is ready.'
-  while ! is_argo_cd_ready; do sleep 1; done
+  while ! is_ready argocd deployments,statefulsets; do sleep 1; done
 }
 
 install_runhub() {
-  echo 'Installing runhub and waiting until ready.'
   runhub_operator="$(helm list --short --deployed --namespace runhub --filter '^runhub-operator$')"
-  helm upgrade --install --create-namespace \
-    --namespace runhub runhub-operator \
-    "${runhub_dir}"/charts/runhub-operator \
-    --set repository=file:///runhub --set revision="$(git rev-parse --verify HEAD)" > /dev/null
 
   if ! [ "${runhub_operator}" ]; then
-    kubectl config use-context k3d-dev-runhub-argocd-core > /dev/null
-    argocd --core app wait runhub > /dev/null
-    argocd --core app wait runhub-network > /dev/null
-    kubectl config use-context k3d-dev-runhub > /dev/null
+    echo 'Installing runhub.'
+    helm install --create-namespace \
+      --namespace runhub runhub-operator \
+      "${runhub_dir}"/charts/runhub-operator \
+      --set repository=file:///runhub --set revision="$(git rev-parse --verify HEAD)" > /dev/null
   else
-    kubectl wait --timeout -1s --all --namespace istio-system pods --for condition=Ready > /dev/null
+    "${scripts_dir}"/upgrade-dev-cluster.sh
   fi
+
+  echo 'Waiting until runhub is ready.'
+  kubectl config use-context k3d-dev-runhub-argocd-core > /dev/null
+  argocd --core app wait runhub > /dev/null
+  argocd --core app wait runhub-network > /dev/null
+  kubectl config use-context k3d-dev-runhub > /dev/null
+  while ! is_ready istio-system deployments; do sleep 1; done
 }
 
 get_total_gibibytes_memory() {
