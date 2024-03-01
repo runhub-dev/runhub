@@ -4,10 +4,13 @@ set -o errexit
 set -o nounset
 
 runhub_dir="$(dirname "$0")"/..
-current_cluster="$(kubectl config view --minify \
-  --output jsonpath='{.clusters[].name}' 2> /dev/null || true)"
+current_context="$(kubectl config view --minify 2> /dev/null || true)"
 
-if [ "${current_cluster}" = 'k3d-dev-runhub' ]; then
+if [ "${current_context}" ]; then
+  current_cluster="$(echo "${current_context}" | yq --exit-status '.clusters[].name')"
+fi
+
+if [ "${current_cluster:-''}" = 'k3d-dev-runhub' ]; then
   echo 'Upgrading runhub.'
   helm upgrade \
     --namespace runhub runhub-operator \
