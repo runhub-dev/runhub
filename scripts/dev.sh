@@ -5,25 +5,6 @@ set -o nounset
 
 runhub_dir="$(dirname "$0")"/..
 
-get_total_gibibytes_memory() {
-  darwin_memory_output="$(sysctl -n hw.memsize 2> /dev/null || true)"
-
-  if [ "${darwin_memory_output}" ]; then
-    echo "${darwin_memory_output}"' / 1024^3' | bc
-  else
-    linux_memory_output="$(cat /proc/meminfo 2> /dev/null || true)"
-
-    if [ "${linux_memory_output}" ]; then
-      linux_memory_output_grep="$(echo "${linux_memory_output}" | grep '^MemTotal:')"
-      linux_memory_output_tr="$(echo "${linux_memory_output_grep}" | tr -s ' ')"
-      linux_memory_output_cut="$(echo "${linux_memory_output_tr}" | cut -d ' ' -f 2)"
-      echo "${linux_memory_output_cut}"' / 1024^2 + 1' | bc
-    else
-      exit 1
-    fi
-  fi
-}
-
 install_argo_cd() {
   echo 'Installing Argo CD and waiting until ready.'
   argo_cd="$(helm list --short --deployed --namespace argocd --filter '^argo-cd$')"
@@ -60,6 +41,25 @@ install_runhub() {
     kubectl config use-context k3d-dev-runhub > /dev/null
   else
     kubectl wait --timeout -1s --all --namespace istio-system pods --for condition=Ready > /dev/null
+  fi
+}
+
+get_total_gibibytes_memory() {
+  darwin_memory_output="$(sysctl -n hw.memsize 2> /dev/null || true)"
+
+  if [ "${darwin_memory_output}" ]; then
+    echo "${darwin_memory_output}"' / 1024^3' | bc
+  else
+    linux_memory_output="$(cat /proc/meminfo 2> /dev/null || true)"
+
+    if [ "${linux_memory_output}" ]; then
+      linux_memory_output_grep="$(echo "${linux_memory_output}" | grep '^MemTotal:')"
+      linux_memory_output_tr="$(echo "${linux_memory_output_grep}" | tr -s ' ')"
+      linux_memory_output_cut="$(echo "${linux_memory_output_tr}" | cut -d ' ' -f 2)"
+      echo "${linux_memory_output_cut}"' / 1024^2 + 1' | bc
+    else
+      exit 1
+    fi
   fi
 }
 
