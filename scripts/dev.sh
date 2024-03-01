@@ -5,11 +5,16 @@ set -o nounset
 
 runhub_dir="$(dirname "$0")"/..
 
+is_argo_cd_ready() {
+  kubectl get --namespace argocd deployments,statefulsets --output yaml \
+    | yq --exit-status '[.items[].status.availableReplicas // 0] | all_c(. >= 1)' > /dev/null 2>&1
+}
+
 install_argo_cd() {
-  echo 'Installing Argo CD and waiting until ready.'
   argo_cd="$(helm list --short --deployed --namespace argocd --filter '^argo-cd$')"
 
   if ! [ "${argo_cd}" ]; then
+    echo 'Installing Argo CD.'
     runhub_yaml="$(helm template "${runhub_dir}"/charts/runhub \
       --set repository=file:///runhub --set revision="$(git rev-parse --verify HEAD)")"
     argo_cd_yaml="$(echo "${runhub_yaml}" | yq --exit-status '
@@ -17,13 +22,16 @@ install_argo_cd() {
       select(.list).list.elements.[] | select(.name == "argo-cd")')"
     argo_cd_version="$(echo "${argo_cd_yaml}" | yq --exit-status '.targetRevision')"
     argo_cd_values="$(echo "${argo_cd_yaml}" | yq --exit-status '.valuesObject')"
-    echo "${argo_cd_values}" | helm upgrade --install --create-namespace --wait \
+    echo "${argo_cd_values}" | helm upgrade --install --create-namespace \
       --namespace argocd argo-cd \
       --repo https://argoproj.github.io/argo-helm argo-cd --version "${argo_cd_version}" \
       --values - > /dev/null
   else
-    kubectl wait --timeout -1s --all --namespace argocd pods --for condition=Ready > /dev/null
+    while is_argo_cd_ready; do sleep 1; done
   fi
+
+  echo 'Waiting until Argo CD is ready.'
+  while ! is_argo_cd_ready; do sleep 1; done
 }
 
 install_runhub() {
