@@ -103,7 +103,6 @@ start_dev_cluster() {
   if k3d cluster get dev-runhub > /dev/null 2>&1; then
     k3d cluster start dev-runhub
     k3d kubeconfig merge --kubeconfig-merge-default dev-runhub > /dev/null
-
     while ! ctlptl get cluster --output yaml k3d-dev-runhub 2> /dev/null \
       | yq --exit-status '.k3d' > /dev/null 2>&1; do true; done
   fi
