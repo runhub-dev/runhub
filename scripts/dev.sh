@@ -7,8 +7,10 @@ scripts_dir="$(dirname "$0")"
 runhub_dir="${scripts_dir}"/..
 
 is_ready() {
-  kubectl get --namespace "$1" "$2" --output yaml \
-    | yq --exit-status '[.items[].status.availableReplicas // 0] | all_c(. >= 1)' > /dev/null 2>&1
+  kubectl get --namespace "$1" pods --output yaml | yq --exit-status \
+    '[.items[].status.containerStatuses[].ready // false] | all' > /dev/null 2>&1 && \
+  kubectl get --namespace "$1" deployments,statefulsets --output yaml | yq --exit-status \
+    '[.items[].status.availableReplicas // 0] | all_c(. >= 1)' > /dev/null 2>&1
 }
 
 install_argo_cd() {
@@ -27,12 +29,10 @@ install_argo_cd() {
       --namespace argocd argo-cd \
       --repo https://argoproj.github.io/argo-helm argo-cd --version "${argo_cd_version}" \
       --values - > /dev/null
-  else
-    while is_ready argocd deployments,statefulsets; do sleep 1; done
   fi
 
   echo 'Waiting until Argo CD is ready.'
-  while ! is_ready argocd deployments,statefulsets; do sleep 1; done
+  while ! is_ready argocd; do sleep 1; done
 }
 
 install_runhub() {
@@ -53,7 +53,7 @@ install_runhub() {
   argocd --core app wait runhub > /dev/null
   argocd --core app wait runhub-network > /dev/null
   kubectl config use-context k3d-dev-runhub > /dev/null
-  while ! is_ready istio-system deployments; do sleep 1; done
+  while ! is_ready istio-system; do sleep 1; done
 }
 
 get_total_gibibytes_memory() {
