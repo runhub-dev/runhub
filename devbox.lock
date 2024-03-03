@@ -21,20 +21,20 @@
         }
       }
     },
-    "colima@0.6.7": {
-      "last_modified": "2024-01-31T06:48:05Z",
-      "resolved": "github:NixOS/nixpkgs/5ad9903c16126a7d949101687af0aa589b1d7d3d#colima",
+    "colima@latest": {
+      "last_modified": "2024-02-28T16:16:04Z",
+      "resolved": "github:NixOS/nixpkgs/96990c69fd59e807cee8ff874d0526c70dffdf8f#colima",
       "source": "devbox-search",
-      "version": "0.6.7",
+      "version": "0.6.8",
       "systems": {
         "aarch64-darwin": {
-          "store_path": "/nix/store/fvin94c98wgw0jp3rwc3890821nhywz4-colima-0.6.7"
+          "store_path": "/nix/store/vysr1y525df9sqvv26axpd40yp37y3bi-colima-0.6.8"
         },
         "aarch64-linux": {
-          "store_path": "/nix/store/lzy6xpw6xahwdrnqry3zcg39ayyzyrzx-colima-0.6.7"
+          "store_path": "/nix/store/bicnn93a36h7qb5k3xzmrcb88rxrviva-colima-0.6.8"
         },
         "x86_64-linux": {
-          "store_path": "/nix/store/40jf691dxj13qfn5lan7sxwsbiharxkq-colima-0.6.7"
+          "store_path": "/nix/store/lfcfimam5yy7didjrcrb78sf48im9sfb-colima-0.6.8"
         }
       }
     },
@@ -139,19 +139,19 @@
       }
     },
     "lima-bin@latest": {
-      "last_modified": "2024-02-24T23:06:34Z",
-      "resolved": "github:NixOS/nixpkgs/9a9dae8f6319600fa9aebde37f340975cab4b8c0#lima-bin",
+      "last_modified": "2024-02-28T16:16:04Z",
+      "resolved": "github:NixOS/nixpkgs/96990c69fd59e807cee8ff874d0526c70dffdf8f#lima-bin",
       "source": "devbox-search",
-      "version": "0.19.1",
+      "version": "0.20.1",
       "systems": {
         "aarch64-darwin": {
-          "store_path": "/nix/store/8ypz8w0r2sq9c2ybs0n7klngwyqsgmfy-lima-0.19.1"
+          "store_path": "/nix/store/4l3dkppn3y69g3dxczca5zn96dng4prx-lima-0.20.1"
         },
         "aarch64-linux": {
-          "store_path": "/nix/store/hxrrj1fbcl19r1gink98aflv5bms5iq7-lima-0.19.1"
+          "store_path": "/nix/store/dkdapjzxb5sgphm5x7vgc25953n67waz-lima-0.20.1"
         },
         "x86_64-linux": {
-          "store_path": "/nix/store/5nc9s6zajil0zkw27cxbkvi66zv91i2h-lima-0.19.1"
+          "store_path": "/nix/store/69kyi25sym873rmrmjj0786cgp45klxn-lima-0.20.1"
         }
       }
     },

@@ -1,7 +1,7 @@
 {
   "packages": [
     "argocd@latest",
-    "colima@0.6.7",
+    "colima@latest",
     "ctlptl@latest",
     "docker-client@latest",
     "k3d@latest",
