@@ -36,18 +36,11 @@ install_argo_cd() {
 }
 
 install_runhub() {
-  runhub_operator="$(helm list --short --deployed --namespace runhub --filter '^runhub-operator$')"
-
-  if ! [ "${runhub_operator}" ]; then
-    echo 'Installing runhub.'
-    helm install --create-namespace \
-      --namespace runhub runhub-operator \
-      "${runhub_dir}"/charts/runhub-operator \
-      --set repository=file:///runhub --set revision="$(git rev-parse --verify HEAD)" > /dev/null
-  else
-    "${scripts_dir}"/upgrade-dev-cluster.sh
-  fi
-
+  echo 'Installing runhub.'
+  helm upgrade --install --create-namespace \
+    --namespace runhub runhub-operator \
+    "${runhub_dir}"/charts/runhub-operator \
+    --set repository=file:///runhub --set revision="$(git rev-parse --verify HEAD)" > /dev/null
   echo 'Waiting until runhub is ready.'
   kubectl config use-context k3d-dev-runhub-argocd-core > /dev/null
   argocd --core app wait runhub > /dev/null
