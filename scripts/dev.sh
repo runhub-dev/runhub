@@ -13,13 +13,17 @@ is_ready() {
     '[.items[].status.availableReplicas // 0] | all_c(. >= 1)' > /dev/null 2>&1
 }
 
+get_revision() {
+  git rev-parse --verify HEAD
+}
+
 install_argo_cd() {
   argo_cd="$(helm list --short --deployed --namespace argocd --filter '^argo-cd$')"
 
   if ! [ "${argo_cd}" ]; then
     echo 'Installing Argo CD.'
     runhub_yaml="$(helm template "${runhub_dir}"/charts/runhub \
-      --set repository=file:///runhub --set revision="$(git rev-parse --verify HEAD)")"
+      --set repository=file:///runhub --set revision="$(get_revision)")"
     argo_cd_yaml="$(echo "${runhub_yaml}" | yq --exit-status '
       select(.kind == "ApplicationSet" and .metadata.name == "runhub").spec.generators.[] |
       select(.list).list.elements.[] | select(.name == "argo-cd")')"
@@ -40,7 +44,7 @@ install_runhub() {
   helm upgrade --install --create-namespace \
     --namespace runhub runhub-operator \
     "${runhub_dir}"/charts/runhub-operator \
-    --set repository=file:///runhub --set revision="$(git rev-parse --verify HEAD)" > /dev/null
+    --set repository=file:///runhub --set revision="$1" > /dev/null
   echo 'Waiting until runhub is ready.'
   while ! kubectl get --namespace argocd applications.argoproj.io runhub-network \
     --output yaml 2> /dev/null | yq --exit-status \
@@ -133,7 +137,6 @@ stop_dev_docker() {
 }
 
 main() {
-  git -C "${runhub_dir}" config core.hooksPath git-hooks
   previous_docker_context="$(docker context show)"
   previous_kube_context="$(kubectl config current-context 2> /dev/null || true)"
 
@@ -144,10 +147,19 @@ main() {
     start_dev_docker
     start_dev_cluster
     install_argo_cd
-    install_runhub
-    echo 'Serving runhub at http://localhost:8080.'
-    echo 'Press Ctrl+C to stop.'
-    sleep 2147483647
+
+    while true; do
+      current_revision="$(get_revision)"
+
+      if [ "${current_revision}" != "${previous_revision:-''}" ]; then
+        install_runhub "${current_revision}"
+        echo 'Serving runhub at http://localhost:8080.'
+        echo 'Press Ctrl+C to stop.'
+        previous_revision="${current_revision}"
+      fi
+
+      sleep 1
+    done
   )
 }
 

@@ -1,9 +1,0 @@
-#!/usr/bin/env sh
-
-set -o errexit
-set -o nounset
-
-runhub_dir="$(dirname "$0")"/..
-scripts_dir="${runhub_dir}"/scripts
-
-direnv exec "${runhub_dir}" "${scripts_dir}"/upgrade-dev-cluster.sh
