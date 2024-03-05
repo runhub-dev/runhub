@@ -42,10 +42,10 @@ install_runhub() {
     "${runhub_dir}"/charts/runhub-operator \
     --set repository=file:///runhub --set revision="$(git rev-parse --verify HEAD)" > /dev/null
   echo 'Waiting until runhub is ready.'
-  kubectl config use-context k3d-dev-runhub-argocd-core > /dev/null
-  argocd --core app wait runhub > /dev/null
-  argocd --core app wait runhub-network > /dev/null
-  kubectl config use-context k3d-dev-runhub > /dev/null
+  while ! kubectl get --namespace argocd applications.argoproj.io runhub-network \
+    --output yaml 2> /dev/null | yq --exit-status \
+    '.status.sync.status == "Synced" and .status.health.status == "Healthy"' \
+    > /dev/null 2>&1; do sleep 1; done
   while ! is_ready istio-system; do sleep 1; done
 }
 
@@ -113,15 +113,12 @@ start_dev_cluster() {
   fi
 
   echo "${dev_cluster_yaml}" | ctlptl apply --filename -
-  kubectl config set-context k3d-dev-runhub-argocd-core \
-    --cluster k3d-dev-runhub --user admin@k3d-dev-runhub --namespace argocd > /dev/null
 }
 
 stop_dev_cluster() {
   echo 'Stopping dev runhub cluster.'
   kubectl config use-context "${previous_kube_context}" > /dev/null 2>&1 \
     || kubectl config unset current-context > /dev/null || true
-  kubectl config delete-context k3d-dev-runhub-argocd-core > /dev/null 2>&1 || true
   kubectl config delete-context k3d-dev-runhub > /dev/null 2>&1 || true
   kubectl config delete-cluster k3d-dev-runhub > /dev/null 2>&1 || true
   kubectl config delete-user admin@k3d-dev-runhub > /dev/null 2>&1 || true
