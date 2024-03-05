@@ -74,7 +74,7 @@ start_dev_docker() {
   colima_template_dir="$(dirname "${colima_template}")"
   colima_lima_dir="${colima_template_dir}"/../_lima
   dev_docker="$(LIMA_HOME="${LIMA_HOME:-"${colima_lima_dir}"}" \
-    limactl list --format yaml colima-dev-runhub 2> /dev/null)"
+    limactl list colima-dev-runhub --format yaml 2> /dev/null)"
   colima_version_output="$(colima version)"
   colima_version_grep="$(echo "${colima_version_output}" | grep '^colima version ')"
   colima_version="$(echo "${colima_version_grep}" | cut -d ' ' -f 3)"
@@ -108,7 +108,7 @@ start_dev_cluster() {
   if k3d cluster get dev-runhub > /dev/null 2>&1; then
     k3d cluster start dev-runhub
     k3d kubeconfig merge --kubeconfig-merge-default dev-runhub > /dev/null
-    while ! ctlptl get cluster --output yaml k3d-dev-runhub 2> /dev/null \
+    while ! ctlptl get cluster k3d-dev-runhub --output yaml 2> /dev/null \
       | yq --exit-status '.k3d' > /dev/null 2>&1; do true; done
   fi
 
