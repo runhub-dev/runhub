@@ -69,27 +69,27 @@ spec:
     rollingSync:
       steps:
         - matchExpressions:
-            - key: app.kubernetes.io/name
+            - key: runhub.dev/name
               operator: In
               values:
                 - argo-cd
         - matchExpressions:
-            - key: app.kubernetes.io/name
+            - key: runhub.dev/name
               operator: In
               values:
                 - istio-base
         - matchExpressions:
-            - key: app.kubernetes.io/name
+            - key: runhub.dev/name
               operator: In
               values:
                 - istiod
         - matchExpressions:
-            - key: app.kubernetes.io/name
+            - key: runhub.dev/name
               operator: In
               values:
                 - istio-ingressgateway
         - matchExpressions:
-            - key: app.kubernetes.io/name
+            - key: runhub.dev/name
               operator: In
               values:
                 - runhub-network
@@ -97,7 +97,7 @@ spec:
     metadata:
       name: "{{ `{{ .name }}` }}"
       labels:
-        app.kubernetes.io/name: "{{ `{{ .name }}` }}"
+        runhub.dev/name: "{{ `{{ .name }}` }}"
     spec:
       project: runhub
       source:
