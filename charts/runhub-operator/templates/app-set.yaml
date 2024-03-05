@@ -35,4 +35,5 @@ spec:
     spec:
       source:
         helm:
-          valuesObject: {{ `{{ toYaml .valuesObject | nindent 12 }}` }}
+          values: |
+            {{ `{{ toYaml .valuesObject | indent 8 | trim }}` }}

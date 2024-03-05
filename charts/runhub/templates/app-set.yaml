@@ -119,7 +119,8 @@ spec:
         {{ `{{- end }}` }}
         {{ `{{- if hasKey . "valuesObject" }}` }}
         helm:
-          valuesObject: {{ `{{ toYaml .valuesObject | nindent 12 }}` }}
+          values: |
+            {{ `{{ toYaml .valuesObject | indent 8 | trim }}` }}
         {{ `{{- end }}` }}
       {{ `{{- if hasKey . "ignoreDifferences" }}` }}
       ignoreDifferences: {{ `{{ toYaml .ignoreDifferences | nindent 8 }}` }}
