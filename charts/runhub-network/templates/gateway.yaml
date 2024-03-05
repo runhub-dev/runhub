@@ -11,4 +11,6 @@ spec:
         name: http
         protocol: HTTP
       hosts:
-        - ./*
+        - runhub.localhost
+        - ./*.runhub.localhost
+        - ./localhost.

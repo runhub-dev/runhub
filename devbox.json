@@ -12,6 +12,6 @@
   ],
   "env": {
     "ARGOCD_OPTS": "--plaintext",
-    "ARGOCD_SERVER": "localhost:8080"
+    "ARGOCD_SERVER": "localhost.:8080"
   }
 }

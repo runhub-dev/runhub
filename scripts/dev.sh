@@ -153,7 +153,7 @@ main() {
 
       if [ "${current_revision}" != "${previous_revision:-''}" ]; then
         install_runhub "${current_revision}"
-        echo 'Serving runhub at http://localhost:8080.'
+        echo 'Serving runhub at http://runhub.localhost:8080.'
         echo 'Press Ctrl+C to stop.'
         previous_revision="${current_revision}"
       fi

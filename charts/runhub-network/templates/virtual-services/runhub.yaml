@@ -1,0 +1,13 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: runhub
+spec:
+  gateways:
+    - runhub
+  hosts:
+    - runhub.localhost
+  http:
+    - redirect:
+        authority: argo-cd.runhub.localhost:8080
+        redirectCode: 307
