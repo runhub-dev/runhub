@@ -18,6 +18,7 @@ spec:
               configs:
                 cm:
                   admin.enabled: false
+                  application.resourceTrackingMethod: annotation
                   users.anonymous.enabled: true
                 params:
                   applicationsetcontroller.enable.progressive.syncs: true
