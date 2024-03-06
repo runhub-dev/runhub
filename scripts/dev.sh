@@ -18,23 +18,18 @@ get_revision() {
 }
 
 install_argo_cd() {
-  argo_cd="$(helm list --short --deployed --namespace argocd --filter '^argo-cd$')"
-
-  if ! [ "${argo_cd}" ]; then
-    echo 'Installing Argo CD.'
-    runhub_yaml="$(helm template "${runhub_dir}"/charts/runhub \
-      --set repository=file:///runhub --set revision="$(get_revision)")"
-    argo_cd_yaml="$(echo "${runhub_yaml}" | yq --exit-status '
-      select(.kind == "ApplicationSet" and .metadata.name == "runhub").spec.generators.[] |
-      select(.list).list.elements.[] | select(.name == "argo-cd")')"
-    argo_cd_version="$(echo "${argo_cd_yaml}" | yq --exit-status '.targetRevision')"
-    argo_cd_values="$(echo "${argo_cd_yaml}" | yq --exit-status '.valuesObject')"
-    echo "${argo_cd_values}" | helm upgrade --install --create-namespace \
-      --namespace argocd argo-cd \
-      --repo https://argoproj.github.io/argo-helm argo-cd --version "${argo_cd_version}" \
-      --values - > /dev/null
-  fi
-
+  echo 'Installing Argo CD.'
+  runhub_yaml="$(helm template "${runhub_dir}"/charts/runhub \
+    --set repository=file:///runhub --set revision="$(get_revision)")"
+  argo_cd_yaml="$(echo "${runhub_yaml}" | yq --exit-status '
+    select(.kind == "ApplicationSet" and .metadata.name == "runhub").spec.generators.[] |
+    select(.list).list.elements.[] | select(.name == "argo-cd")')"
+  argo_cd_version="$(echo "${argo_cd_yaml}" | yq --exit-status '.targetRevision')"
+  argo_cd_values="$(echo "${argo_cd_yaml}" | yq --exit-status '.valuesObject')"
+  echo "${argo_cd_values}" | helm upgrade --install --create-namespace \
+    --namespace argocd argo-cd \
+    --repo https://argoproj.github.io/argo-helm argo-cd --version "${argo_cd_version}" \
+    --values - > /dev/null
   echo 'Waiting until Argo CD is ready.'
   while ! is_ready argocd; do sleep 1; done
 }
