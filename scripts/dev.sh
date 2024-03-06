@@ -41,7 +41,7 @@ install_runhub() {
     "${runhub_dir}"/charts/runhub-operator \
     --set repository=file:///runhub --set revision="$1" > /dev/null
   echo 'Waiting until runhub is ready.'
-  while ! kubectl get --namespace argocd applications.argoproj.io runhub-network \
+  while ! kubectl get --namespace runhub applications.argoproj.io runhub-network \
     --output yaml 2> /dev/null | yq --exit-status \
     '.status.sync.status == "Synced" and .status.health.status == "Healthy"' \
     > /dev/null 2>&1; do sleep 1; done

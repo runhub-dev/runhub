@@ -4,6 +4,8 @@ metadata:
   name: runhub-operator
   namespace: argocd
 spec:
+  sourceNamespaces:
+    - runhub
   sourceRepos:
     - "{{ .Values.repository }}"
   destinations:

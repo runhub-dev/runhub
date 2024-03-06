@@ -4,6 +4,8 @@ metadata:
   name: runhub
   namespace: argocd
 spec:
+  sourceNamespaces:
+    - runhub
   sourceRepos:
     - "{{ .Values.repository }}"
     - https://argoproj.github.io/argo-helm
