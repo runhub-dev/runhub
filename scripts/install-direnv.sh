@@ -5,7 +5,7 @@ set -o nounset
 
 scripts_dir="$(dirname "$0")"
 runhub_dir="${scripts_dir}"/..
-version='2.33.0'
+version='2.34.0'
 
 append_if_not_found() {
   if ! grep -Fs "$1" "$2" > /dev/null; then
