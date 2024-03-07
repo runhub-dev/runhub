@@ -113,6 +113,8 @@ spec:
       syncPolicy:
         automated:
           prune: true
+        syncOptions:
+          - CreateNamespace=true
   templatePatch: |
     spec:
       source:
