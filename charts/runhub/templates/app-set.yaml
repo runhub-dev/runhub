@@ -20,6 +20,21 @@ spec:
                 cm:
                   admin.enabled: false
                   application.resourceTrackingMethod: annotation
+                  resource.customizations: |
+                    argoproj.io/Application:
+                      health.lua: |
+                        hs = {}
+                        hs.status = "Progressing"
+                        hs.message = ""
+                        if obj.status ~= nil then
+                          if obj.status.health ~= nil then
+                            hs.status = obj.status.health.status
+                            if obj.status.health.message ~= nil then
+                              hs.message = obj.status.health.message
+                            end
+                          end
+                        end
+                        return hs
                   users.anonymous.enabled: true
                 params:
                   application.namespaces: runhub
@@ -43,26 +58,11 @@ spec:
                 service:
                   servicePortHttpsName: grpc
             namespace: argocd
-          - name: istio-base
-            repoURL: https://istio-release.storage.googleapis.com/charts
-            targetRevision: 1.20.3
-            chart: base
-            namespace: istio-system
-            ignoreDifferences:
-              - group: "*"
-                kind: "*"
-                managedFieldsManagers:
-                  - pilot-discovery
-          - name: istiod
-            repoURL: https://istio-release.storage.googleapis.com/charts
-            targetRevision: 1.20.3
-            chart: istiod
-            namespace: istio-system
-          - name: istio-ingressgateway
-            repoURL: https://istio-release.storage.googleapis.com/charts
-            targetRevision: 1.20.3
-            chart: gateway
-            namespace: istio-system
+          - name: runhub-istio
+            repoURL: "{{ .Values.repository }}"
+            targetRevision: "{{ .Values.revision }}"
+            path: charts/runhub-istio
+            namespace: runhub
           - name: runhub-network
             repoURL: "{{ .Values.repository }}"
             targetRevision: "{{ .Values.revision }}"
@@ -81,17 +81,7 @@ spec:
             - key: runhub.dev/name
               operator: In
               values:
-                - istio-base
-        - matchExpressions:
-            - key: runhub.dev/name
-              operator: In
-              values:
-                - istiod
-        - matchExpressions:
-            - key: runhub.dev/name
-              operator: In
-              values:
-                - istio-ingressgateway
+                - runhub-istio
         - matchExpressions:
             - key: runhub.dev/name
               operator: In
@@ -128,6 +118,3 @@ spec:
           values: |
             {{ `{{ toYaml .valuesObject | indent 8 | trim }}` }}
         {{ `{{- end }}` }}
-      {{ `{{- if hasKey . "ignoreDifferences" }}` }}
-      ignoreDifferences: {{ `{{ toYaml .ignoreDifferences | nindent 8 }}` }}
-      {{ `{{- end }}` }}
