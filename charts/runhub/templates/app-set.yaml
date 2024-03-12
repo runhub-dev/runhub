@@ -20,6 +20,45 @@ spec:
                 cm:
                   admin.enabled: false
                   application.resourceTrackingMethod: annotation
+                  resource.customizations: |
+                    argoproj.io/ApplicationSet:
+                      health.lua: |
+                        local hs = {}
+                        hs.status = "Progressing"
+                        hs.message = ""
+
+                        if obj.status ~= nil then
+                          if obj.status.conditions ~= nil then
+                            for i, condition in pairs(obj.status.conditions) do
+                              if condition.type == "ErrorOccurred" and condition.status == "True" then
+                                hs.status = "Degraded"
+                                hs.message = condition.message
+                                return hs
+                              end
+                              if condition.type == "ResourcesUpToDate" and condition.status == "True" then
+                                if obj.spec.strategy ~= nil and obj.spec.strategy.type == "RollingSync" then
+                                  if obj.status.applicationStatus ~= nil then
+                                    for i, applicationStatus in pairs(obj.status.applicationStatus) do
+                                      if applicationStatus.status ~= "Healthy" then
+                                        hs.message = applicationStatus.application .. ": " .. applicationStatus.message
+                                        return hs
+                                      end
+                                    end
+                                    hs.status = "Healthy"
+                                    hs.message = condition.message
+                                    return hs
+                                  end
+                                else
+                                  hs.status = "Healthy"
+                                  hs.message = condition.message
+                                  return hs
+                                end
+                              end
+                            end
+                          end
+                        end
+
+                        return hs
                   users.anonymous.enabled: true
                 params:
                   application.namespaces: runhub
@@ -43,26 +82,11 @@ spec:
                 service:
                   servicePortHttpsName: grpc
             namespace: argocd
-          - name: istio-base
-            repoURL: https://istio-release.storage.googleapis.com/charts
-            targetRevision: 1.20.3
-            chart: base
-            namespace: istio-system
-            ignoreDifferences:
-              - group: "*"
-                kind: "*"
-                managedFieldsManagers:
-                  - pilot-discovery
-          - name: istiod
-            repoURL: https://istio-release.storage.googleapis.com/charts
-            targetRevision: 1.20.3
-            chart: istiod
-            namespace: istio-system
-          - name: istio-ingressgateway
-            repoURL: https://istio-release.storage.googleapis.com/charts
-            targetRevision: 1.20.3
-            chart: gateway
-            namespace: istio-system
+          - name: istio
+            repoURL: "{{ .Values.repository }}"
+            targetRevision: "{{ .Values.revision }}"
+            path: charts/istio
+            namespace: runhub
           - name: runhub-network
             repoURL: "{{ .Values.repository }}"
             targetRevision: "{{ .Values.revision }}"
@@ -81,17 +105,7 @@ spec:
             - key: runhub.dev/name
               operator: In
               values:
-                - istio-base
-        - matchExpressions:
-            - key: runhub.dev/name
-              operator: In
-              values:
-                - istiod
-        - matchExpressions:
-            - key: runhub.dev/name
-              operator: In
-              values:
-                - istio-ingressgateway
+                - istio
         - matchExpressions:
             - key: runhub.dev/name
               operator: In
@@ -128,6 +142,3 @@ spec:
           values: |
             {{ `{{ toYaml .valuesObject | indent 8 | trim }}` }}
         {{ `{{- end }}` }}
-      {{ `{{- if hasKey . "ignoreDifferences" }}` }}
-      ignoreDifferences: {{ `{{ toYaml .ignoreDifferences | nindent 8 }}` }}
-      {{ `{{- end }}` }}

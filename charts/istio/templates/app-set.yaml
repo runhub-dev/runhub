@@ -1,0 +1,74 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: istio
+spec:
+  goTemplate: true
+  goTemplateOptions:
+    - missingkey=error
+  generators:
+    - list:
+        elements:
+          - name: istio-base
+            repoURL: https://istio-release.storage.googleapis.com/charts
+            targetRevision: 1.20.3
+            chart: base
+            namespace: istio-system
+            ignoreDifferences:
+              - group: "*"
+                kind: "*"
+                managedFieldsManagers:
+                  - pilot-discovery
+          - name: istiod
+            repoURL: https://istio-release.storage.googleapis.com/charts
+            targetRevision: 1.20.3
+            chart: istiod
+            namespace: istio-system
+          - name: istio-ingressgateway
+            repoURL: https://istio-release.storage.googleapis.com/charts
+            targetRevision: 1.20.3
+            chart: gateway
+            namespace: istio-system
+  strategy:
+    type: RollingSync
+    rollingSync:
+      steps:
+        - matchExpressions:
+            - key: runhub.dev/name
+              operator: In
+              values:
+                - istio-base
+        - matchExpressions:
+            - key: runhub.dev/name
+              operator: In
+              values:
+                - istiod
+        - matchExpressions:
+            - key: runhub.dev/name
+              operator: In
+              values:
+                - istio-ingressgateway
+  template:
+    metadata:
+      name: "{{ `{{ .name }}` }}"
+      labels:
+        runhub.dev/name: "{{ `{{ .name }}` }}"
+    spec:
+      project: runhub
+      source:
+        repoURL: "{{ `{{ .repoURL }}` }}"
+        targetRevision: "{{ `{{ .targetRevision }}` }}"
+        chart: "{{ `{{ .chart }}` }}"
+      destination:
+        name: in-cluster
+        namespace: "{{ `{{ .namespace }}` }}"
+      syncPolicy:
+        automated:
+          prune: true
+        syncOptions:
+          - CreateNamespace=true
+  templatePatch: |
+    {{ `{{- if hasKey . "ignoreDifferences" }}` }}
+    spec:
+      ignoreDifferences: {{ `{{ toYaml .ignoreDifferences | nindent 8 }}` }}
+    {{ `{{- end }}` }}
