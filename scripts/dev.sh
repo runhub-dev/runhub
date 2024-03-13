@@ -31,7 +31,7 @@ install_argo_cd() {
     --repo https://argoproj.github.io/argo-helm argo-cd --version "${argo_cd_version}" \
     --values - > /dev/null
   echo 'Waiting until Argo CD is ready.'
-  while ! is_ready argocd; do sleep 1; done
+  until is_ready argocd; do sleep 1; done
 }
 
 install_runhub() {
@@ -41,11 +41,11 @@ install_runhub() {
     "${runhub_dir}"/charts/runhub-operator \
     --set repository=file:///runhub --set revision="$1" > /dev/null
   echo 'Waiting until runhub is ready.'
-  while ! kubectl get --namespace runhub applications.argoproj.io runhub-network \
+  until kubectl get --namespace runhub applications.argoproj.io runhub-network \
     --output yaml 2> /dev/null | yq --exit-status \
     '.status.sync.status == "Synced" and .status.health.status == "Healthy"' \
     > /dev/null 2>&1; do sleep 1; done
-  while ! is_ready istio-system; do sleep 1; done
+  until is_ready istio-system; do sleep 1; done
 }
 
 get_total_gibibytes_memory() {
@@ -107,7 +107,7 @@ start_dev_cluster() {
   if k3d cluster get dev-runhub > /dev/null 2>&1; then
     k3d cluster start dev-runhub
     k3d kubeconfig merge --kubeconfig-merge-default dev-runhub > /dev/null
-    while ! ctlptl get cluster k3d-dev-runhub --output yaml 2> /dev/null \
+    until ctlptl get cluster k3d-dev-runhub --output yaml 2> /dev/null \
       | yq --exit-status '.k3d' > /dev/null 2>&1; do true; done
   fi
 
