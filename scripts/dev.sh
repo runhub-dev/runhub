@@ -118,19 +118,19 @@ stop_dev_cluster() {
   echo 'Stopping dev runhub cluster.'
   kubectl drain k3d-dev-runhub-server-0 \
     --force --disable-eviction --delete-emptydir-data --ignore-daemonsets > /dev/null 2>&1 || true
-  kubectl config use-context "${previous_kube_context}" > /dev/null 2>&1 \
-    || kubectl config unset current-context > /dev/null || true
+  k3d cluster stop dev-runhub || true
   kubectl config delete-context k3d-dev-runhub > /dev/null 2>&1 || true
   kubectl config delete-cluster k3d-dev-runhub > /dev/null 2>&1 || true
   kubectl config delete-user admin@k3d-dev-runhub > /dev/null 2>&1 || true
-  k3d cluster stop dev-runhub || true
+  kubectl config use-context "${previous_kube_context}" > /dev/null 2>&1 \
+    || kubectl config unset current-context > /dev/null || true
 }
 
 stop_dev_docker() {
   echo 'Stopping dev runhub docker.'
-  docker context use "${previous_docker_context}" > /dev/null 2>&1 || true
+  colima stop --profile dev-runhub || true
   docker context rm --force colima-dev-runhub > /dev/null || true
-  colima stop --profile dev-runhub
+  docker context use "${previous_docker_context}" > /dev/null 2>&1 || true
 }
 
 main() {
