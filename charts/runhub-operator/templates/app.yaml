@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: runhub
+spec:
+  project: runhub-operator
+  source:
+    repoURL: "{{ .Values.repository }}"
+    targetRevision: "{{ .Values.revision }}"
+    path: charts/runhub
+    helm:
+      values: |
+        {{ toYaml .Values | indent 8 | trim }}
+  destination:
+    name: in-cluster
+    namespace: runhub
+  syncPolicy:
+    automated:
+      prune: true
+    syncOptions:
+      - CreateNamespace=true
