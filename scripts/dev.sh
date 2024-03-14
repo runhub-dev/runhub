@@ -34,6 +34,20 @@ install_argo_cd() {
   until is_ready argocd; do sleep 1; done
 }
 
+is_runhub_network_healthy() {
+  kubectl get applications.argoproj.io --namespace runhub runhub-network \
+    --output yaml 2> /dev/null | yq --exit-status \
+    '.status.sync.status == "Synced" and .status.health.status == "Healthy"' > /dev/null 2>&1
+}
+
+get_runhub_health_message() {
+  kubectl get application.argoproj.io --namespace runhub runhub --output yaml 2> /dev/null | yq '
+    .status.resources | filter(
+      .group == "argoproj.io" and .kind == "ApplicationSet" and
+      .namespace == "runhub" and .name == "runhub"
+    ).[].health.message //""'
+}
+
 install_runhub() {
   echo 'Installing runhub.'
   helm upgrade --install --create-namespace \
@@ -41,10 +55,20 @@ install_runhub() {
     "${runhub_dir}"/charts/runhub-operator \
     --set repository=file:///runhub --set revision="$1" > /dev/null
   echo 'Waiting until runhub is ready.'
-  until kubectl get --namespace runhub applications.argoproj.io runhub-network \
-    --output yaml 2> /dev/null | yq --exit-status \
-    '.status.sync.status == "Synced" and .status.health.status == "Healthy"' \
-    > /dev/null 2>&1; do sleep 1; done
+
+  until is_runhub_network_healthy; do
+    current_runhub_health_message="$(get_runhub_health_message)"
+
+    if [ "${current_runhub_health_message}" != "${previous_runhub_health_message:-''}" ]; then
+      if [ "${current_runhub_health_message}" ]; then
+        echo "${current_runhub_health_message}"
+      fi
+      previous_runhub_health_message="${current_runhub_health_message}"
+    fi
+
+    sleep 1
+  done
+
   until is_ready istio-system; do sleep 1; done
 }
 
