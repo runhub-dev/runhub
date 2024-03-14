@@ -117,7 +117,7 @@ start_dev_cluster() {
 stop_dev_cluster() {
   echo 'Stopping dev runhub cluster.'
   kubectl drain k3d-dev-runhub-server-0 \
-    --force --disable-eviction --delete-emptydir-data --ignore-daemonsets > /dev/null 2>&1 || true
+    --force --disable-eviction --delete-emptydir-data --ignore-daemonsets 2> /dev/null || true
   k3d cluster stop dev-runhub || true
   kubectl config delete-context k3d-dev-runhub > /dev/null 2>&1 || true
   kubectl config delete-cluster k3d-dev-runhub > /dev/null 2>&1 || true
