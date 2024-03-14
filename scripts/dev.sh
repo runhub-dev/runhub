@@ -129,7 +129,6 @@ stop_dev_cluster() {
 stop_dev_docker() {
   echo 'Stopping dev runhub docker.'
   colima stop --profile dev-runhub || true
-  docker context rm --force colima-dev-runhub > /dev/null || true
   docker context use "${previous_docker_context}" > /dev/null 2>&1 || true
 }
 
