@@ -40,12 +40,18 @@ is_runhub_network_healthy() {
     '.status.sync.status == "Synced" and .status.health.status == "Healthy"' > /dev/null 2>&1
 }
 
-get_runhub_health_message() {
-  kubectl get application.argoproj.io --namespace runhub runhub --output yaml 2> /dev/null | yq '
+get_health_message() {
+  kubectl get application.argoproj.io --namespace runhub "$1" --output yaml 2> /dev/null | yq '
     .status.resources | filter(
       .group == "argoproj.io" and .kind == "ApplicationSet" and
-      .namespace == "runhub" and .name == "runhub"
+      .namespace == "runhub" and .name == "'"$1"'"
     ).[].health.message //""'
+}
+
+echo_if_updated() {
+  if [ "$1" ] && [ "$1" != "$2" ]; then
+    echo "$1"
+  fi
 }
 
 install_runhub() {
@@ -57,15 +63,12 @@ install_runhub() {
   echo 'Waiting until runhub is ready.'
 
   until is_runhub_network_healthy; do
-    current_runhub_health_message="$(get_runhub_health_message)"
-
-    if [ "${current_runhub_health_message}" != "${previous_runhub_health_message:-''}" ]; then
-      if [ "${current_runhub_health_message}" ]; then
-        echo "${current_runhub_health_message}"
-      fi
-      previous_runhub_health_message="${current_runhub_health_message}"
-    fi
-
+    current_runhub_health_message="$(get_health_message runhub)"
+    current_istio_health_message="$(get_health_message istio)"
+    echo_if_updated "${current_runhub_health_message}" "${previous_runhub_health_message:-''}"
+    echo_if_updated "${current_istio_health_message}" "${previous_istio_health_message:-''}"
+    previous_runhub_health_message="${current_runhub_health_message}"
+    previous_istio_health_message="${current_istio_health_message}"
     sleep 1
   done
 
