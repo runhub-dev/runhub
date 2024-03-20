@@ -13,7 +13,7 @@ spec:
         {{ toYaml .Values | indent 8 | trim }}
   destination:
     name: in-cluster
-    namespace: runhub
+    namespace: "{{ .Release.Namespace }}"
   syncPolicy:
     automated:
       prune: true

@@ -86,12 +86,12 @@ spec:
             repoURL: "{{ .Values.runhubRepository }}"
             targetRevision: "{{ .Values.runhubRevision }}"
             path: charts/istio
-            namespace: runhub
+            namespace: "{{ .Release.Namespace }}"
           - name: runhub-network
             repoURL: "{{ .Values.runhubRepository }}"
             targetRevision: "{{ .Values.runhubRevision }}"
             path: charts/runhub-network
-            namespace: runhub
+            namespace: "{{ .Release.Namespace }}"
   strategy:
     type: RollingSync
     rollingSync:
