@@ -28,22 +28,22 @@ spec:
             - key: runhub.dev/name
               operator: In
               values:
-                - istio-base
+                - "{{ .Release.Namespace }}-istio-base"
         - matchExpressions:
             - key: runhub.dev/name
               operator: In
               values:
-                - istiod
+                - "{{ .Release.Namespace }}-istiod"
         - matchExpressions:
             - key: runhub.dev/name
               operator: In
               values:
-                - istio-ingressgateway
+                - "{{ .Release.Namespace }}-istio-ingressgateway"
   template:
     metadata:
       name: "{{ `{{ .name }}` }}"
       labels:
-        runhub.dev/name: "{{ `{{ .name }}` }}"
+        runhub.dev/name: "{{ .Release.Namespace }}-{{ `{{ .name }}` }}"
     spec:
       project: runhub
       source:

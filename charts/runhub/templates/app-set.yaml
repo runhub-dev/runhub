@@ -100,22 +100,22 @@ spec:
             - key: runhub.dev/name
               operator: In
               values:
-                - argo-cd
+                - "{{ .Release.Namespace }}-argo-cd"
         - matchExpressions:
             - key: runhub.dev/name
               operator: In
               values:
-                - istio
+                - "{{ .Release.Namespace }}-istio"
         - matchExpressions:
             - key: runhub.dev/name
               operator: In
               values:
-                - runhub-network
+                - "{{ .Release.Namespace }}-runhub-network"
   template:
     metadata:
       name: "{{ `{{ .name }}` }}"
       labels:
-        runhub.dev/name: "{{ `{{ .name }}` }}"
+        runhub.dev/name: "{{ .Release.Namespace }}-{{ `{{ .name }}` }}"
     spec:
       project: runhub
       source:
