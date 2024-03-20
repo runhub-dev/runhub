@@ -16,7 +16,7 @@ is_ready() {
 install_argo_cd() {
   echo 'Installing Argo CD.'
   runhub_yaml="$(helm template "${runhub_dir}"/charts/runhub \
-    --set repository=file:///runhub --set revision="$1")"
+    --set runhubRepository=file:///runhub --set runhubRevision="$1")"
   argo_cd_yaml="$(echo "${runhub_yaml}" | yq --exit-status '
     select(.kind == "ApplicationSet" and .metadata.name == "runhub").spec.generators.[] |
     select(.list).list.elements.[] | select(.name == "argo-cd")')"
@@ -55,7 +55,7 @@ install_runhub() {
   helm upgrade --install --create-namespace \
     --namespace runhub runhub-operator \
     "${runhub_dir}"/charts/runhub-operator \
-    --set repository=file:///runhub --set revision="$1" > /dev/null
+    --set runhubRepository=file:///runhub --set runhubRevision="$1" > /dev/null
   echo 'Waiting until runhub is ready.'
 
   until is_runhub_network_healthy; do

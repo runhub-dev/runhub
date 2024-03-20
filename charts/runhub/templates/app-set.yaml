@@ -83,13 +83,13 @@ spec:
                   servicePortHttpsName: grpc
             namespace: argocd
           - name: istio
-            repoURL: "{{ .Values.repository }}"
-            targetRevision: "{{ .Values.revision }}"
+            repoURL: "{{ .Values.runhubRepository }}"
+            targetRevision: "{{ .Values.runhubRevision }}"
             path: charts/istio
             namespace: runhub
           - name: runhub-network
-            repoURL: "{{ .Values.repository }}"
-            targetRevision: "{{ .Values.revision }}"
+            repoURL: "{{ .Values.runubRepository }}"
+            targetRevision: "{{ .Values.runhubRevision }}"
             path: charts/runhub-network
             namespace: runhub
   strategy:

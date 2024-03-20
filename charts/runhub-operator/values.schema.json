@@ -2,18 +2,18 @@
   "$schema": "https://json-schema.org/draft-07/schema#",
   "type": "object",
   "properties": {
-    "repository": {
+    "runhubRepository": {
       "type": "string",
       "minLength": 1
     },
-    "revision": {
+    "runhubRevision": {
       "type": "string",
       "minLength": 1
     }
   },
   "required": [
-    "repository",
-    "revision"
+    "runhubRepository",
+    "runhubRevision"
   ],
   "additionalProperties": false
 }

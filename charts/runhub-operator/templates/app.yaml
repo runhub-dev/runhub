@@ -5,8 +5,8 @@ metadata:
 spec:
   project: runhub-operator
   source:
-    repoURL: "{{ .Values.repository }}"
-    targetRevision: "{{ .Values.revision }}"
+    repoURL: "{{ .Values.runhubRepository }}"
+    targetRevision: "{{ .Values.runhubRevision }}"
     path: charts/runhub
     helm:
       values: |
