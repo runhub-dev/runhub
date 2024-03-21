@@ -82,15 +82,6 @@ spec:
                 service:
                   servicePortHttpsName: grpc
             namespace: argocd
-          - name: argo-workflows
-            repoURL: https://argoproj.github.io/argo-helm
-            targetRevision: 0.40.14
-            chart: argo-workflows
-            valuesObject:
-              server:
-                authModes:
-                  - server
-            namespace: argo
           - name: istio
             repoURL: "{{ .Values.runhubRepository }}"
             targetRevision: "{{ .Values.runhubRevision }}"
@@ -114,7 +105,6 @@ spec:
             - key: app
               operator: In
               values:
-                - "{{ .Release.Namespace }}-argo-workflows"
                 - "{{ .Release.Namespace }}-istio"
         - matchExpressions:
             - key: app
