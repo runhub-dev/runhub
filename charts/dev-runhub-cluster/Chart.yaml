@@ -1,3 +1,3 @@
 apiVersion: v2
-name: runhub-dev-cluster
+name: dev-runhub-cluster
 version: 0.0.0

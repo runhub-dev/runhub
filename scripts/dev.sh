@@ -124,7 +124,7 @@ start_dev_cluster() {
   k3d_version_output="$(k3d version --output json)"
   k3d_version="$(echo "${k3d_version_output}" | yq --exit-status '.k3d')"
   runub_absolute_dir="$(cd "${runhub_dir}" && pwd)"
-  dev_cluster_yaml="$(helm template "${runhub_dir}"/charts/runhub-dev-cluster \
+  dev_cluster_yaml="$(helm template "${runhub_dir}"/charts/dev-runhub-cluster \
     --set k3dVersion="${k3d_version}" --set runhubAbsoluteDir="${runub_absolute_dir}")"
 
   if k3d cluster get dev-runhub > /dev/null 2>&1; then
