@@ -106,18 +106,18 @@ spec:
     rollingSync:
       steps:
         - matchExpressions:
-            - key: runhub.dev/name
+            - key: app
               operator: In
               values:
                 - "{{ .Release.Namespace }}-argo-cd"
         - matchExpressions:
-            - key: runhub.dev/name
+            - key: app
               operator: In
               values:
                 - "{{ .Release.Namespace }}-argo-workflows"
                 - "{{ .Release.Namespace }}-istio"
         - matchExpressions:
-            - key: runhub.dev/name
+            - key: app
               operator: In
               values:
                 - "{{ .Release.Namespace }}-runhub-network"
@@ -125,7 +125,7 @@ spec:
     metadata:
       name: "{{ `{{ .name }}` }}"
       labels:
-        runhub.dev/name: "{{ .Release.Namespace }}-{{ `{{ .name }}` }}"
+        app: "{{ .Release.Namespace }}-{{ `{{ .name }}` }}"
     spec:
       project: runhub
       source:
