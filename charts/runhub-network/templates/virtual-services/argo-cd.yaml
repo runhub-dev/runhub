@@ -7,7 +7,6 @@ spec:
     - runhub
   hosts:
     - argo-cd.runhub.localhost
-    - localhost.
   http:
     - match:
         - headers:

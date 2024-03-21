@@ -1,6 +1,5 @@
 {
   "packages": [
-    "argocd@latest",
     "colima@latest",
     "ctlptl@latest",
     "docker-client@latest",
@@ -9,9 +8,5 @@
     "kubernetes-helm@latest",
     "lima-bin@latest",
     "yq-go@latest"
-  ],
-  "env": {
-    "ARGOCD_OPTS": "--plaintext",
-    "ARGOCD_SERVER": "localhost.:8080"
-  }
+  ]
 }
