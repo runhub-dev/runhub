@@ -87,11 +87,26 @@ spec:
             targetRevision: "{{ .Values.runhubRevision }}"
             path: charts/istio
             namespace: "{{ .Release.Namespace }}"
+          - name: knative-operator
+            repoURL: "{{ .Values.runhubRepository }}"
+            targetRevision: "{{ .Values.runhubRevision }}"
+            path: kustomizations/knative-operator
+            namespace: knative-operator
+            ignoreDifferences:
+              - group: "*"
+                kind: "*"
+                managedFieldsManagers:
+                  - clusterrole-aggregation-controller
           - name: runhub-network
             repoURL: "{{ .Values.runhubRepository }}"
             targetRevision: "{{ .Values.runhubRevision }}"
             path: charts/runhub-network
             namespace: "{{ .Release.Namespace }}"
+          - name: knative-serving
+            repoURL: "{{ .Values.runhubRepository }}"
+            targetRevision: "{{ .Values.runhubRevision }}"
+            path: charts/knative-serving
+            namespace: knative-serving
   strategy:
     type: RollingSync
     rollingSync:
@@ -110,7 +125,13 @@ spec:
             - key: app
               operator: In
               values:
+                - "{{ .Release.Namespace }}-knative-operator"
                 - "{{ .Release.Namespace }}-runhub-network"
+        - matchExpressions:
+            - key: app
+              operator: In
+              values:
+                - "{{ .Release.Namespace }}-knative-serving"
   template:
     metadata:
       name: "{{ `{{ .name }}` }}"
@@ -142,3 +163,6 @@ spec:
           values: |
             {{ `{{ toYaml .valuesObject | indent 8 | trim }}` }}
         {{ `{{- end }}` }}
+    {{ `{{- if hasKey . "ignoreDifferences" }}` }}
+      ignoreDifferences: {{ `{{ toYaml .ignoreDifferences | nindent 8 }}` }}
+    {{ `{{- end }}` }}
