@@ -83,13 +83,13 @@ spec:
                   servicePortHttpsName: grpc
             namespace: argocd
           - name: istio
-            repoURL: "{{ .Values.runhubRepository }}"
-            targetRevision: "{{ .Values.runhubRevision }}"
+            repoURL: "{{ .Values.runhub.repository }}"
+            targetRevision: "{{ .Values.runhub.revision }}"
             path: charts/istio
             namespace: "{{ .Release.Namespace }}"
           - name: knative-operator
-            repoURL: "{{ .Values.runhubRepository }}"
-            targetRevision: "{{ .Values.runhubRevision }}"
+            repoURL: "{{ .Values.runhub.repository }}"
+            targetRevision: "{{ .Values.runhub.revision }}"
             path: kustomizations/knative-operator
             namespace: knative-operator
             ignoreDifferences:
@@ -98,15 +98,23 @@ spec:
                 managedFieldsManagers:
                   - clusterrole-aggregation-controller
           - name: runhub-network
-            repoURL: "{{ .Values.runhubRepository }}"
-            targetRevision: "{{ .Values.runhubRevision }}"
+            repoURL: "{{ .Values.runhub.repository }}"
+            targetRevision: "{{ .Values.runhub.revision }}"
             path: charts/runhub-network
             namespace: "{{ .Release.Namespace }}"
           - name: knative-serving
-            repoURL: "{{ .Values.runhubRepository }}"
-            targetRevision: "{{ .Values.runhubRevision }}"
+            repoURL: "{{ .Values.runhub.repository }}"
+            targetRevision: "{{ .Values.runhub.revision }}"
             path: charts/knative-serving
             namespace: knative-serving
+          {{- if .Values.apps }}
+          - name: apps
+            repoURL: "{{ .Values.runhub.repository }}"
+            targetRevision: "{{ .Values.runhub.revision }}"
+            path: charts/apps
+            valuesObject: {{ toYaml .Values | nindent 14 }}
+            namespace: "{{ .Release.Namespace }}"
+          {{- end }}
   strategy:
     type: RollingSync
     rollingSync:
@@ -132,6 +140,13 @@ spec:
               operator: In
               values:
                 - "{{ .Release.Namespace }}-knative-serving"
+        {{- if .Values.apps }}
+        - matchExpressions:
+            - key: app
+              operator: In
+              values:
+                - "{{ .Release.Namespace }}-apps"
+        {{- end }}
   template:
     metadata:
       name: "{{ `{{ .name }}` }}"

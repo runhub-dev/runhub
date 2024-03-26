@@ -1,1 +1,7 @@
-runhubRepository: file:///runhub
+runhub:
+  repository: https://github.com/runhub-dev/runhub
+  revision: main
+apps:
+  hello:
+    repository: https://github.com/runhub-dev/runhub
+    revision: main

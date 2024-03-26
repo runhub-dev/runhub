@@ -1,0 +1,29 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: apps
+spec:
+  goTemplate: true
+  goTemplateOptions:
+    - missingkey=error
+  generators:
+    - list:
+        elements:
+          {{- range $key, $value := .Values.apps }}
+          - name: {{ $key }}
+          {{- end }}
+  template:
+    metadata:
+      name: "runhub-app-{{ `{{ .name }}` }}"
+    spec:
+      project: runhub
+      source:
+        repoURL: "{{ .Values.runhub.repository }}"
+        targetRevision: "{{ .Values.runhub.revision }}"
+        path: charts/app
+      destination:
+        name: in-cluster
+        namespace: "runhub-app-{{ `{{ .name }}` }}"
+      syncPolicy:
+        automated:
+          prune: true

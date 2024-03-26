@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "runhub": {
+      "type": "object",
+      "properties": {
+        "repository": {
+          "type": "string",
+          "minLength": 1
+        },
+        "revision": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "repository",
+        "revision"
+      ],
+      "additionalProperties": false
+    },
+    "apps": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": {
+        "format": "hostname",
+        "pattern": "^[a-z0-9-]*$",
+        "minLength": 1,
+        "maxLength": 63
+      },
+      "not": {
+        "required": ["runhub"]
+      },
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "repository": {
+            "type": "string",
+            "minLength": 1
+          },
+          "revision": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "repository",
+          "revision"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "runhub"
+  ],
+  "additionalProperties": false
+}

@@ -7,7 +7,7 @@ spec:
   sourceNamespaces:
     - runhub
   sourceRepos:
-    - "{{ .Values.runhubRepository }}"
+    - "{{ .Values.runhub.repository }}"
     - https://argoproj.github.io/argo-helm
     - https://istio-release.storage.googleapis.com/charts
   destinations:

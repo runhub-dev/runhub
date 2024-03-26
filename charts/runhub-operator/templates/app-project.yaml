@@ -7,7 +7,12 @@ spec:
   sourceNamespaces:
     - runhub
   sourceRepos:
-    - "{{ .Values.runhubRepository }}"
+    {{- if get .Values "dev" }}
+    - "{{ .Values.dev.repository }}"
+    {{- else }}
+    - "{{ .Values.runhub.repository }}"
+    - "{{ .Values.infra.repository }}"
+    {{- end }}
   destinations:
     - name: in-cluster
       namespace: "*"
