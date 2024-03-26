@@ -16,7 +16,7 @@ is_ready() {
 install_argo_cd() {
   echo 'Installing Argo CD.'
   runhub_yaml="$(helm template "${runhub_dir}"/charts/runhub \
-    --values "${runhub_dir}"/runhub-infra.yaml)"
+    --values "${runhub_dir}"/runhub-infra.yaml --set runhubRevision="$1")"
   argo_cd_yaml="$(echo "${runhub_yaml}" | yq --exit-status '
     select(.kind == "ApplicationSet" and .metadata.name == "runhub").spec.generators.[] |
     select(.list).list.elements.[] | select(.name == "argo-cd")')"
@@ -155,6 +155,10 @@ stop_dev_docker() {
   docker context use "${previous_docker_context}" > /dev/null 2>&1 || true
 }
 
+get_current_revision() {
+  git -C "${runhub_dir}" rev-parse --verify HEAD
+}
+
 main() {
   previous_docker_context="$(docker context show)"
   previous_kube_context="$(kubectl config current-context 2> /dev/null || true)"
@@ -165,11 +169,10 @@ main() {
     trap 'echo ; stop_dev_cluster ; stop_dev_docker ; exit 0' EXIT
     start_dev_docker
     start_dev_cluster
-    install_argo_cd
+    current_revision="$(get_current_revision)"
+    install_argo_cd "${current_revision}"
 
     while true; do
-      current_revision="$(git -C "${runhub_dir}" rev-parse --verify HEAD)"
-
       if [ "${current_revision}" != "${previous_revision:-''}" ]; then
         install_runhub "${current_revision}"
         echo 'Serving runhub at http://runhub.localhost:8080.'
@@ -178,6 +181,7 @@ main() {
       fi
 
       sleep 1
+      current_revision="$(get_current_revision)"
     done
   )
 }
