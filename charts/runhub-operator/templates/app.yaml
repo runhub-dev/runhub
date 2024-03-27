@@ -15,7 +15,7 @@ spec:
       path: charts/runhub
       helm:
         valueFiles:
-          - $values/runhub-infra.yaml
+          - $infraRepository/runhub-infra.yaml
         #{{ if get .Values "dev" }}
         parameters:
           - name: runhub.repository
@@ -36,7 +36,7 @@ spec:
     - repoURL: "{{ .Values.infra.repository }}"
       targetRevision: "{{ .Values.infra.revision }}"
       #{{ end }}
-      ref: values
+      ref: infraRepository
   destination:
     name: in-cluster
     namespace: "{{ .Release.Namespace }}"
