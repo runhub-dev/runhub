@@ -57,9 +57,18 @@
       "additionalProperties": false
     }
   },
-  "required": [
-    "runhub",
-    "infra"
+  "anyOf": [
+    {
+      "required": [
+        "runhub",
+        "infra"
+      ]
+    },
+    {
+      "required": [
+        "dev"
+      ]
+    }
   ],
   "additionalProperties": true
 }
