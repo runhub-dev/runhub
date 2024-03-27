@@ -9,9 +9,9 @@ spec:
   generators:
     - list:
         elements:
-          {{- range $key, $value := .Values.apps }}
-          - name: {{ $key }}
-          {{- end }}
+          #{{ range $key, $value := .Values.apps }}
+          - name: "{{ $key }}"
+          #{{ end }}
   template:
     metadata:
       name: "runhub-app-{{ `{{ .name }}` }}"

@@ -14,10 +14,7 @@
           "minLength": 1
         }
       },
-      "required": [
-        "repository",
-        "revision"
-      ],
+      "required": ["repository", "revision"],
       "additionalProperties": false
     },
     "apps": {
@@ -44,16 +41,11 @@
             "minLength": 1
           }
         },
-        "required": [
-          "repository",
-          "revision"
-        ],
+        "required": ["repository", "revision"],
         "additionalProperties": false
       }
     }
   },
-  "required": [
-    "runhub"
-  ],
+  "required": ["runhub"],
   "additionalProperties": false
 }

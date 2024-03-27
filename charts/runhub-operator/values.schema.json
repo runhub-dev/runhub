@@ -14,10 +14,7 @@
           "minLength": 1
         }
       },
-      "required": [
-        "repository",
-        "revision"
-      ],
+      "required": ["repository", "revision"],
       "additionalProperties": false
     },
     "infra": {
@@ -32,10 +29,7 @@
           "minLength": 1
         }
       },
-      "required": [
-        "repository",
-        "revision"
-      ],
+      "required": ["repository", "revision"],
       "additionalProperties": false
     },
     "dev": {
@@ -50,24 +44,16 @@
           "minLength": 1
         }
       },
-      "required": [
-        "repository",
-        "revision"
-      ],
+      "required": ["repository", "revision"],
       "additionalProperties": false
     }
   },
   "anyOf": [
     {
-      "required": [
-        "runhub",
-        "infra"
-      ]
+      "required": ["runhub", "infra"]
     },
     {
-      "required": [
-        "dev"
-      ]
+      "required": ["dev"]
     }
   ],
   "additionalProperties": true

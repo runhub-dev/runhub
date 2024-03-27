@@ -107,14 +107,14 @@ spec:
             targetRevision: "{{ .Values.runhub.revision }}"
             path: charts/knative-serving
             namespace: knative-serving
-          {{- if .Values.apps }}
+          #{{ if .Values.apps }}
           - name: apps
             repoURL: "{{ .Values.runhub.repository }}"
             targetRevision: "{{ .Values.runhub.revision }}"
             path: charts/apps
-            valuesObject: {{ toYaml .Values | nindent 14 }}
+            valuesObject: #{{ toYaml .Values | nindent 14 }}
             namespace: "{{ .Release.Namespace }}"
-          {{- end }}
+          #{{ end }}
   strategy:
     type: RollingSync
     rollingSync:
@@ -140,13 +140,13 @@ spec:
               operator: In
               values:
                 - "{{ .Release.Namespace }}-knative-serving"
-        {{- if .Values.apps }}
+        #{{ if .Values.apps }}
         - matchExpressions:
             - key: app
               operator: In
               values:
                 - "{{ .Release.Namespace }}-apps"
-        {{- end }}
+        #{{ end }}
   template:
     metadata:
       name: "{{ `{{ .name }}` }}"

@@ -11,9 +11,6 @@
       "minLength": 1
     }
   },
-  "required": [
-    "k3dVersion",
-    "runhubAbsoluteDir"
-  ],
+  "required": ["k3dVersion", "runhubAbsoluteDir"],
   "additionalProperties": false
 }

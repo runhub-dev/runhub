@@ -5,37 +5,37 @@ metadata:
 spec:
   project: runhub-operator
   sources:
-    {{- if get .Values "dev" }}
+    #{{ if get .Values "dev" }}
     - repoURL: "{{ .Values.dev.repository }}"
       targetRevision: "{{ .Values.dev.revision }}"
-    {{- else }}
+    #{{ else }}
     - repoURL: "{{ .Values.runhub.repository }}"
       targetRevision: "{{ .Values.runhub.revision }}"
-    {{- end }}
+      #{{ end }}
       path: charts/runhub
       helm:
         valueFiles:
           - $values/runhub-infra.yaml
-        {{- if get .Values "dev" }}
+        #{{ if get .Values "dev" }}
         parameters:
           - name: runhub.repository
             value: "{{ .Values.dev.repository }}"
           - name: runhub.revision
             value: "{{ .Values.dev.revision }}"
-          {{- range $key, $value := .Values.apps }}
-          - name: apps.{{ $key }}.repository
+          #{{ range $key, $value := .Values.apps }}
+          - name: "apps.{{ $key }}.repository"
             value: "{{ $.Values.dev.repository }}"
-          - name: apps.{{ $key }}.revision
+          - name: "apps.{{ $key }}.revision"
             value: "{{ $.Values.dev.revision }}"
-          {{- end }}
-        {{- end }}
-    {{- if get .Values "dev" }}
+          #{{ end }}
+        #{{ end }}
+    #{{ if get .Values "dev" }}
     - repoURL: "{{ .Values.dev.repository }}"
       targetRevision: "{{ .Values.dev.revision }}"
-    {{- else }}
+    #{{ else }}
     - repoURL: "{{ .Values.infra.repository }}"
       targetRevision: "{{ .Values.infra.revision }}"
-    {{- end }}
+      #{{ end }}
       ref: values
   destination:
     name: in-cluster
