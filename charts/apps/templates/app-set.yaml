@@ -9,8 +9,8 @@ spec:
   generators:
     - list:
         elements:
-          #{{ range $key, $value := .Values.apps }}
-          - name: "{{ $key }}"
+          #{{ range $appName, $app := .Values.apps }}
+          - name: "{{ $appName }}"
           #{{ end }}
   template:
     metadata:

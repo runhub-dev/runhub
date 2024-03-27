@@ -22,10 +22,10 @@ spec:
             value: "{{ .Values.dev.repository }}"
           - name: runhub.revision
             value: "{{ .Values.dev.revision }}"
-          #{{ range $key, $value := .Values.apps }}
-          - name: "apps.{{ $key }}.repository"
+          #{{ range $appName, $app := .Values.apps }}
+          - name: "apps.{{ $appName }}.repository"
             value: "{{ $.Values.dev.repository }}"
-          - name: "apps.{{ $key }}.revision"
+          - name: "apps.{{ $appName }}.revision"
             value: "{{ $.Values.dev.revision }}"
           #{{ end }}
         #{{ end }}
