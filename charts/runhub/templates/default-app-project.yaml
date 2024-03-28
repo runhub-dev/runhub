@@ -6,7 +6,6 @@ metadata:
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
-  sourceNamespaces: []
   sourceRepos: []
   destinations: []
   namespaceResourceWhitelist: []

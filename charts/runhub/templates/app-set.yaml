@@ -2,6 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
   name: runhub
+  namespace: argocd
 spec:
   goTemplate: true
   goTemplateOptions:
@@ -14,8 +15,6 @@ spec:
             targetRevision: 6.7.3
             chart: argo-cd
             valuesObject:
-              applicationSet:
-                allowAnyNamespace: true
               configs:
                 cm:
                   admin.enabled: false
@@ -61,10 +60,7 @@ spec:
                         return hs
                   users.anonymous.enabled: true
                 params:
-                  application.namespaces: runhub
-                  applicationsetcontroller.allowed.scm.providers: false
                   applicationsetcontroller.enable.progressive.syncs: true
-                  applicationsetcontroller.namespaces: runhub
                   server.insecure: true
                 rbac:
                   policy.default: role:admin

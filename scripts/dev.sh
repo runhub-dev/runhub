@@ -31,16 +31,15 @@ install_argo_cd() {
 }
 
 is_runhub_network_healthy() {
-  kubectl get applications.argoproj.io --namespace runhub runhub-network \
+  kubectl get applications.argoproj.io --namespace argocd runhub-network \
     --output yaml 2> /dev/null | yq --exit-status \
     '.status.sync.status == "Synced" and .status.health.status == "Healthy"' > /dev/null 2>&1
 }
 
 get_health_message() {
-  kubectl get application.argoproj.io --namespace runhub "$1" --output yaml 2> /dev/null | yq '
+  kubectl get application.argoproj.io --namespace argocd "$1" --output yaml 2> /dev/null | yq '
     .status.resources | filter(
-      .group == "argoproj.io" and .kind == "ApplicationSet" and
-      .namespace == "runhub" and .name == "'"$1"'"
+      .group == "argoproj.io" and .kind == "ApplicationSet" and .name == "'"$1"'"
     ).[].health.message //""'
 }
 

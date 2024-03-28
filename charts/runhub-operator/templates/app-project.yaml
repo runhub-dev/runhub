@@ -6,8 +6,6 @@ metadata:
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
-  sourceNamespaces:
-    - runhub
   sourceRepos:
     #{{ if get .Values "dev" }}
     - "{{ .Values.dev.repository }}"
