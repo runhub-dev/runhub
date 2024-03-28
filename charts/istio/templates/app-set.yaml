@@ -29,22 +29,22 @@ spec:
             - key: app
               operator: In
               values:
-                - "{{ .Release.Namespace }}-istio-base"
+                - istio-base
         - matchExpressions:
             - key: app
               operator: In
               values:
-                - "{{ .Release.Namespace }}-istiod"
+                - istiod
         - matchExpressions:
             - key: app
               operator: In
               values:
-                - "{{ .Release.Namespace }}-istio-ingressgateway"
+                - istio-ingressgateway
   template:
     metadata:
       name: "{{ `{{ .name }}` }}"
       labels:
-        app: "{{ .Release.Namespace }}-{{ `{{ .name }}` }}"
+        app: "{{ `{{ .name }}` }}"
     spec:
       project: runhub
       source:

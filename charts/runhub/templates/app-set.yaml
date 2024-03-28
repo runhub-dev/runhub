@@ -118,35 +118,35 @@ spec:
             - key: app
               operator: In
               values:
-                - "{{ .Release.Namespace }}-argo-cd"
+                - argo-cd
         - matchExpressions:
             - key: app
               operator: In
               values:
-                - "{{ .Release.Namespace }}-istio"
+                - istio
         - matchExpressions:
             - key: app
               operator: In
               values:
-                - "{{ .Release.Namespace }}-knative-operator"
-                - "{{ .Release.Namespace }}-runhub-network"
+                - knative-operator
+                - runhub-network
         - matchExpressions:
             - key: app
               operator: In
               values:
-                - "{{ .Release.Namespace }}-knative-serving"
+                - knative-serving
         #{{ if .Values.apps }}
         - matchExpressions:
             - key: app
               operator: In
               values:
-                - "{{ .Release.Namespace }}-apps"
+                - apps
         #{{ end }}
   template:
     metadata:
       name: "{{ `{{ .name }}` }}"
       labels:
-        app: "{{ .Release.Namespace }}-{{ `{{ .name }}` }}"
+        app: "{{ `{{ .name }}` }}"
     spec:
       project: runhub
       source:
