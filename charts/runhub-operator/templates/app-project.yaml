@@ -3,6 +3,8 @@ kind: AppProject
 metadata:
   name: runhub-operator
   namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   sourceNamespaces:
     - runhub
