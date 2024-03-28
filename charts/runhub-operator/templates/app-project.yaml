@@ -14,8 +14,8 @@ spec:
     - "{{ .Values.infra.repository }}"
     #{{ end }}
   destinations:
-    - name: in-cluster
-      namespace: "*"
+    - namespace: "*"
+      name: in-cluster
   namespaceResourceWhitelist:
     - group: "*"
       kind: "*"

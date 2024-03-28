@@ -11,8 +11,8 @@ spec:
     - https://argoproj.github.io/argo-helm
     - https://istio-release.storage.googleapis.com/charts
   destinations:
-    - name: in-cluster
-      namespace: "*"
+    - namespace: "*"
+      name: in-cluster
   namespaceResourceWhitelist:
     - group: "*"
       kind: "*"
