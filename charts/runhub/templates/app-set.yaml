@@ -18,7 +18,6 @@ spec:
               configs:
                 cm:
                   admin.enabled: false
-                  application.resourceTrackingMethod: annotation
                   resource.customizations: |
                     argoproj.io/ApplicationSet:
                       health.lua: |
