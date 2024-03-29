@@ -8,8 +8,6 @@ metadata:
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
-  sourceNamespaces:
-    - runhub
   sourceRepos:
     - "{{ $.Values.runhub.repository }}"
     - "{{ $app.repository }}"
