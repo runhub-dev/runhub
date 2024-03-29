@@ -12,16 +12,30 @@ spec:
         elements:
           #{{ range $appName, $app := .Values.apps }}
           - name: "{{ $appName }}"
+            repository: "{{ $app.repository }}"
+            revision: "{{ $app.revision }}"
           #{{ end }}
   template:
     metadata:
       name: "runhub-app-{{ `{{ .name }}` }}"
     spec:
-      project: runhub
-      source:
-        repoURL: "{{ .Values.runhub.repository }}"
-        targetRevision: "{{ .Values.runhub.revision }}"
-        path: charts/app
+      project: "runhub-app-{{ `{{ .name }}` }}"
+      sources:
+        - repoURL: "{{ .Values.runhub.repository }}"
+          targetRevision: "{{ .Values.runhub.revision }}"
+          path: charts/app
+          helm:
+            valueFiles:
+              - $appRepository/runhub-app.yaml
+            values: |
+              runhub:
+                repository: "{{ .Values.runhub.repository }}"
+                revision: "{{ .Values.runhub.revision }}"
+              repository: "{{ `{{ .repository }}` }}"
+              revision: "{{ `{{ .revision }}` }}"
+        - repoURL: "{{ `{{ .repository }}` }}"
+          targetRevision: "{{ `{{ .revision }}` }}"
+          ref: appRepository
       destination:
         name: in-cluster
         namespace: "runhub-app-{{ `{{ .name }}` }}"

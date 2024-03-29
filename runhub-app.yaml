@@ -1,0 +1,3 @@
+services:
+  world:
+    image: ghcr.io/knative/helloworld-go@sha256:f96c789e20bd20354e951161672a1132520df1389f6078d374658354c95d1b7c
