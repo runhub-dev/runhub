@@ -14,9 +14,7 @@ spec:
   destinations:
     - namespace: "runhub-app-{{ $appName }}"
       name: in-cluster
-  namespaceResourceWhitelist:
-    - group: "*"
-      kind: "*"
+  namespaceResourceWhitelist: []
   clusterResourceWhitelist:
     - group: ""
       kind: Namespace
