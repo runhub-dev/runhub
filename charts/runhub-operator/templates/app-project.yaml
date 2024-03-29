@@ -7,18 +7,15 @@ metadata:
     - resources-finalizer.argocd.argoproj.io
 spec:
   sourceRepos:
-    #{{ if get .Values "dev" }}
-    - "{{ .Values.dev.repository }}"
-    #{{ else }}
-    - "{{ .Values.runhub.repository }}"
-    - "{{ .Values.infra.repository }}"
-    #{{ end }}
+    - "*"
   destinations:
-    - namespace: "*"
+    - namespace: "{{ .Release.Namespace }}"
+      name: in-cluster
+    - namespace: argocd
       name: in-cluster
   namespaceResourceWhitelist:
-    - group: "*"
-      kind: "*"
-  clusterResourceWhitelist:
-    - group: "*"
-      kind: "*"
+    - group: argoproj.io
+      kind: AppProject
+    - group: argoproj.io
+      kind: ApplicationSet
+  clusterResourceWhitelist: []

@@ -54,7 +54,6 @@ install_runhub() {
   helm upgrade --install --create-namespace \
     --namespace runhub runhub-operator \
     "${runhub_dir}"/charts/runhub-operator \
-    --values "${runhub_dir}"/runhub-infra.yaml \
     --set dev.repository="$1",dev.revision="$2" \
     > /dev/null
   echo 'Waiting until runhub is ready.'

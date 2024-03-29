@@ -1,0 +1,53 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: runhub-operator
+  namespace: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions:
+    - missingkey=error
+  generators:
+    - git:
+        repoURL: '{{ template "infra.repository" . }}'
+        revision: '{{ template "infra.revision" . }}'
+        files:
+          - path: runhub-infra.yaml
+  template:
+    metadata:
+      name: runhub
+    spec:
+      project: runhub-operator
+      destination:
+        name: in-cluster
+        namespace: "{{ .Release.Namespace }}"
+      syncPolicy:
+        automated:
+          prune: true
+        syncOptions:
+          - CreateNamespace=true
+  templatePatch: |
+    spec:
+      sources:
+        - repoURL: '{{ template "runhub.repository" . }}'
+          targetRevision: '{{ template "runhub.revision" . }}'
+          path: charts/runhub
+          helm:
+            valueFiles:
+              - $infraRepository/runhub-infra.yaml
+            {{- if get .Values "dev" }}
+            parameters:
+              - name: runhub.repository
+                value: '{{ template "runhub.repository" . }}'
+              - name: runhub.revision
+                value: '{{ template "runhub.revision" . }}'
+              {{ `{{- range $appName, $app := .apps }}` }}
+              - name: "apps.{{ `{{ $appName }}` }}.repository"
+                value: '{{ template "runhub.repository" . }}'
+              - name: "apps.{{ `{{ $appName }}` }}.revision"
+                value: '{{ template "runhub.revision" . }}'
+              {{ `{{- end }}` }}
+            {{- end }}
+        - repoURL: '{{ template "infra.repository" . }}'
+          targetRevision: '{{ template "infra.revision" . }}'
+          ref: infraRepository

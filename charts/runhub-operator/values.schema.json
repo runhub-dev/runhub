@@ -2,21 +2,6 @@
   "$schema": "https://json-schema.org/draft-07/schema#",
   "type": "object",
   "properties": {
-    "runhub": {
-      "type": "object",
-      "properties": {
-        "repository": {
-          "type": "string",
-          "minLength": 1
-        },
-        "revision": {
-          "type": "string",
-          "minLength": 1
-        }
-      },
-      "required": ["repository", "revision"],
-      "additionalProperties": false
-    },
     "infra": {
       "type": "object",
       "properties": {
@@ -48,13 +33,13 @@
       "additionalProperties": false
     }
   },
-  "anyOf": [
+  "oneOf": [
     {
-      "required": ["runhub", "infra"]
+      "required": ["infra"]
     },
     {
       "required": ["dev"]
     }
   ],
-  "additionalProperties": true
+  "additionalProperties": false
 }
