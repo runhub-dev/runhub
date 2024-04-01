@@ -30,7 +30,7 @@
       "minProperties": 1,
       "propertyNames": {
         "format": "hostname",
-        "pattern": "^[a-z0-9-]*$",
+        "pattern": "^[a-z0-9]*$",
         "minLength": 1,
         "maxLength": 63
       },
