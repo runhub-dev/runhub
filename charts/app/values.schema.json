@@ -2,7 +2,6 @@
   "$schema": "https://json-schema.org/draft-07/schema#",
   "type": "object",
   "properties": {
-    "name": {},
     "app": {},
     "services": {
       "type": "object",
@@ -27,6 +26,6 @@
     },
     "runhub": {}
   },
-  "required": ["name", "app", "services", "runhub"],
+  "required": ["app", "services", "runhub"],
   "additionalProperties": false
 }

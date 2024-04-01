@@ -11,18 +11,18 @@ spec:
     - list:
         elements:
           #{{ range $appName, $app := .Values.apps }}
-          - name: "{{ $appName }}"
-            app: #{{ toYaml $app | nindent 14 }}
+          - app: #{{ toYaml $app | nindent 14 }}
+              name: "{{ $appName }}"
             runhub: #{{ toYaml $.Values.runhub | nindent 14 }}
           #{{ end }}
   template:
     metadata:
-      name: "runhub-app-{{ `{{ .name }}` }}"
+      name: "runhub-app-{{ `{{ .app.name }}` }}"
     spec:
-      project: "runhub-app-{{ `{{ .name }}` }}"
+      project: "runhub-app-{{ `{{ .app.name }}` }}"
       destination:
         name: in-cluster
-        namespace: "runhub-app-{{ `{{ .name }}` }}"
+        namespace: "runhub-app-{{ `{{ .app.name }}` }}"
       syncPolicy:
         automated:
           prune: true
