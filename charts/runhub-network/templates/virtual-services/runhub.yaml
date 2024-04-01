@@ -9,5 +9,5 @@ spec:
     - runhub.localhost
   http:
     - redirect:
-        authority: argo-cd.runhub.localhost:8080
+        authority: runhub-argo-cd.localhost:8080
         redirectCode: 307

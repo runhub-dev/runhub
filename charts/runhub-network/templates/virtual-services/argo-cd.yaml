@@ -6,7 +6,7 @@ spec:
   gateways:
     - runhub
   hosts:
-    - argo-cd.runhub.localhost
+    - runhub-argo-cd.localhost
   http:
     - match:
         - headers:
