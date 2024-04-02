@@ -8,8 +8,7 @@
       "propertyNames": {
         "format": "hostname",
         "pattern": "^[a-z0-9]*$",
-        "minLength": 1,
-        "maxLength": 63
+        "minLength": 1
       },
       "not": {
         "required": ["runhub"]
