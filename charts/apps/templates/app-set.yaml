@@ -11,18 +11,20 @@ spec:
     - list:
         elements:
           #{{ range $appName, $app := .Values.apps }}
-          - app: #{{ toYaml $app | nindent 14 }}
-              name: "{{ $appName }}"
-            runhub: #{{ toYaml $.Values.runhub | nindent 14 }}
+          - name: "runhub-app-{{ $appName }}"
+            valuesObject:
+              app: #{{ toYaml $app | nindent 16 }}
+                name: "{{ $appName }}"
+              runhub: #{{ toYaml $.Values.runhub | nindent 16 }}
           #{{ end }}
   template:
     metadata:
-      name: "runhub-app-{{ `{{ .app.name }}` }}"
+      name: "{{ `{{ .name }}` }}"
     spec:
-      project: "runhub-app-{{ `{{ .app.name }}` }}"
+      project: "{{ `{{ .name }}` }}"
       destination:
         name: in-cluster
-        namespace: "runhub-app-{{ `{{ .app.name }}` }}"
+        namespace: "{{ `{{ .name }}` }}"
       syncPolicy:
         automated:
           prune: true
@@ -35,7 +37,7 @@ spec:
           helm:
             valueFiles:
               - $appRepository/runhub-app.yaml
-            values: |{{ `{{ toYaml . | nindent 10 }}` }}
-        - repoURL: "{{ `{{ .app.repository }}` }}"
-          targetRevision: "{{ `{{ .app.revision }}` }}"
+            values: |{{ `{{ toYaml .valuesObject | nindent 10 }}` }}
+        - repoURL: "{{ `{{ .valuesObject.app.repository }}` }}"
+          targetRevision: "{{ `{{ .valuesObject.app.revision }}` }}"
           ref: appRepository
