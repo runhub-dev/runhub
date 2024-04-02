@@ -41,11 +41,13 @@ spec:
                 value: '{{ template "runhub.repository" . }}'
               - name: runhub.revision
                 value: '{{ template "runhub.revision" . }}'
+              {{ `{{- if get . "apps" }}` }}
               {{ `{{- range $appName, $app := .apps }}` }}
               - name: "apps.{{ `{{ $appName }}` }}.repository"
                 value: '{{ template "runhub.repository" . }}'
               - name: "apps.{{ `{{ $appName }}` }}.revision"
                 value: '{{ template "runhub.revision" . }}'
+              {{ `{{- end }}` }}
               {{ `{{- end }}` }}
             {{- end }}
         - repoURL: '{{ template "infra.repository" . }}'
