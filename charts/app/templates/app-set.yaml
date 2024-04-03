@@ -1,0 +1,79 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: services
+  namespace: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions:
+    - missingkey=error
+  generators:
+    - list:
+        elements:
+          #{{ range $serviceName, $service := .Values.services }}
+          - name: "{{ $serviceName }}-configure"
+            path: charts/service-configure
+            stage: configure
+            valuesObject:
+              service: #{{ toYaml $service | nindent 16 }}
+                name: "{{ $serviceName }}"
+              app: #{{ toYaml $.Values.app | nindent 16 }}
+              runhub: #{{ toYaml $.Values.runhub | nindent 16 }}
+          - name: "{{ $serviceName }}-route"
+            path: charts/service-route
+            stage: route
+            valuesObject:
+              service: #{{ toYaml $service | nindent 16 }}
+                name: "{{ $serviceName }}"
+              app: #{{ toYaml $.Values.app | nindent 16 }}
+              runhub: #{{ toYaml $.Values.runhub | nindent 16 }}
+          - name: "{{ $serviceName }}-expose"
+            path: charts/service-expose
+            stage: expose
+            valuesObject:
+              service: #{{ toYaml $service | nindent 16 }}
+                name: "{{ $serviceName }}"
+              app: #{{ toYaml $.Values.app | nindent 16 }}
+              runhub: #{{ toYaml $.Values.runhub | nindent 16 }}
+          #{{ end }}
+  strategy:
+    type: RollingSync
+    rollingSync:
+      steps:
+        - matchExpressions:
+            - key: stage
+              operator: In
+              values:
+                - configure
+        - matchExpressions:
+            - key: stage
+              operator: In
+              values:
+                - route
+        - matchExpressions:
+            - key: stage
+              operator: In
+              values:
+                - expose
+  template:
+    metadata:
+      name: "{{ .Release.Namespace }}-{{ `{{ .name }}` }}"
+      labels:
+        stage: "{{ `{{ .stage }}` }}"
+    spec:
+      project: "{{ .Release.Namespace }}"
+      source:
+        repoURL: "{{ .Values.runhub.repository }}"
+        targetRevision: "{{ .Values.runhub.revision }}"
+        path: "{{ `{{ .path }}` }}"
+      destination:
+        name: in-cluster
+        namespace: "{{ .Release.Namespace }}"
+      syncPolicy:
+        automated:
+          prune: true
+  templatePatch: |
+    spec:
+      source:
+        helm:
+          values: |{{ `{{ toYaml .valuesObject | nindent 8 }}` }}

@@ -1,0 +1,17 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: "{{ .Values.service.name }}"
+spec:
+  gateways:
+    - runhub/runhub
+  hosts:
+    - "{{ .Values.app.name }}-{{ .Values.service.name }}.localhost"
+  http:
+    - rewrite:
+        authority: "{{ .Values.service.name }}.{{ .Release.Namespace }}.svc.cluster.local"
+      route:
+        - destination:
+            host: "{{ .Values.service.name }}.{{ .Release.Namespace }}.svc.cluster.local"
+            port:
+              number: 80
