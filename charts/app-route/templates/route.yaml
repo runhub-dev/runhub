@@ -1,0 +1,11 @@
+#{{ range $serviceName, $service := .Values.services }}
+---
+apiVersion: serving.knative.dev/v1
+kind: Route
+metadata:
+  name: "{{ $serviceName }}"
+spec:
+  traffic:
+    - revisionName: "{{ $serviceName }}-{{ $.Values.app.revision }}"
+      percent: 100
+#{{ end }}

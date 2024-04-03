@@ -1,0 +1,20 @@
+#{{ range $serviceName, $service := .Values.services }}
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: "{{ $serviceName }}"
+spec:
+  gateways:
+    - runhub/runhub
+  hosts:
+    - "{{ $.Values.app.name }}-{{ $serviceName  }}.localhost"
+  http:
+    - rewrite:
+        authority: "{{ $serviceName  }}.{{ $.Release.Namespace }}.svc.cluster.local"
+      route:
+        - destination:
+            host: "{{ $serviceName  }}.{{ $.Release.Namespace }}.svc.cluster.local"
+            port:
+              number: 80
+#{{ end }}

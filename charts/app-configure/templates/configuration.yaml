@@ -1,0 +1,14 @@
+#{{ range $serviceName, $service := .Values.services }}
+---
+apiVersion: serving.knative.dev/v1
+kind: Configuration
+metadata:
+  name: "{{ $serviceName }}"
+spec:
+  template:
+    metadata:
+      name: "{{ $serviceName }}-{{ $.Values.app.revision }}"
+    spec:
+      containers:
+        - image: "{{ $service.image }}"
+#{{ end }}

@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: services
+  name: "{{ .Release.Namespace }}"
   namespace: argocd
 spec:
   goTemplate: true
@@ -10,32 +10,9 @@ spec:
   generators:
     - list:
         elements:
-          #{{ range $serviceName, $service := .Values.services }}
-          - name: "{{ $serviceName }}-configure"
-            path: charts/service-configure
-            stage: configure
-            valuesObject:
-              service: #{{ toYaml $service | nindent 16 }}
-                name: "{{ $serviceName }}"
-              app: #{{ toYaml $.Values.app | nindent 16 }}
-              runhub: #{{ toYaml $.Values.runhub | nindent 16 }}
-          - name: "{{ $serviceName }}-route"
-            path: charts/service-route
-            stage: route
-            valuesObject:
-              service: #{{ toYaml $service | nindent 16 }}
-                name: "{{ $serviceName }}"
-              app: #{{ toYaml $.Values.app | nindent 16 }}
-              runhub: #{{ toYaml $.Values.runhub | nindent 16 }}
-          - name: "{{ $serviceName }}-expose"
-            path: charts/service-expose
-            stage: expose
-            valuesObject:
-              service: #{{ toYaml $service | nindent 16 }}
-                name: "{{ $serviceName }}"
-              app: #{{ toYaml $.Values.app | nindent 16 }}
-              runhub: #{{ toYaml $.Values.runhub | nindent 16 }}
-          #{{ end }}
+          - stage: configure
+          - stage: route
+          - stage: expose
   strategy:
     type: RollingSync
     rollingSync:
@@ -57,7 +34,7 @@ spec:
                 - expose
   template:
     metadata:
-      name: "{{ .Release.Namespace }}-{{ `{{ .name }}` }}"
+      name: "{{ .Release.Namespace }}-{{ `{{ .stage }}` }}"
       labels:
         stage: "{{ `{{ .stage }}` }}"
     spec:
@@ -65,7 +42,7 @@ spec:
       source:
         repoURL: "{{ .Values.runhub.repository }}"
         targetRevision: "{{ .Values.runhub.revision }}"
-        path: "{{ `{{ .path }}` }}"
+        path: "charts/app-{{ `{{ .stage }}` }}"
       destination:
         name: in-cluster
         namespace: "{{ .Release.Namespace }}"
@@ -76,4 +53,4 @@ spec:
     spec:
       source:
         helm:
-          values: |{{ `{{ toYaml .valuesObject | nindent 8 }}` }}
+          values: |{{ toYaml .Values | nindent 12 }}

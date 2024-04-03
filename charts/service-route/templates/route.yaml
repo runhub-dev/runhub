@@ -1,8 +1,0 @@
-apiVersion: serving.knative.dev/v1
-kind: Route
-metadata:
-  name: "{{ .Values.service.name }}"
-spec:
-  traffic:
-    - revisionName: "{{ .Values.service.name }}-{{ .Values.app.revision }}"
-      percent: 100
