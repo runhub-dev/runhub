@@ -2,8 +2,8 @@
   "lockfile_version": "1",
   "packages": {
     "colima@latest": {
-      "last_modified": "2024-03-27T09:47:59Z",
-      "resolved": "github:NixOS/nixpkgs/2230a20f2b5a14f2db3d7f13a2dc3c22517e790b#colima",
+      "last_modified": "2024-04-02T02:53:36Z",
+      "resolved": "github:NixOS/nixpkgs/080a4a27f206d07724b88da096e27ef63401a504#colima",
       "source": "devbox-search",
       "version": "0.6.8",
       "systems": {
@@ -31,11 +31,11 @@
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/rn5y5igf4xdlys3340m70izy89r9lr1y-colima-0.6.8",
+              "path": "/nix/store/znff3y9jd76yxdj4qvxb5j342km92wvp-colima-0.6.8",
               "default": true
             }
           ],
-          "store_path": "/nix/store/rn5y5igf4xdlys3340m70izy89r9lr1y-colima-0.6.8"
+          "store_path": "/nix/store/znff3y9jd76yxdj4qvxb5j342km92wvp-colima-0.6.8"
         },
         "x86_64-linux": {
           "outputs": [
@@ -326,8 +326,8 @@
       }
     },
     "lima-bin@latest": {
-      "last_modified": "2024-03-27T09:47:59Z",
-      "resolved": "github:NixOS/nixpkgs/2230a20f2b5a14f2db3d7f13a2dc3c22517e790b#lima-bin",
+      "last_modified": "2024-04-02T02:53:36Z",
+      "resolved": "github:NixOS/nixpkgs/080a4a27f206d07724b88da096e27ef63401a504#lima-bin",
       "source": "devbox-search",
       "version": "0.21.0",
       "systems": {
@@ -335,11 +335,11 @@
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/dhw5mnym2vrlngwcp3js16y3y8ys4hh6-lima-0.21.0",
+              "path": "/nix/store/brllic89nsmx3h8lmrvv2gw7flbdiazw-lima-0.21.0",
               "default": true
             }
           ],
-          "store_path": "/nix/store/dhw5mnym2vrlngwcp3js16y3y8ys4hh6-lima-0.21.0"
+          "store_path": "/nix/store/brllic89nsmx3h8lmrvv2gw7flbdiazw-lima-0.21.0"
         },
         "aarch64-linux": {
           "outputs": [
@@ -355,11 +355,11 @@
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/fg9919j3akmnbggbq9b424p6cww2yr21-lima-0.21.0",
+              "path": "/nix/store/75fjkn716qyc94bf0q665ipnr6h8m7dn-lima-0.21.0",
               "default": true
             }
           ],
-          "store_path": "/nix/store/fg9919j3akmnbggbq9b424p6cww2yr21-lima-0.21.0"
+          "store_path": "/nix/store/75fjkn716qyc94bf0q665ipnr6h8m7dn-lima-0.21.0"
         },
         "x86_64-linux": {
           "outputs": [
