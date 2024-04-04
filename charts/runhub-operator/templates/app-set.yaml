@@ -45,12 +45,12 @@ spec:
           helm:
             valueFiles:
               - $infraRepository/runhub-infra.yaml
-            {{- if hasKey .Values "dev" }}
             parameters:
+              - name: runhub.revision
+                value: $ARGOCD_APP_REVISION
+              {{- if hasKey .Values "dev" }}
               - name: runhub.repository
                 value: "{{ .Values.dev.repository }}"
-              - name: runhub.revision
-                value: "{{ .Values.dev.revision }}"
               {{ `{{- if hasKey . "apps" }}` }}
               {{ `{{- range $appName, $app := .apps }}` }}
               - name: "apps.{{ `{{ $appName }}` }}.repository"
@@ -59,7 +59,7 @@ spec:
                 value: "{{ .Values.dev.revision }}"
               {{ `{{- end }}` }}
               {{ `{{- end }}` }}
-            {{- end }}
+              {{- end }}
         {{- if hasKey .Values "dev" }}
         - repoURL: "{{ .Values.dev.repository }}"
           targetRevision: "{{ .Values.dev.revision }}"
