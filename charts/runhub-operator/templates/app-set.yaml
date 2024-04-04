@@ -9,8 +9,13 @@ spec:
     - missingkey=error
   generators:
     - git:
-        repoURL: '{{ template "infra.repository" . }}'
-        revision: '{{ template "infra.revision" . }}'
+        #{{ if hasKey .Values "dev" }}
+        repoURL: "{{ .Values.dev.repository }}"
+        revision: "{{ .Values.dev.revision }}"
+        #{{ else }}
+        repoURL: "{{ .Values.infra.repository }}"
+        revision: "{{ .Values.infra.revision }}"
+        #{{ end }}
         files:
           - path: runhub-infra.yaml
   template:
@@ -29,27 +34,37 @@ spec:
   templatePatch: |
     spec:
       sources:
-        - repoURL: '{{ template "runhub.repository" . }}'
-          targetRevision: '{{ template "runhub.revision" . }}'
+        {{- if hasKey .Values "dev" }}
+        - repoURL: "{{ .Values.dev.repository }}"
+          targetRevision: "{{ .Values.dev.revision }}"
+        {{- else }}
+        - repoURL: "{{ `{{ .runhub.repository }}` }}"
+          targetRevision: "{{ `{{ .runhub.revision }}` }}"
+        {{- end }}
           path: charts/runhub
           helm:
             valueFiles:
               - $infraRepository/runhub-infra.yaml
-            {{- if get .Values "dev" }}
+            {{- if hasKey .Values "dev" }}
             parameters:
               - name: runhub.repository
-                value: '{{ template "runhub.repository" . }}'
+                value: "{{ .Values.dev.repository }}"
               - name: runhub.revision
-                value: '{{ template "runhub.revision" . }}'
-              {{ `{{- if get . "apps" }}` }}
+                value: "{{ .Values.dev.revision }}"
+              {{ `{{- if hasKey . "apps" }}` }}
               {{ `{{- range $appName, $app := .apps }}` }}
               - name: "apps.{{ `{{ $appName }}` }}.repository"
-                value: '{{ template "runhub.repository" . }}'
+                value: "{{ .Values.dev.repository }}"
               - name: "apps.{{ `{{ $appName }}` }}.revision"
-                value: '{{ template "runhub.revision" . }}'
+                value: "{{ .Values.dev.revision }}"
               {{ `{{- end }}` }}
               {{ `{{- end }}` }}
             {{- end }}
-        - repoURL: '{{ template "infra.repository" . }}'
-          targetRevision: '{{ template "infra.revision" . }}'
+        {{- if hasKey .Values "dev" }}
+        - repoURL: "{{ .Values.dev.repository }}"
+          targetRevision: "{{ .Values.dev.revision }}"
+        {{- else }}
+        - repoURL: "{{ .Values.infra.repository }}"
+          targetRevision: "{{ .Values.infra.revision }}"
+        {{- end }}
           ref: infraRepository
