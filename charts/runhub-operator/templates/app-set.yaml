@@ -9,12 +9,9 @@ spec:
     - missingkey=error
   generators:
     - git:
-        #{{ if hasKey .Values "dev" }}
-        repoURL: "{{ .Values.dev.repository }}"
-        revision: "{{ .Values.dev.revision }}"
-        #{{ else }}
-        repoURL: "{{ .Values.infra.repository }}"
-        revision: "{{ .Values.infra.revision }}"
+        #{{ with coalesce (get .Values "dev") (get .Values "infra") }}
+        repoURL: "{{ .repository }}"
+        revision: "{{ .revision }}"
         #{{ end }}
         files:
           - path: runhub-infra.yaml
@@ -23,6 +20,10 @@ spec:
       name: runhub
     spec:
       project: runhub-operator
+      source:
+        repoURL: '{{ dig "dev" "repository" "{{ .runhub.repository }}" .Values.AsMap }}'
+        targetRevision: '{{ dig "dev" "revision" "{{ .runhub.revision }}" .Values.AsMap }}'
+        path: charts/runhub
       destination:
         name: in-cluster
         namespace: "{{ .Release.Namespace }}"
@@ -33,38 +34,21 @@ spec:
           - CreateNamespace=true
   templatePatch: |
     spec:
-      sources:
-        {{- if hasKey .Values "dev" }}
-        - repoURL: "{{ .Values.dev.repository }}"
-          targetRevision: "{{ .Values.dev.revision }}"
-        {{- else }}
-        - repoURL: "{{ `{{ .runhub.repository }}` }}"
-          targetRevision: "{{ `{{ .runhub.revision }}` }}"
-        {{- end }}
-          path: charts/runhub
-          helm:
-            valueFiles:
-              - $infraRepository/runhub-infra.yaml
-            parameters:
-              - name: runhub.revision
-                value: $ARGOCD_APP_REVISION
-              {{- if hasKey .Values "dev" }}
-              - name: runhub.repository
-                value: "{{ .Values.dev.repository }}"
-              {{ `{{- if hasKey . "apps" }}` }}
-              {{ `{{- range $appName, $app := .apps }}` }}
-              - name: "apps.{{ `{{ $appName }}` }}.repository"
-                value: "{{ .Values.dev.repository }}"
-              - name: "apps.{{ `{{ $appName }}` }}.revision"
-                value: "{{ .Values.dev.revision }}"
-              {{ `{{- end }}` }}
-              {{ `{{- end }}` }}
-              {{- end }}
-        {{- if hasKey .Values "dev" }}
-        - repoURL: "{{ .Values.dev.repository }}"
-          targetRevision: "{{ .Values.dev.revision }}"
-        {{- else }}
-        - repoURL: "{{ .Values.infra.repository }}"
-          targetRevision: "{{ .Values.infra.revision }}"
-        {{- end }}
-          ref: infraRepository
+      source:
+        helm:
+          values: |{{ `{{ toYaml (omit . "path") | nindent 8 }}` }}
+          parameters:
+            - name: runhub.revision
+              value: $ARGOCD_APP_REVISION
+            {{- if hasKey .Values "dev" }}
+            - name: runhub.repository
+              value: "{{ .Values.dev.repository }}"
+            {{ `{{- if hasKey . "apps" }}` }}
+            {{ `{{- range $appName, $app := .apps }}` }}
+            - name: "apps.{{ `{{ $appName }}` }}.repository"
+              value: "{{ .Values.dev.repository }}"
+            - name: "apps.{{ `{{ $appName }}` }}.revision"
+              value: "{{ .Values.dev.revision }}"
+            {{ `{{- end }}` }}
+            {{ `{{- end }}` }}
+            {{- end }}
