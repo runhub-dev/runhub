@@ -6,6 +6,6 @@ metadata:
   name: "{{ $serviceName }}"
 spec:
   traffic:
-    - revisionName: "{{ $serviceName }}-{{ $.Values.app.revision }}"
+    - configurationName: "{{ $serviceName }}"
       percent: 100
 #{{ end }}

@@ -6,8 +6,6 @@ metadata:
   name: "{{ $serviceName }}"
 spec:
   template:
-    metadata:
-      name: "{{ $serviceName }}-{{ $.Values.app.revision }}"
     spec:
       containers:
         - image: "{{ $service.image }}"
