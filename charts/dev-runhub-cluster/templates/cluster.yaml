@@ -6,7 +6,7 @@ k3d:
   v1alpha5Simple:
     metadata:
       name: "k3d-version-{{ .Values.k3dVersion }}"
-    image: rancher/k3s:v1.29.3-k3s1
+    image: rancher/k3s:v1.28.8-k3s1
     volumes:
       - volume: "{{ .Values.runhubAbsoluteDir }}:/runhub"
         nodeFilters:
