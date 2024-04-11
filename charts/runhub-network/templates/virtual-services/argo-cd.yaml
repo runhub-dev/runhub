@@ -14,11 +14,11 @@ spec:
               exact: application/grpc
       route:
         - destination:
-            host: argo-cd-argocd-server.argocd.svc.cluster.local
+            host: argocd-server.argocd.svc.cluster.local
             port:
               number: 443
     - route:
         - destination:
-            host: argo-cd-argocd-server.argocd.svc.cluster.local
+            host: argocd-server.argocd.svc.cluster.local
             port:
               number: 80

@@ -23,7 +23,7 @@ install_argo_cd() {
   argo_cd_version="$(echo "${argo_cd_yaml}" | yq --exit-status '.targetRevision')"
   argo_cd_values="$(echo "${argo_cd_yaml}" | yq --exit-status '.valuesObject')"
   echo "${argo_cd_values}" | helm upgrade --install --create-namespace \
-    --namespace argocd argo-cd \
+    --namespace argocd argocd \
     --repo https://argoproj.github.io/argo-helm argo-cd --version "${argo_cd_version}" \
     --values - > /dev/null
   echo 'Waiting until Argo CD is ready.'
