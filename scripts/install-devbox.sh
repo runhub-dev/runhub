@@ -16,7 +16,7 @@ get_current_version() {
 main() {
   if ! command -v devbox > /dev/null; then
     "${scripts_dir}"/confirm.sh 'Devbox not found, install?'
-    install_script="$(curl -fsSL https://get.jetpack.io/devbox)"
+    install_script="$(curl -fsSL https://get.jetify.com/devbox)"
     echo "${install_script}" | bash -s -- --force
   else
     current_version_output="$(devbox version --quiet --verbose)"
