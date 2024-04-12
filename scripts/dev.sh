@@ -30,23 +30,10 @@ install_argo_cd() {
   until is_ready argocd; do sleep 1; done
 }
 
-is_runhub_network_healthy() {
-  kubectl get applications.argoproj.io --namespace argocd runhub-network \
+is_healthy() {
+  kubectl get applications.argoproj.io --namespace argocd "$1" \
     --output yaml 2> /dev/null | yq --exit-status \
     '.status.sync.status == "Synced" and .status.health.status == "Healthy"' > /dev/null 2>&1
-}
-
-get_health_message() {
-  kubectl get application.argoproj.io --namespace argocd "$1" --output yaml 2> /dev/null | yq '
-    .status.resources | filter(
-      .group == "argoproj.io" and .kind == "ApplicationSet" and .name == "'"$1"'"
-    ).[].health.message //""'
-}
-
-echo_if_updated() {
-  if [ "$1" ] && [ "$1" != "$2" ]; then
-    echo "$1"
-  fi
 }
 
 install_runhub() {
@@ -57,17 +44,14 @@ install_runhub() {
     --set dev.repository="$1",dev.revision="$2" \
     > /dev/null
   echo 'Waiting until runhub is ready.'
-
-  until is_runhub_network_healthy; do
-    current_runhub_health_message="$(get_health_message runhub)"
-    current_istio_health_message="$(get_health_message istio)"
-    echo_if_updated "${current_runhub_health_message}" "${previous_runhub_health_message:-''}"
-    echo_if_updated "${current_istio_health_message}" "${previous_istio_health_message:-''}"
-    previous_runhub_health_message="${current_runhub_health_message}"
-    previous_istio_health_message="${current_istio_health_message}"
-    sleep 1
-  done
-
+  until is_healthy runhub; do sleep 1; done
+  echo 'Waiting until Argo CD is ready.'
+  until is_healthy argo-cd; do sleep 1; done
+  echo 'Waiting until Istio is ready.'
+  until is_healthy istio-base; do sleep 1; done
+  until is_healthy istiod; do sleep 1; done
+  until is_healthy istio-ingressgateway; do sleep 1; done
+  until is_healthy runhub-network; do sleep 1; done
   until is_ready istio-system; do sleep 1; done
 }
 
