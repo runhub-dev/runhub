@@ -1,0 +1,22 @@
+#{{ define "runhub.app.apps" }}
+metadata:
+  name: apps
+  labels:
+    app: apps
+spec:
+  source:
+    repoURL: "{{ .Values.runhub.repository }}"
+    targetRevision: "{{ .Values.runhub.revision }}"
+    path: charts/apps
+    helm:
+      values: |
+        {{ toYaml .Values | indent 8 | trim }}
+  destination:
+    name: in-cluster
+    namespace: "{{ .Release.Namespace }}"
+  syncPolicy:
+    automated:
+      prune: true
+    syncOptions:
+      - CreateNamespace=true
+#{{ end }}

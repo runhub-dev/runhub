@@ -1,0 +1,19 @@
+#{{ define "runhub.app.knative-serving" }}
+metadata:
+  name: knative-serving
+  labels:
+    app: knative-serving
+spec:
+  source:
+    repoURL: "{{ .Values.runhub.repository }}"
+    targetRevision: "{{ .Values.runhub.revision }}"
+    path: charts/knative-serving
+  destination:
+    name: in-cluster
+    namespace: knative-serving
+  syncPolicy:
+    automated:
+      prune: true
+    syncOptions:
+      - CreateNamespace=true
+#{{ end }}

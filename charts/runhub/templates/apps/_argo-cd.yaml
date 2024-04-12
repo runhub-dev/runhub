@@ -1,0 +1,63 @@
+#{{ define "runhub.app.argo-cd" }}
+metadata:
+  name: argo-cd
+  labels:
+    app: argo-cd
+spec:
+  source:
+    repoURL: https://argoproj.github.io/argo-helm
+    targetRevision: 6.7.11
+    chart: argo-cd
+    helm:
+      releaseName: argocd
+      values: |
+        configs:
+          cm:
+            admin.enabled: false
+            resource.customizations: |
+              serving.knative.dev/*:
+                health.lua: |
+                  local hs = {}
+                  hs.status = "Progressing"
+                  hs.message = ""
+
+                  if obj.status ~= nil then
+                    if obj.status.conditions ~= nil then
+                      for i, condition in pairs(obj.status.conditions) do
+                        if condition.type == "Ready" and condition.status == "True" then
+                          hs.status = "Healthy"
+                          return hs
+                        end
+                      end
+                    end
+                  end
+
+                  return hs
+            users.anonymous.enabled: true
+          params:
+            applicationsetcontroller.enable.progressive.syncs: true
+            server.insecure: true
+          rbac:
+            policy.default: role:admin
+        repoServer:
+          volumeMounts:
+            - mountPath: /runhub
+              name: runhub
+              readOnly: true
+          volumes:
+            - name: runhub
+              hostPath:
+                path: /runhub
+                type: Directory
+        server:
+          service:
+            servicePortHttpsName: grpc
+  destination:
+    name: in-cluster
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+    syncOptions:
+      - CreateNamespace=true
+#{{ end }}

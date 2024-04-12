@@ -19,9 +19,9 @@ install_argo_cd() {
     --values "${runhub_dir}"/runhub-infra.yaml)"
   argo_cd_yaml="$(echo "${runhub_yaml}" | yq --exit-status '
     select(.kind == "ApplicationSet" and .metadata.name == "runhub").spec.generators.[] |
-    select(.list).list.elements.[] | select(.name == "argo-cd")')"
-  argo_cd_version="$(echo "${argo_cd_yaml}" | yq --exit-status '.targetRevision')"
-  argo_cd_values="$(echo "${argo_cd_yaml}" | yq --exit-status '.valuesObject')"
+    select(.list).list.elements.[] | select(.metadata.name == "argo-cd")')"
+  argo_cd_version="$(echo "${argo_cd_yaml}" | yq --exit-status '.spec.source.targetRevision')"
+  argo_cd_values="$(echo "${argo_cd_yaml}" | yq --exit-status '.spec.source.helm.values')"
   echo "${argo_cd_values}" | helm upgrade --install --create-namespace \
     --namespace argocd argocd \
     --repo https://argoproj.github.io/argo-helm argo-cd --version "${argo_cd_version}" \

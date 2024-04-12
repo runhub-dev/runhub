@@ -1,0 +1,19 @@
+#{{ define "runhub.app.istio-ingressgateway" }}
+metadata:
+  name: istio-ingressgateway
+  labels:
+    app: istio-ingressgateway
+spec:
+  source:
+    repoURL: https://istio-release.storage.googleapis.com/charts
+    targetRevision: 1.20.5
+    chart: gateway
+  destination:
+    name: in-cluster
+    namespace: istio-system
+  syncPolicy:
+    automated:
+      prune: true
+    syncOptions:
+      - CreateNamespace=true
+#{{ end }}
