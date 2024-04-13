@@ -67,8 +67,7 @@ spec:
                 - apps
         #{{ end }}
   template:
-    metadata:
-      name:
+    metadata: {}
     spec:
       project: runhub
       destination: {}
