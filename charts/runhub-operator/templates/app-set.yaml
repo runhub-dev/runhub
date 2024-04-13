@@ -30,6 +30,8 @@ spec:
       syncPolicy:
         automated:
           prune: true
+        retry:
+          limit: 0
         syncOptions:
           - CreateNamespace=true
   templatePatch: |
