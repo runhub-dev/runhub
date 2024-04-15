@@ -7,8 +7,6 @@ scripts_dir="$(dirname "$0")"
 runhub_dir="${scripts_dir}"/..
 
 is_ready() {
-  kubectl get --namespace "$1" pods --output yaml | yq --exit-status \
-    '[.items[].status.containerStatuses[].ready // false] | all' > /dev/null 2>&1 && \
   kubectl get --namespace "$1" deployments,statefulsets --output yaml | yq --exit-status \
     '[.items[].status.availableReplicas // 0] | all_c(. >= 1)' > /dev/null 2>&1
 }
