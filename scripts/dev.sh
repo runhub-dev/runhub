@@ -6,53 +6,6 @@ set -o nounset
 scripts_dir="$(dirname "$0")"
 runhub_dir="${scripts_dir}"/..
 
-is_ready() {
-  kubectl get --namespace "$1" deployments,statefulsets --output yaml | yq --exit-status \
-    '[.items[].status.availableReplicas // 0] | all_c(. >= 1)' > /dev/null 2>&1
-}
-
-install_argo_cd() {
-  echo 'Installing Argo CD.'
-  runhub_yaml="$(helm template "${runhub_dir}"/charts/runhub \
-    --values "${runhub_dir}"/runhub-infra.yaml)"
-  argo_cd_yaml="$(echo "${runhub_yaml}" | yq --exit-status '
-    select(.kind == "ApplicationSet" and .metadata.name == "runhub").spec.generators.[] |
-    select(.list).list.elements.[] | select(.metadata.name == "argo-cd")')"
-  argo_cd_version="$(echo "${argo_cd_yaml}" | yq --exit-status '.spec.source.targetRevision')"
-  argo_cd_values="$(echo "${argo_cd_yaml}" | yq --exit-status '.spec.source.helm.values')"
-  echo "${argo_cd_values}" | helm upgrade --install --create-namespace \
-    --namespace argocd argocd \
-    --repo https://argoproj.github.io/argo-helm argo-cd --version "${argo_cd_version}" \
-    --values - > /dev/null
-  echo 'Waiting until Argo CD is ready.'
-  until is_ready argocd; do sleep 1; done
-}
-
-is_healthy() {
-  kubectl get applications.argoproj.io --namespace argocd "$1" \
-    --output yaml 2> /dev/null | yq --exit-status \
-    '.status.sync.status == "Synced" and .status.health.status == "Healthy"' > /dev/null 2>&1
-}
-
-install_runhub() {
-  echo 'Installing runhub.'
-  helm upgrade --install --create-namespace \
-    --namespace runhub runhub-operator \
-    "${runhub_dir}"/charts/runhub-operator \
-    --set dev.repository="$1",dev.revision="$2" \
-    > /dev/null
-  echo 'Waiting until runhub is ready.'
-  until is_healthy runhub; do sleep 1; done
-  echo 'Waiting until Argo CD is ready.'
-  until is_healthy argo-cd; do sleep 1; done
-  echo 'Waiting until Istio is ready.'
-  until is_healthy istio-base; do sleep 1; done
-  until is_healthy istiod; do sleep 1; done
-  until is_healthy istio-ingressgateway; do sleep 1; done
-  until is_healthy runhub-network; do sleep 1; done
-  until is_ready istio-system; do sleep 1; done
-}
-
 get_total_gibibytes_memory() {
   darwin_memory_output="$(sysctl -n hw.memsize 2> /dev/null || true)"
 
@@ -137,6 +90,92 @@ stop_dev_docker() {
   docker context use "${previous_docker_context}" > /dev/null 2>&1 || true
 }
 
+get_current_commit() {
+  git -C "${runhub_dir}" rev-parse --verify HEAD
+}
+
+get_installed_commit() {
+  operator="$(kubectl get applicationsets.argoproj.io --namespace argocd runhub-operator \
+    --output yaml 2> /dev/null || true)"
+
+  if [ "${operator}" ]; then
+    echo "${operator}" | yq --exit-status '.spec.template.spec.source.targetRevision'
+  fi
+}
+
+has_new_commit() {
+  [ "$(get_current_commit)" != "${current_commit}" ]
+}
+
+is_available() {
+  kubectl get --namespace "$1" deployments,statefulsets --output yaml | yq --exit-status \
+    '[.items[].status.availableReplicas // 0] | all_c(. >= 1)' > /dev/null 2>&1
+}
+
+is_healthy() {
+  kubectl get --ignore-not-found applications.argoproj.io --namespace argocd "$1" --output yaml \
+    | yq --exit-status '.status.health.status == "Healthy"' > /dev/null 2>&1
+}
+
+install_operator() {
+  echo 'Installing runhub operator.'
+  helm upgrade --install --create-namespace \
+    --namespace runhub runhub-operator \
+    "${runhub_dir}"/charts/runhub-operator \
+    --set dev.repository='file:///runhub',dev.revision="${current_commit}" \
+    > /dev/null
+}
+
+install() {
+  current_commit="$(get_current_commit)"
+  installed_commit="$(get_installed_commit)"
+
+  if [ "${current_commit}" != "${installed_commit}" ] || "${is_first_install:-true}"; then
+    echo 'Installing commit '"${current_commit}"'.'
+  fi
+
+  if ! "${is_argo_cd_ready:-false}"; then
+    if "${scripts_dir}"/install-argo-cd.sh; then
+      echo 'Waiting until Argo CD is ready.'
+      until is_available argocd; do has_new_commit && return; sleep 1; done
+      is_argo_cd_ready=true
+    else
+      echo 'Argo CD install failed, waiting for new commit.'
+      until has_new_commit; do sleep 1; done
+      return
+    fi
+  fi
+
+  if [ "${current_commit}" != "${installed_commit}" ]; then
+    if ! install_operator; then
+      echo 'runhub operator install failed, waiting for new commit.'
+      until has_new_commit; do sleep 1; done
+      return
+    fi
+  fi
+
+  if ! "${is_runhub_ready:-false}"; then
+    echo 'Waiting until runhub is ready.'
+    until is_healthy runhub; do has_new_commit && return; sleep 1; done
+    echo 'Waiting until Argo CD is ready.'
+    until is_healthy argo-cd; do has_new_commit && return; sleep 1; done
+    echo 'Waiting until Istio is ready.'
+    until is_healthy istio-base; do has_new_commit && return; sleep 1; done
+    until is_healthy istiod; do has_new_commit && return; sleep 1; done
+    until is_healthy istio-ingressgateway; do has_new_commit && return; sleep 1; done
+    until is_healthy runhub-network; do has_new_commit && return; sleep 1; done
+    until is_available istio-system; do has_new_commit && return; sleep 1; done
+    is_runhub_ready=true
+  fi
+
+  if [ "${current_commit}" != "${installed_commit}" ] || "${is_first_install:-true}"; then
+    echo 'Serving runhub at http://runhub.localhost:8080.'
+    echo 'Waiting for new commit.'
+    echo 'Press Ctrl+C to stop.'
+    is_first_install=false
+  fi
+}
+
 main() {
   previous_docker_context="$(docker context show)"
   previous_kube_context="$(kubectl config current-context 2> /dev/null || true)"
@@ -147,20 +186,8 @@ main() {
     trap 'echo ; stop_dev_cluster ; stop_dev_docker ; exit 0' EXIT
     start_dev_docker
     start_dev_cluster
-    install_argo_cd
 
-    while true; do
-      current_revision="$(git -C "${runhub_dir}" rev-parse --verify HEAD)"
-
-      if [ "${current_revision}" != "${previous_revision:-''}" ]; then
-        install_runhub file:///runhub "${current_revision}"
-        echo 'Serving runhub at http://runhub.localhost:8080.'
-        echo 'Press Ctrl+C to stop.'
-        previous_revision="${current_revision}"
-      fi
-
-      sleep 1
-    done
+    while true; do install; sleep 1; done
   )
 }
 
