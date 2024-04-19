@@ -54,6 +54,9 @@ spec:
     - repoURL: "{{ .Values.runhub.repository }}"
       targetRevision: "{{ .Values.runhub.revision }}"
       path: charts/namespace
+    - repoURL: "{{ .Values.runhub.repository }}"
+      targetRevision: "{{ .Values.runhub.revision }}"
+      path: charts/argo-cd-post
   destination:
     name: in-cluster
     namespace: argocd
