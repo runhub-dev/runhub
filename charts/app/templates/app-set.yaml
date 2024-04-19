@@ -10,9 +10,8 @@ spec:
   generators:
     - list:
         elements:
-          - stage: configure
+          - stage: deploy
           - stage: route
-          - stage: expose
   strategy:
     type: RollingSync
     rollingSync:
@@ -21,17 +20,12 @@ spec:
             - key: stage
               operator: In
               values:
-                - configure
+                - deploy
         - matchExpressions:
             - key: stage
               operator: In
               values:
                 - route
-        - matchExpressions:
-            - key: stage
-              operator: In
-              values:
-                - expose
   template:
     metadata:
       name: "{{ .Release.Namespace }}-{{ `{{ .stage }}` }}"

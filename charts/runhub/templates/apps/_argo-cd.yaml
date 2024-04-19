@@ -15,11 +15,9 @@ spec:
           cm:
             admin.enabled: false
             resource.customizations: |
-              serving.knative.dev/*:
+              serving.knative.dev/Configuration:
                 health.lua: |
                   local hs = {}
-                  hs.status = "Progressing"
-                  hs.message = ""
 
                   if obj.status ~= nil then
                     if obj.status.conditions ~= nil then
@@ -32,6 +30,7 @@ spec:
                     end
                   end
 
+                  hs.status = "Progressing"
                   return hs
             users.anonymous.enabled: true
           params:
