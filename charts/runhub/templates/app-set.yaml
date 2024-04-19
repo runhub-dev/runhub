@@ -14,7 +14,7 @@ spec:
           -  #{{ include "runhub.app.istio-base" . | indent 12 }}
           -  #{{ include "runhub.app.istiod" . | indent 12 }}
           -  #{{ include "runhub.app.istio-ingressgateway" . | indent 12 }}
-          -  #{{ include "runhub.app.runhub-network" . | indent 12 }}
+          -  #{{ include "runhub.app.runhub-istio" . | indent 12 }}
           -  #{{ include "runhub.app.knative-operator" . | indent 12 }}
           -  #{{ include "runhub.app.knative-serving" . | indent 12 }}
           #{{ if .Values.apps }}
@@ -48,7 +48,7 @@ spec:
             - key: app
               operator: In
               values:
-                - runhub-network
+                - runhub-istio
         - matchExpressions:
             - key: app
               operator: In

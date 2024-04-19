@@ -1,13 +1,13 @@
-#{{ define "runhub.app.runhub-network" }}
+#{{ define "runhub.app.runhub-istio" }}
 metadata:
-  name: runhub-network
+  name: runhub-istio
   labels:
-    app: runhub-network
+    app: runhub-istio
 spec:
   source:
     repoURL: "{{ .Values.runhub.repository }}"
     targetRevision: "{{ .Values.runhub.revision }}"
-    path: charts/runhub-network
+    path: charts/runhub-istio
   destination:
     name: in-cluster
     namespace: "{{ .Release.Namespace }}"
