@@ -4,8 +4,8 @@ set -o errexit
 set -o nounset
 
 scripts_dir="$(dirname "$0")"
-version='2.20.5'
-installer_version='0.17.1'
+version='2.21.2'
+installer_version='0.18.0'
 
 install() {
   (
