@@ -4,10 +4,13 @@ metadata:
   labels:
     app: knative-operator
 spec:
-  source:
-    repoURL: "{{ .Values.runhub.repository }}"
-    targetRevision: "{{ .Values.runhub.revision }}"
-    path: kustomizations/knative-operator
+  sources:
+    - repoURL: "{{ .Values.runhub.repository }}"
+      targetRevision: "{{ .Values.runhub.revision }}"
+      path: kustomizations/knative-operator
+    - repoURL: "{{ .Values.runhub.repository }}"
+      targetRevision: "{{ .Values.runhub.revision }}"
+      path: charts/namespace
   destination:
     name: in-cluster
     namespace: knative-operator
@@ -16,8 +19,6 @@ spec:
       prune: true
     retry:
       limit: 0
-    syncOptions:
-      - CreateNamespace=true
   ignoreDifferences:
     - group: "*"
       kind: "*"

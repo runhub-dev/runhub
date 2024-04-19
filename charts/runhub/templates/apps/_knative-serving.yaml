@@ -4,10 +4,13 @@ metadata:
   labels:
     app: knative-serving
 spec:
-  source:
-    repoURL: "{{ .Values.runhub.repository }}"
-    targetRevision: "{{ .Values.runhub.revision }}"
-    path: charts/knative-serving
+  sources:
+    - repoURL: "{{ .Values.runhub.repository }}"
+      targetRevision: "{{ .Values.runhub.revision }}"
+      path: charts/knative-serving
+    - repoURL: "{{ .Values.runhub.repository }}"
+      targetRevision: "{{ .Values.runhub.revision }}"
+      path: charts/namespace
   destination:
     name: in-cluster
     namespace: knative-serving
@@ -16,6 +19,4 @@ spec:
       prune: true
     retry:
       limit: 0
-    syncOptions:
-      - CreateNamespace=true
 #{{ end }}

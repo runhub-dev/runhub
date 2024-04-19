@@ -4,53 +4,56 @@ metadata:
   labels:
     app: argo-cd
 spec:
-  source:
-    repoURL: https://argoproj.github.io/argo-helm
-    targetRevision: 6.7.13
-    chart: argo-cd
-    helm:
-      releaseName: argocd
-      values: |
-        configs:
-          cm:
-            admin.enabled: false
-            resource.customizations: |
-              serving.knative.dev/Configuration:
-                health.lua: |
-                  local hs = {}
+  sources:
+    - repoURL: https://argoproj.github.io/argo-helm
+      targetRevision: 6.7.13
+      chart: argo-cd
+      helm:
+        releaseName: argocd
+        values: |
+          configs:
+            cm:
+              admin.enabled: false
+              resource.customizations: |
+                serving.knative.dev/Configuration:
+                  health.lua: |
+                    local hs = {}
 
-                  if obj.status ~= nil then
-                    if obj.status.conditions ~= nil then
-                      for i, condition in pairs(obj.status.conditions) do
-                        if condition.type == "Ready" and condition.status == "True" then
-                          hs.status = "Healthy"
-                          return hs
+                    if obj.status ~= nil then
+                      if obj.status.conditions ~= nil then
+                        for i, condition in pairs(obj.status.conditions) do
+                          if condition.type == "Ready" and condition.status == "True" then
+                            hs.status = "Healthy"
+                            return hs
+                          end
                         end
                       end
                     end
-                  end
 
-                  hs.status = "Progressing"
-                  return hs
-            users.anonymous.enabled: true
-          params:
-            applicationsetcontroller.enable.progressive.syncs: true
-            server.insecure: true
-          rbac:
-            policy.default: role:admin
-        repoServer:
-          volumeMounts:
-            - mountPath: /runhub
-              name: runhub
-              readOnly: true
-          volumes:
-            - name: runhub
-              hostPath:
-                path: /runhub
-                type: Directory
-        server:
-          service:
-            servicePortHttpsName: grpc
+                    hs.status = "Progressing"
+                    return hs
+              users.anonymous.enabled: true
+            params:
+              applicationsetcontroller.enable.progressive.syncs: true
+              server.insecure: true
+            rbac:
+              policy.default: role:admin
+          repoServer:
+            volumeMounts:
+              - mountPath: /runhub
+                name: runhub
+                readOnly: true
+            volumes:
+              - name: runhub
+                hostPath:
+                  path: /runhub
+                  type: Directory
+          server:
+            service:
+              servicePortHttpsName: grpc
+    - repoURL: "{{ .Values.runhub.repository }}"
+      targetRevision: "{{ .Values.runhub.revision }}"
+      path: charts/namespace
   destination:
     name: in-cluster
     namespace: argocd
@@ -59,6 +62,4 @@ spec:
       prune: true
     retry:
       limit: 0
-    syncOptions:
-      - CreateNamespace=true
 #{{ end }}

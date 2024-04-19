@@ -16,4 +16,6 @@ spec:
   namespaceResourceWhitelist:
     - group: "*"
       kind: "*"
-  clusterResourceWhitelist: []
+  clusterResourceWhitelist:
+    - group: ""
+      kind: Namespace

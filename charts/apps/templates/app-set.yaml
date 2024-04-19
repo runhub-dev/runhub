@@ -43,3 +43,6 @@ spec:
         - repoURL: "{{ `{{ .valuesObject.app.repository }}` }}"
           targetRevision: "{{ `{{ .valuesObject.app.revision }}` }}"
           ref: appRepository
+        - repoURL: "{{ .Values.runhub.repository }}"
+          targetRevision: "{{ .Values.runhub.revision }}"
+          path: charts/namespace
