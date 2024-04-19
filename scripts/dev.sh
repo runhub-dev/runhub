@@ -94,15 +94,6 @@ get_current_commit() {
   git -C "${runhub_dir}" rev-parse --verify HEAD
 }
 
-get_installed_commit() {
-  operator="$(kubectl get applicationsets.argoproj.io --namespace argocd runhub-operator \
-    --output yaml 2> /dev/null || true)"
-
-  if [ "${operator}" ]; then
-    echo "${operator}" | yq --exit-status '.spec.template.spec.source.targetRevision'
-  fi
-}
-
 has_new_commit() {
   [ "$(get_current_commit)" != "${current_commit}" ]
 }
@@ -128,51 +119,46 @@ install_operator() {
 
 install() {
   current_commit="$(get_current_commit)"
-  installed_commit="$(get_installed_commit)"
 
-  if [ "${current_commit}" != "${installed_commit}" ] || "${is_first_install:-true}"; then
+  if [ "${current_commit}" != "${previous_commit:-''}" ]; then
     echo 'Installing commit '"${current_commit}"'.'
-  fi
 
-  if ! "${is_argo_cd_ready:-false}"; then
-    if "${scripts_dir}"/install-argo-cd.sh; then
-      echo 'Waiting until Argo CD is ready.'
-      until is_available argocd; do has_new_commit && return; sleep 1; done
-      is_argo_cd_ready=true
-    else
-      echo 'Argo CD install failed, waiting for new commit.'
-      until has_new_commit; do sleep 1; done
-      return
+    if ! "${is_argo_cd_ready:-false}"; then
+      if "${scripts_dir}"/install-argo-cd.sh; then
+        echo 'Waiting until Argo CD is ready.'
+        until is_available argocd; do has_new_commit && return; sleep 1; done
+        is_argo_cd_ready=true
+      else
+        echo 'Argo CD install failed, waiting for new commit.'
+        until has_new_commit; do sleep 1; done
+        return
+      fi
     fi
-  fi
 
-  if [ "${current_commit}" != "${installed_commit}" ]; then
-    if ! install_operator; then
+    if install_operator; then
+      if ! "${is_runhub_ready:-false}"; then
+        echo 'Waiting until runhub is ready.'
+        until is_healthy runhub; do has_new_commit && return; sleep 1; done
+        echo 'Waiting until Argo CD is ready.'
+        until is_healthy argo-cd; do has_new_commit && return; sleep 1; done
+        echo 'Waiting until Istio is ready.'
+        until is_healthy istio-base; do has_new_commit && return; sleep 1; done
+        until is_healthy istiod; do has_new_commit && return; sleep 1; done
+        until is_healthy istio-ingressgateway; do has_new_commit && return; sleep 1; done
+        until is_healthy runhub-istio; do has_new_commit && return; sleep 1; done
+        until is_available istio-system; do has_new_commit && return; sleep 1; done
+        is_runhub_ready=true
+      fi
+    else
       echo 'runhub operator install failed, waiting for new commit.'
       until has_new_commit; do sleep 1; done
       return
     fi
-  fi
 
-  if ! "${is_runhub_ready:-false}"; then
-    echo 'Waiting until runhub is ready.'
-    until is_healthy runhub; do has_new_commit && return; sleep 1; done
-    echo 'Waiting until Argo CD is ready.'
-    until is_healthy argo-cd; do has_new_commit && return; sleep 1; done
-    echo 'Waiting until Istio is ready.'
-    until is_healthy istio-base; do has_new_commit && return; sleep 1; done
-    until is_healthy istiod; do has_new_commit && return; sleep 1; done
-    until is_healthy istio-ingressgateway; do has_new_commit && return; sleep 1; done
-    until is_healthy runhub-istio; do has_new_commit && return; sleep 1; done
-    until is_available istio-system; do has_new_commit && return; sleep 1; done
-    is_runhub_ready=true
-  fi
-
-  if [ "${current_commit}" != "${installed_commit}" ] || "${is_first_install:-true}"; then
     echo 'Serving runhub at http://runhub.localhost:8080.'
     echo 'Waiting for new commit.'
     echo 'Press Ctrl+C to stop.'
-    is_first_install=false
+    previous_commit="${current_commit}"
   fi
 }
 
