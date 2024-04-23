@@ -110,11 +110,10 @@ is_healthy() {
 
 install_operator() {
   echo 'Installing runhub operator.'
-  helm upgrade --install --create-namespace \
-    --namespace runhub runhub-operator \
+  operator_chart_yaml="$(helm template --namespace runhub runhub-operator \
     "${runhub_dir}"/charts/runhub-operator \
-    --set dev.repository='file:///runhub',dev.revision="${current_commit}" \
-    > /dev/null
+    --set dev.repository='file:///runhub',dev.revision="${current_commit}")"
+  echo "${operator_chart_yaml}" | kubectl apply --filename - > /dev/null
 }
 
 install() {
