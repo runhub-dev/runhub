@@ -2,6 +2,7 @@ apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
   name: runhub
+  namespace: "{{ .Release.Namespace }}"
 spec:
   gateways:
     - runhub

@@ -4,6 +4,7 @@ apiVersion: serving.knative.dev/v1
 kind: Route
 metadata:
   name: "{{ $serviceName }}"
+  namespace: "{{ $.Release.Namespace }}"
 spec:
   traffic:
     - configurationName: "{{ $serviceName }}"

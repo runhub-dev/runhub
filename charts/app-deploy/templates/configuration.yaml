@@ -4,6 +4,7 @@ apiVersion: serving.knative.dev/v1
 kind: Configuration
 metadata:
   name: "{{ $serviceName }}"
+  namespace: "{{ $.Release.Namespace }}"
 spec:
   template:
     spec:
