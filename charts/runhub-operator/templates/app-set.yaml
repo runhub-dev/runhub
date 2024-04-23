@@ -20,6 +20,10 @@ spec:
       name: runhub
     spec:
       project: runhub-operator
+      source:
+        repoURL: '{{ dig "dev" "repository" "{{ .runhub.repository }}" .Values.AsMap }}'
+        targetRevision: '{{ dig "dev" "revision" "{{ .runhub.revision }}" .Values.AsMap }}'
+        path: charts/runhub
       destination:
         name: in-cluster
         namespace: "{{ .Release.Namespace }}"
@@ -30,27 +34,21 @@ spec:
           limit: 0
   templatePatch: |
     spec:
-      sources:
-        - repoURL: '{{ dig "dev" "repository" "{{ .runhub.repository }}" .Values.AsMap }}'
-          targetRevision: '{{ dig "dev" "revision" "{{ .runhub.revision }}" .Values.AsMap }}'
-          path: charts/runhub
-          helm:
-            values: |{{ `{{ toYaml (omit . "path") | nindent 10 }}` }}
-            parameters:
-              - name: runhub.revision
-                value: $ARGOCD_APP_REVISION
-              {{- if hasKey .Values "dev" }}
-              - name: runhub.repository
-                value: "{{ .Values.dev.repository }}"
-              {{ `{{- if hasKey . "apps" }}` }}
-              {{ `{{- range $appName, $app := .apps }}` }}
-              - name: "apps.{{ `{{ $appName }}` }}.repository"
-                value: "{{ .Values.dev.repository }}"
-              - name: "apps.{{ `{{ $appName }}` }}.revision"
-                value: "{{ .Values.dev.revision }}"
-              {{ `{{- end }}` }}
-              {{ `{{- end }}` }}
-              {{- end }}
-        - repoURL: '{{ dig "dev" "repository" "{{ .runhub.repository }}" .Values.AsMap }}'
-          targetRevision: '{{ dig "dev" "revision" "{{ .runhub.revision }}" .Values.AsMap }}'
-          path: charts/namespace
+      source:
+        helm:
+          values: |{{ `{{ toYaml (omit . "path") | nindent 10 }}` }}
+          parameters:
+            - name: runhub.revision
+              value: $ARGOCD_APP_REVISION
+            {{- if hasKey .Values "dev" }}
+            - name: runhub.repository
+              value: "{{ .Values.dev.repository }}"
+            {{ `{{- if hasKey . "apps" }}` }}
+            {{ `{{- range $appName, $app := .apps }}` }}
+            - name: "apps.{{ `{{ $appName }}` }}.repository"
+              value: "{{ .Values.dev.repository }}"
+            - name: "apps.{{ `{{ $appName }}` }}.revision"
+              value: "{{ .Values.dev.revision }}"
+            {{ `{{- end }}` }}
+            {{ `{{- end }}` }}
+            {{- end }}
