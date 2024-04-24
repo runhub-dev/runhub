@@ -14,6 +14,8 @@ spec:
   syncPolicy:
     automated:
       prune: true
+    syncOptions:
+      - ServerSideApply=true
     retry:
       limit: 0
 #{{ end }}
