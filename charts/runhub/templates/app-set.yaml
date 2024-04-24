@@ -73,3 +73,5 @@ spec:
       destination: {}
   templatePatch: |
     {{ `{{ toYaml . | indent 4 }}` }}
+  syncPolicy:
+    preserveResourcesOnDeletion: true

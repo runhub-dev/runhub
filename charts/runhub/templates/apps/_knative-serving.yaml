@@ -3,6 +3,8 @@ metadata:
   name: knative-serving
   labels:
     app: knative-serving
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   source:
     repoURL: "{{ .Values.runhub.repository }}"

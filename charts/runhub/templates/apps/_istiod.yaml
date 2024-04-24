@@ -3,6 +3,8 @@ metadata:
   name: istiod
   labels:
     app: istiod
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   source:
     repoURL: https://istio-release.storage.googleapis.com/charts

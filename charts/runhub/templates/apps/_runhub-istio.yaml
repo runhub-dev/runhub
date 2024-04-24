@@ -3,6 +3,8 @@ metadata:
   name: runhub-istio
   labels:
     app: runhub-istio
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   source:
     repoURL: "{{ .Values.runhub.repository }}"

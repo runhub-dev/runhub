@@ -3,6 +3,8 @@ metadata:
   name: istio-ingressgateway
   labels:
     app: istio-ingressgateway
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   source:
     repoURL: https://istio-release.storage.googleapis.com/charts

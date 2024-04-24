@@ -3,6 +3,8 @@ metadata:
   name: istio-base
   labels:
     app: istio-base
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   sources:
     - repoURL: https://istio-release.storage.googleapis.com/charts
