@@ -10,14 +10,17 @@ echo 'Installing Argo CD.'
 namespace_chart_yaml="$(helm template --namespace argocd argocd "${runhub_dir}"/charts/namespace)"
 runhub_chart_yaml="$(helm template --namespace runhub runhub "${runhub_dir}"/charts/runhub \
   --values "${runhub_dir}"/runhub-infra.yaml)"
-app_source_yaml="$(echo "${runhub_chart_yaml}" | yq --exit-status '
+argo_cd_app_source_yaml="$(echo "${runhub_chart_yaml}" | yq --exit-status '
   select(.kind == "ApplicationSet" and .metadata.name == "runhub").spec.generators.[] |
   select(.list).list.elements.[] |
   select(.metadata.name == "argo-cd").spec.sources.[] |
   select(.chart == "argo-cd")')"
-version="$(echo "${app_source_yaml}" | yq --exit-status '.targetRevision')"
-values="$(echo "${app_source_yaml}"  | yq --exit-status '.helm.values')"
-chart_yaml="$(echo "${values}" | helm template --namespace argocd argocd \
-  --repo https://argoproj.github.io/argo-helm argo-cd --version "${version}" --values -)"
-printf '%s\n%s\n' "${namespace_chart_yaml}" "${chart_yaml}" \
-  | kubectl apply --filename - > /dev/null
+argo_cd_version="$(echo "${argo_cd_app_source_yaml}" | yq --exit-status '.targetRevision')"
+argo_cd_values="$(echo "${argo_cd_app_source_yaml}"  | yq --exit-status '.helm.values')"
+argo_cd_chart_yaml="$(echo "${argo_cd_values}" | helm template --namespace argocd argocd \
+  --repo https://argoproj.github.io/argo-helm argo-cd --version "${argo_cd_version}" --values -)"
+combined_chart_yaml="$(printf '%s\n%s' "${namespace_chart_yaml}" "${argo_cd_chart_yaml}")"
+labeled_chart_yaml="$(echo "${combined_chart_yaml}" | yq '
+  select(.kind != "CustomResourceDefinition")
+  .metadata.labels += {"argocd.argoproj.io/instance": "argo-cd"}')"
+echo "${labeled_chart_yaml}" | kubectl apply --filename - > /dev/null
