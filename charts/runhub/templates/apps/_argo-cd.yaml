@@ -58,7 +58,7 @@ spec:
         releaseName: argocd
     - repoURL: "{{ .Values.runhub.repository }}"
       targetRevision: "{{ .Values.runhub.revision }}"
-      path: charts/argo-cd-post
+      path: charts/argo-cd
       helm:
         releaseName: argocd
   destination:
