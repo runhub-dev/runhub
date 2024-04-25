@@ -108,8 +108,8 @@ is_healthy() {
     | yq --exit-status '.status.health.status == "Healthy"' > /dev/null 2>&1
 }
 
-install_operator() {
-  echo 'Installing runhub operator.'
+install_runhub() {
+  echo 'Installing runhub.'
   helm upgrade --install --create-namespace --namespace runhub runhub-operator \
     "${runhub_dir}"/charts/runhub-operator \
     --set dev.repository='file:///runhub',dev.revision="${current_commit}" > /dev/null
@@ -133,7 +133,7 @@ install() {
       fi
     fi
 
-    if install_operator; then
+    if install_runhub; then
       if ! "${is_runhub_ready:-false}"; then
         echo 'Waiting until runhub is ready.'
         until is_healthy runhub; do has_new_commit && return; sleep 1; done
@@ -148,7 +148,7 @@ install() {
         is_runhub_ready=true
       fi
     else
-      echo 'runhub operator install failed, waiting for new commit.'
+      echo 'runhub install failed, waiting for new commit.'
       until has_new_commit; do sleep 1; done
       return
     fi
