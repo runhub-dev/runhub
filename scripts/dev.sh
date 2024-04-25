@@ -143,7 +143,7 @@ install() {
         until is_healthy istio-base; do has_new_commit && return; sleep 1; done
         until is_healthy istiod; do has_new_commit && return; sleep 1; done
         until is_healthy istio-ingressgateway; do has_new_commit && return; sleep 1; done
-        until is_healthy runhub-istio; do has_new_commit && return; sleep 1; done
+        until is_healthy runhub-routes; do has_new_commit && return; sleep 1; done
         until is_available istio-system; do has_new_commit && return; sleep 1; done
         is_runhub_ready=true
       fi
