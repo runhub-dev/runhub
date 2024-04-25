@@ -32,6 +32,12 @@
     "runhub": {
       "type": "object",
       "properties": {
+        "domain": {
+          "type": "string",
+          "format": "hostname",
+          "pattern": "^[-a-z0-9.]*$",
+          "minLength": 1
+        },
         "repository": {
           "type": "string",
           "minLength": 1
@@ -41,7 +47,7 @@
           "minLength": 1
         }
       },
-      "required": ["repository", "revision"],
+      "required": ["domain", "repository", "revision"],
       "additionalProperties": false
     }
   },

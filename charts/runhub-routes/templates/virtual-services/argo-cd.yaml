@@ -7,7 +7,7 @@ spec:
   gateways:
     - runhub
   hosts:
-    - runhub-argo-cd.localhost
+    - "runhub-argo-cd.{{ .Values.runhub.domain }}"
   http:
     - match:
         - headers:

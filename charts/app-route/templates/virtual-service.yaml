@@ -9,7 +9,7 @@ spec:
   gateways:
     - runhub/runhub
   hosts:
-    - "{{ $.Values.app.name }}-{{ $serviceName  }}.localhost"
+    - "{{ $.Values.app.name }}-{{ $serviceName  }}.{{ $.Values.runhub.domain }}"
   http:
     - rewrite:
         authority: "{{ $serviceName  }}.{{ $.Release.Namespace }}.svc.cluster.local"

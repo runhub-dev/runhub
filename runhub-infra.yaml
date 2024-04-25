@@ -3,5 +3,6 @@ apps:
     repository: https://github.com/runhub-dev/runhub
     revision: main
 runhub:
+  domain: localhost
   repository: https://github.com/runhub-dev/runhub
   revision: main

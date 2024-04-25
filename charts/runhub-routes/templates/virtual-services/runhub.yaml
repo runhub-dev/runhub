@@ -7,8 +7,8 @@ spec:
   gateways:
     - runhub
   hosts:
-    - runhub.localhost
+    - "runhub.{{ .Values.runhub.domain }}"
   http:
     - redirect:
-        authority: runhub-argo-cd.localhost:8080
+        authority: "runhub-argo-cd.{{ .Values.runhub.domain }}:8080"
         redirectCode: 307

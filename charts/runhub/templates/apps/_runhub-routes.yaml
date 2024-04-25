@@ -10,6 +10,9 @@ spec:
     repoURL: "{{ .Values.runhub.repository }}"
     targetRevision: "{{ .Values.runhub.revision }}"
     path: charts/runhub-routes
+    helm:
+      values: |
+        {{ toYaml .Values | indent 8 | trim }}
   destination:
     name: in-cluster
     namespace: "{{ .Release.Namespace }}"
