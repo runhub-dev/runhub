@@ -6,7 +6,7 @@ metadata:
   name: "rh-{{ $appName }}"
   namespace: argocd
   annotations:
-    argocd.argoproj.io/sync-wave: "1"
+    argocd.argoproj.io/sync-wave: "-1"
 spec:
   sourceRepos:
     - "{{ $.Values.runhub.repository }}"
