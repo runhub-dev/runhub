@@ -1,3 +1,3 @@
 apiVersion: v2
-name: app-deploy
+name: runhub-app-deployments
 version: 0.0.0

@@ -10,8 +10,8 @@ spec:
   generators:
     - list:
         elements:
-          - stage: deploy
-          - stage: route
+          - stage: deployments
+          - stage: routes
   strategy:
     type: RollingSync
     rollingSync:
@@ -20,12 +20,12 @@ spec:
             - key: stage
               operator: In
               values:
-                - deploy
+                - deployments
         - matchExpressions:
             - key: stage
               operator: In
               values:
-                - route
+                - routes
   template:
     metadata:
       name: "{{ .Release.Namespace }}-{{ `{{ .stage }}` }}"
@@ -36,7 +36,7 @@ spec:
       source:
         repoURL: "{{ .Values.runhub.repository }}"
         targetRevision: "{{ .Values.runhub.revision }}"
-        path: "charts/app-{{ `{{ .stage }}` }}"
+        path: "charts/runhub-app-{{ `{{ .stage }}` }}"
       destination:
         name: in-cluster
         namespace: "{{ .Release.Namespace }}"
