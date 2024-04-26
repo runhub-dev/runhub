@@ -5,8 +5,8 @@ kind: AppProject
 metadata:
   name: "rh-{{ $appName }}"
   namespace: argocd
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   sourceRepos:
     - "{{ $.Values.runhub.repository }}"

@@ -3,6 +3,8 @@ kind: ApplicationSet
 metadata:
   name: "{{ .Release.Namespace }}"
   namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
 spec:
   goTemplate: true
   goTemplateOptions:
