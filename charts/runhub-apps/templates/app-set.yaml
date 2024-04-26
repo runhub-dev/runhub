@@ -11,7 +11,7 @@ spec:
     - list:
         elements:
           #{{ range $appName, $app := .Values.apps }}
-          - name: "runhub-app-{{ $appName }}"
+          - name: "rh-{{ $appName }}"
             valuesObject:
               app: #{{ toYaml $app | nindent 16 }}
                 name: "{{ $appName }}"

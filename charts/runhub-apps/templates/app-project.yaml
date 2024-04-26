@@ -3,7 +3,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
-  name: "runhub-app-{{ $appName }}"
+  name: "rh-{{ $appName }}"
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
@@ -12,7 +12,7 @@ spec:
     - "{{ $.Values.runhub.repository }}"
     - "{{ $app.repository }}"
   destinations:
-    - namespace: "runhub-app-{{ $appName }}"
+    - namespace: "rh-{{ $appName }}"
       name: in-cluster
     - namespace: argocd
       name: in-cluster
