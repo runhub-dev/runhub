@@ -3,8 +3,6 @@ kind: AppProject
 metadata:
   name: default
   namespace: "{{ .Release.Namespace }}"
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
 spec:
   sourceRepos: []
   destinations: []
