@@ -14,6 +14,7 @@ spec:
           configs:
             cm:
               admin.enabled: false
+              application.resourceTrackingMethod: annotation
               resource.customizations: |
                 serving.knative.dev/Configuration:
                   health.lua: |
