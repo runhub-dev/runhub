@@ -1,15 +1,15 @@
-#{{ define "runhub.app.apps" }}
+#{{ define "runhub.app.runhub-apps" }}
 metadata:
-  name: apps
+  name: runhub-apps
   labels:
-    app: apps
+    app: runhub-apps
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
   source:
     repoURL: "{{ .Values.runhub.repository }}"
     targetRevision: "{{ .Values.runhub.revision }}"
-    path: charts/apps
+    path: charts/runhub-apps
     helm:
       values: |
         {{ toYaml .Values | indent 8 | trim }}

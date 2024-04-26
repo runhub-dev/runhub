@@ -18,7 +18,7 @@ spec:
           -  #{{ include "runhub.app.knative-operator" . | indent 12 }}
           -  #{{ include "runhub.app.knative-serving" . | indent 12 }}
           #{{ if .Values.apps }}
-          -  #{{ include "runhub.app.apps" . | indent 12 }}
+          -  #{{ include "runhub.app.runhub-apps" . | indent 12 }}
           #{{ end }}
   strategy:
     type: RollingSync
@@ -64,7 +64,7 @@ spec:
             - key: app
               operator: In
               values:
-                - apps
+                - runhub-apps
         #{{ end }}
   template:
     metadata: {}
