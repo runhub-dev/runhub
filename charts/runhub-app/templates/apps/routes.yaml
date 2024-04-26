@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: "{{ .Release.Namespace }}-routes"
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  project: "{{ .Release.Namespace }}"
+  source:
+    repoURL: "{{ .Values.runhub.repository }}"
+    targetRevision: "{{ .Values.runhub.revision }}"
+    path: charts/runhub-app-routes
+    helm:
+      values: |
+        {{ toYaml .Values | indent 8 | trim }}
+  destination:
+    name: in-cluster
+    namespace: "{{ .Release.Namespace }}"
+  syncPolicy:
+    automated:
+      prune: true
+    retry:
+      limit: 0
