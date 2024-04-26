@@ -64,10 +64,10 @@ start_dev_cluster() {
       | yq --exit-status '.k3d' > /dev/null 2>&1; do true; done
   fi
 
-  k3d_version_output="$(k3d version --output json)"
-  k3d_version="$(echo "${k3d_version_output}" | yq --exit-status '.k3d')"
+  runhub_k3d_version_output="$(k3d version --output json)"
+  runhub_k3d_version="$(echo "${runhub_k3d_version_output}" | yq --exit-status '.k3d')"
   runhub_absolute_dir="$(cd "${runhub_dir}" && pwd)"
-  export k3d_version runhub_absolute_dir
+  export runhub_k3d_version runhub_absolute_dir
   dev_cluster_yaml="$(envsubst -no-unset -no-empty -i "${runhub_dir}"/dev-cluster.yaml)"
   echo "${dev_cluster_yaml}" | ctlptl apply --filename -
 }
