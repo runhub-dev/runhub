@@ -3,6 +3,7 @@
     "colima@latest",
     "ctlptl@latest",
     "docker-client@latest",
+    "envsubst@latest",
     "k3d@latest",
     "kubectl@latest",
     "kubernetes-helm@latest",

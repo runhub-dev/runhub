@@ -66,9 +66,9 @@ start_dev_cluster() {
 
   k3d_version_output="$(k3d version --output json)"
   k3d_version="$(echo "${k3d_version_output}" | yq --exit-status '.k3d')"
-  runub_absolute_dir="$(cd "${runhub_dir}" && pwd)"
-  dev_cluster_yaml="$(helm template "${runhub_dir}"/charts/dev-runhub-cluster \
-    --set k3dVersion="${k3d_version}",runhubAbsoluteDir="${runub_absolute_dir}")"
+  runhub_absolute_dir="$(cd "${runhub_dir}" && pwd)"
+  export k3d_version runhub_absolute_dir
+  dev_cluster_yaml="$(envsubst -no-unset -no-empty -i "${runhub_dir}"/dev-cluster.yaml)"
   echo "${dev_cluster_yaml}" | ctlptl apply --filename -
 }
 
