@@ -4,4 +4,4 @@ metadata:
   name: knative-serving
   namespace: "{{ .Release.Namespace }}"
 spec:
-  version: 1.14.0
+  version: 1.13.1

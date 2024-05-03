@@ -10,6 +10,8 @@ spec:
     repoURL: "{{ .Values.runhub.repository }}"
     targetRevision: "{{ .Values.runhub.revision }}"
     path: kustomizations/knative-operator
+    kustomize:
+      namespace: knative-operator
   destination:
     name: in-cluster
     namespace: knative-operator
