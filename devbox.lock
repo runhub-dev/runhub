@@ -2,8 +2,8 @@
   "lockfile_version": "1",
   "packages": {
     "colima@latest": {
-      "last_modified": "2024-04-19T17:36:04-04:00",
-      "resolved": "github:NixOS/nixpkgs/92d295f588631b0db2da509f381b4fb1e74173c5#colima",
+      "last_modified": "2024-04-28T10:22:29-04:00",
+      "resolved": "github:NixOS/nixpkgs/cf8cc1201be8bc71b7cbbbdaf349b22f4f99c7ae#colima",
       "source": "devbox-search",
       "version": "0.6.8",
       "systems": {
@@ -11,11 +11,11 @@
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/mbijj9pmf5jrhkasylm6rbklkj91ns5y-colima-0.6.8",
+              "path": "/nix/store/2vihnwkpwih1761dll7h9zdhdkls6f4d-colima-0.6.8",
               "default": true
             }
           ],
-          "store_path": "/nix/store/mbijj9pmf5jrhkasylm6rbklkj91ns5y-colima-0.6.8"
+          "store_path": "/nix/store/2vihnwkpwih1761dll7h9zdhdkls6f4d-colima-0.6.8"
         },
         "aarch64-linux": {
           "outputs": [
@@ -31,11 +31,11 @@
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/9mmsmajnqx1y1md25kd6rk89maqrf6j2-colima-0.6.8",
+              "path": "/nix/store/9i9vzhb36cy9248yv093gzsa9d54k19p-colima-0.6.8",
               "default": true
             }
           ],
-          "store_path": "/nix/store/9mmsmajnqx1y1md25kd6rk89maqrf6j2-colima-0.6.8"
+          "store_path": "/nix/store/9i9vzhb36cy9248yv093gzsa9d54k19p-colima-0.6.8"
         },
         "x86_64-linux": {
           "outputs": [
@@ -137,11 +137,11 @@
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/nll1fz8a8q36kn3vjhngfr5gf3mirw8v-docker-24.0.5",
+              "path": "/nix/store/61c12nqd0g04a7qiggmpw0saylq9m81f-docker-24.0.5",
               "default": true
             }
           ],
-          "store_path": "/nix/store/nll1fz8a8q36kn3vjhngfr5gf3mirw8v-docker-24.0.5"
+          "store_path": "/nix/store/61c12nqd0g04a7qiggmpw0saylq9m81f-docker-24.0.5"
         }
       }
     },
@@ -241,7 +241,7 @@
         }
       }
     },
-    "kubectl@latest": {
+    "kubectl@1.29": {
       "last_modified": "2024-04-19T17:36:04-04:00",
       "resolved": "github:NixOS/nixpkgs/92d295f588631b0db2da509f381b4fb1e74173c5#kubectl",
       "source": "devbox-search",
@@ -374,8 +374,8 @@
       }
     },
     "lima-bin@latest": {
-      "last_modified": "2024-04-19T17:36:04-04:00",
-      "resolved": "github:NixOS/nixpkgs/92d295f588631b0db2da509f381b4fb1e74173c5#lima-bin",
+      "last_modified": "2024-04-28T10:22:29-04:00",
+      "resolved": "github:NixOS/nixpkgs/cf8cc1201be8bc71b7cbbbdaf349b22f4f99c7ae#lima-bin",
       "source": "devbox-search",
       "version": "0.21.0",
       "systems": {
@@ -403,11 +403,11 @@
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/d0fpicp3mc3n895wrrbpgh43bhbxy8pm-lima-0.21.0",
+              "path": "/nix/store/snwddfmaz5acr6n8yrpsafj8mawabl94-lima-0.21.0",
               "default": true
             }
           ],
-          "store_path": "/nix/store/d0fpicp3mc3n895wrrbpgh43bhbxy8pm-lima-0.21.0"
+          "store_path": "/nix/store/snwddfmaz5acr6n8yrpsafj8mawabl94-lima-0.21.0"
         },
         "x86_64-linux": {
           "outputs": [
