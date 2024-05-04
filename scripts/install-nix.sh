@@ -5,7 +5,7 @@ set -o nounset
 
 scripts_dir="$(dirname "$0")"
 version='2.21.2'
-installer_version='0.18.0'
+installer_version='0.19.0'
 
 install() {
   (
