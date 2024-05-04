@@ -30,8 +30,7 @@ spec:
       syncPolicy:
         automated:
           prune: true
-        retry:
-          limit: 0
+        retry: {}
   templatePatch: |
     spec:
       source:

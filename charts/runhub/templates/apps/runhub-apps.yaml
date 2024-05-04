@@ -23,4 +23,5 @@ spec:
   syncPolicy:
     automated:
       prune: true
+    retry: {}
 #{{ end }}
