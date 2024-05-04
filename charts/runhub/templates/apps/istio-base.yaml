@@ -1,11 +1,14 @@
-#{{ define "runhub.app.istio-base" }}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
 metadata:
   name: istio-base
-  labels:
-    app: istio-base
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
+  project: runhub
   sources:
     - repoURL: https://istio-release.storage.googleapis.com/charts
       targetRevision: 1.21.2
@@ -13,17 +16,17 @@ spec:
     - repoURL: "{{ .Values.runhub.repository }}"
       targetRevision: "{{ .Values.runhub.revision }}"
       path: charts/namespace
+    - repoURL: "{{ .Values.runhub.repository }}"
+      targetRevision: "{{ .Values.runhub.revision }}"
+      path: charts/wait-for-crds
   destination:
     name: in-cluster
     namespace: istio-system
   syncPolicy:
     automated:
       prune: true
-    retry:
-      limit: 0
   ignoreDifferences:
     - group: "*"
       kind: "*"
       managedFieldsManagers:
         - pilot-discovery
-#{{ end }}

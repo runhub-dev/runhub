@@ -1,9 +1,12 @@
-#{{ define "runhub.app.argo-cd" }}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
 metadata:
   name: argo-cd
-  labels:
-    app: argo-cd
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
+  project: runhub
   sources:
     - repoURL: https://argoproj.github.io/argo-helm
       targetRevision: 6.7.18
@@ -50,7 +53,6 @@ spec:
                     return hs
               users.anonymous.enabled: true
             params:
-              applicationsetcontroller.enable.progressive.syncs: true
               server.insecure: true
             rbac:
               policy.default: role:admin
@@ -83,6 +85,3 @@ spec:
   syncPolicy:
     automated:
       prune: true
-    retry:
-      limit: 0
-#{{ end }}

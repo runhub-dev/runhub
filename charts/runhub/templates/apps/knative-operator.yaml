@@ -1,11 +1,14 @@
-#{{ define "runhub.app.knative-operator" }}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
 metadata:
   name: knative-operator
-  labels:
-    app: knative-operator
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "6"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
+  project: runhub
   source:
     repoURL: "{{ .Values.runhub.repository }}"
     targetRevision: "{{ .Values.runhub.revision }}"
@@ -16,11 +19,8 @@ spec:
   syncPolicy:
     automated:
       prune: true
-    retry:
-      limit: 0
   ignoreDifferences:
     - group: "*"
       kind: "*"
       managedFieldsManagers:
         - clusterrole-aggregation-controller
-#{{ end }}

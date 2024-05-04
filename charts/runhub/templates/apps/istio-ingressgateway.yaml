@@ -1,21 +1,21 @@
-#{{ define "runhub.app.istiod" }}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
 metadata:
-  name: istiod
-  labels:
-    app: istiod
+  name: istio-ingressgateway
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
+  project: runhub
   source:
     repoURL: https://istio-release.storage.googleapis.com/charts
     targetRevision: 1.21.2
-    chart: istiod
+    chart: gateway
   destination:
     name: in-cluster
     namespace: istio-system
   syncPolicy:
     automated:
       prune: true
-    retry:
-      limit: 0
-#{{ end }}

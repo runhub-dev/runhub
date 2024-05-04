@@ -11,9 +11,7 @@ namespace_chart_yaml="$(helm template --namespace argocd argocd "${runhub_dir}"/
 runhub_chart_yaml="$(helm template --namespace runhub runhub "${runhub_dir}"/charts/runhub \
   --values "${runhub_dir}"/runhub-infra.yaml)"
 app_source_yaml="$(echo "${runhub_chart_yaml}" | yq --exit-status '
-  select(.kind == "ApplicationSet" and .metadata.name == "runhub").spec.generators.[] |
-  select(.list).list.elements.[] |
-  select(.metadata.name == "argo-cd").spec.sources.[] |
+  select(.kind == "Application" and .metadata.name == "argo-cd").spec.sources.[] |
   select(.chart == "argo-cd")')"
 version="$(echo "${app_source_yaml}" | yq --exit-status '.targetRevision')"
 values="$(echo "${app_source_yaml}"  | yq --exit-status '.helm.values')"

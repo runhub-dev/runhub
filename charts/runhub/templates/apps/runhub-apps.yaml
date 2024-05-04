@@ -1,11 +1,15 @@
-#{{ define "runhub.app.runhub-apps" }}
+#{{ if .Values.apps }}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
 metadata:
   name: runhub-apps
-  labels:
-    app: runhub-apps
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "8"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
+  project: runhub
   source:
     repoURL: "{{ .Values.runhub.repository }}"
     targetRevision: "{{ .Values.runhub.revision }}"
@@ -19,6 +23,4 @@ spec:
   syncPolicy:
     automated:
       prune: true
-    retry:
-      limit: 0
 #{{ end }}
