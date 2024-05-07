@@ -99,12 +99,12 @@ has_new_commit() {
 }
 
 is_available() {
-  kubectl get --namespace "$1" deployments,statefulsets --output yaml | yq --exit-status \
+  kubectl get deployments,statefulsets --namespace "$1" --output yaml | yq --exit-status \
     '[.items[].status.availableReplicas // 0] | all_c(. >= 1)' > /dev/null 2>&1
 }
 
 is_healthy() {
-  kubectl get --ignore-not-found applications.argoproj.io --namespace argocd "$1" --output yaml \
+  kubectl get applications.argoproj.io  --ignore-not-found --namespace argocd "$1" --output yaml \
     | yq --exit-status '.status.health.status == "Healthy"' > /dev/null 2>&1
 }
 
