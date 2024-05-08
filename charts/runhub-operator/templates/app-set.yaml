@@ -35,7 +35,6 @@ spec:
     spec:
       source:
         helm:
-          valuesObject: {{ `{{ toYaml (omit . "path") | nindent 10 }}` }}
           parameters:
             - name: runhub.revision
               value: $ARGOCD_APP_REVISION
@@ -51,3 +50,4 @@ spec:
             {{ `{{- end }}` }}
             {{ `{{- end }}` }}
             {{- end }}
+          valuesObject: {{ `{{ toYaml (omit . "path") | nindent 8 }}` }}
