@@ -1,12 +1,15 @@
 #{{ range $serviceName, $service := .Values.services }}
 ---
 apiVersion: serving.knative.dev/v1
-kind: Route
+kind: Configuration
 metadata:
   name: "{{ $serviceName }}"
   namespace: "{{ $.Release.Namespace }}"
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
-  traffic:
-    - configurationName: "{{ $serviceName }}"
-      percent: 100
+  template:
+    spec:
+      containers:
+        - image: "{{ $service.image }}"
 #{{ end }}
