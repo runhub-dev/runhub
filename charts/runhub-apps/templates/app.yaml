@@ -16,10 +16,10 @@ spec:
       helm:
         valueFiles:
           - $appRepository/runhub-app.yaml
-        values: |
-          app: {{ toYaml $app | nindent 12 }}
+        valuesObject:
+          app: #{{ toYaml $app | nindent 12 }}
             name: "{{ $appName }}"
-          runhub: {{ toYaml $.Values.runhub | nindent 12 }}
+          runhub: #{{ toYaml $.Values.runhub | nindent 12 }}
     - repoURL: "{{ $app.repository}}"
       targetRevision: "{{ $app.revision }}"
       ref: appRepository

@@ -13,7 +13,7 @@ spec:
       chart: argo-cd
       helm:
         releaseName: argocd
-        values: |
+        valuesObject:
           configs:
             cm:
               admin.enabled: false

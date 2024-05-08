@@ -14,8 +14,7 @@ spec:
     targetRevision: "{{ .Values.runhub.revision }}"
     path: charts/runhub-app-deployments
     helm:
-      values: |
-        {{ toYaml .Values | indent 8 | trim }}
+      valuesObject: #{{ toYaml .Values | nindent 8 }}
   destination:
     name: in-cluster
     namespace: "{{ .Release.Namespace }}"
