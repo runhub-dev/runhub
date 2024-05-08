@@ -21,52 +21,13 @@ spec:
               resource.customizations: |
                 argoproj.io/Application:
                   health.lua: |
-                    local hs = {}
-                    hs.status = "Progressing"
-                    hs.message = ""
-                    if obj.status ~= nil then
-                      if obj.status.health ~= nil then
-                        if obj.status.health.status ~= nil then
-                          hs.status = obj.status.health.status
-                        end
-                        if obj.status.health.message ~= nil then
-                          hs.message = obj.status.health.message
-                        end
-                      end
-                    end
-                    return hs
+                    {{ .Files.Get "argo-cd-health-checks/app.lua" | indent 20 | trim }}
                 operator.knative.dev/KnativeServing:
                   health.lua: |
-                    local hs = {}
-                    hs.status = "Progressing"
-                    hs.message = ""
-                    if obj.status ~= nil then
-                      if obj.status.conditions ~= nil then
-                        for i, condition in pairs(obj.status.conditions) do
-                          if condition.type == "Ready" and condition.status == "True" then
-                            hs.status = "Healthy"
-                            break
-                          end
-                        end
-                      end
-                    end
-                    return hs
+                    {{ .Files.Get "argo-cd-health-checks/ready.lua" | indent 20 | trim }}
                 serving.knative.dev/Configuration:
                   health.lua: |
-                    local hs = {}
-                    hs.status = "Progressing"
-                    hs.message = ""
-                    if obj.status ~= nil then
-                      if obj.status.conditions ~= nil then
-                        for i, condition in pairs(obj.status.conditions) do
-                          if condition.type == "Ready" and condition.status == "True" then
-                            hs.status = "Healthy"
-                            break
-                          end
-                        end
-                      end
-                    end
-                    return hs
+                    {{ .Files.Get "argo-cd-health-checks/ready.lua" | indent 20 | trim }}
               users.anonymous.enabled: true
             params:
               server.insecure: true
