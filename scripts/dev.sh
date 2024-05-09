@@ -118,7 +118,7 @@ install_runhub() {
 install() {
   current_commit="$(get_current_commit)"
 
-  if [ "${current_commit}" != "${previous_commit:-''}" ]; then
+  if [ "${current_commit}" != "${previous_commit:-}" ]; then
     echo 'Installing commit '"${current_commit}"'.'
 
     if ! "${is_argo_cd_ready:-false}"; then
