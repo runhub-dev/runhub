@@ -3,4 +3,5 @@ kind: Namespace
 metadata:
   name: "{{ .Release.Namespace }}"
   annotations:
+    argocd.argoproj.io/sync-options: ServerSideApply=true
     argocd.argoproj.io/sync-wave: "-1"
