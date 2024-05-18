@@ -21,13 +21,13 @@ spec:
               resource.customizations: |
                 argoproj.io/Application:
                   health.lua: |
-                    {{ .Files.Get "argo-cd-health-checks/app.lua" | indent 20 | trim }}
+                    {{ .Files.Get "health-checks/app.lua" | indent 20 | trim }}
                 operator.knative.dev/KnativeServing:
                   health.lua: |
-                    {{ .Files.Get "argo-cd-health-checks/ready.lua" | indent 20 | trim }}
+                    {{ .Files.Get "health-checks/ready.lua" | indent 20 | trim }}
                 serving.knative.dev/Configuration:
                   health.lua: |
-                    {{ .Files.Get "argo-cd-health-checks/ready.lua" | indent 20 | trim }}
+                    {{ .Files.Get "health-checks/ready.lua" | indent 20 | trim }}
               users.anonymous.enabled: true
             params:
               server.insecure: true
