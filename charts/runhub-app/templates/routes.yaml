@@ -5,8 +5,6 @@ kind: Route
 metadata:
   name: "{{ $serviceName }}"
   namespace: "{{ $.Release.Namespace }}"
-  annotations:
-    argocd.argoproj.io/sync-wave: "2"
 spec:
   traffic:
     - configurationName: "{{ $serviceName }}"

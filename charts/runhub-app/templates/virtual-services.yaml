@@ -5,8 +5,6 @@ kind: VirtualService
 metadata:
   name: "{{ $serviceName }}"
   namespace: "{{ $.Release.Namespace }}"
-  annotations:
-    argocd.argoproj.io/sync-wave: "3"
 spec:
   gateways:
     - runhub/runhub
