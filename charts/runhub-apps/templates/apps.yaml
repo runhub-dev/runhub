@@ -30,4 +30,11 @@ spec:
     automated:
       prune: true
     retry: {}
+    syncOptions:
+      - RespectIgnoreDifferences=true
+  ignoreDifferences:
+    - group: serving.knative.dev
+      kind: Route
+      jsonPointers:
+        - /spec/traffic
 #{{ end }}

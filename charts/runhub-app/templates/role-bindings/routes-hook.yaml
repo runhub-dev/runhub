@@ -1,0 +1,12 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: routes-hook
+  namespace: "{{ .Release.Namespace }}"
+roleRef:
+  kind: Role
+  name: routes-hook
+  apiGroup: rbac.authorization.k8s.io
+subjects:
+  - kind: ServiceAccount
+    name: routes-hook

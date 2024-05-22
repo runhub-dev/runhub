@@ -5,6 +5,8 @@ kind: Route
 metadata:
   name: "{{ $serviceName }}"
   namespace: "{{ $.Release.Namespace }}"
+  annotations:
+    argocd.argoproj.io/sync-options: ServerSideApply=true
 spec:
   traffic:
     - configurationName: "{{ $serviceName }}"

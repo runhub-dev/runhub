@@ -1,0 +1,34 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: routes-hook
+  namespace: "{{ .Release.Namespace }}"
+  annotations:
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  template:
+    spec:
+      serviceAccountName: routes-hook
+      containers:
+        - name: routes-hook
+          image: bitnami/kubectl:1.29.4-debian-12-r6
+          command:
+            - sh
+            - -c
+            - |
+              {{ .Files.Get "hooks/routes.sh" | indent 14 | trim }}
+            - routes-hook
+            - "{{ .Release.Namespace }}"
+          securityContext:
+            runAsNonRoot: true
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            seccompProfile:
+              type: RuntimeDefault
+            capabilities:
+              drop:
+                - ALL
+      restartPolicy: Never
+  backoffLimit: 0
