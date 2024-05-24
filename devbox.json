@@ -5,7 +5,7 @@
     "docker-client@latest",
     "envsubst@latest",
     "k3d@latest",
-    "kubectl@1.29",
+    "kubectl@latest",
     "kubernetes-helm@latest",
     "lima-bin@latest",
     "yq-go@latest"
