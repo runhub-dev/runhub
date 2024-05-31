@@ -28,6 +28,10 @@ spec:
                 serving.knative.dev/Configuration:
                   health.lua: |
                     {{ .Files.Get "health-checks/ready.lua" | indent 20 | trim }}
+              resource.customizations.ignoreResourceUpdates.all: |
+                jsonPointers:
+                  - /status
+              resource.ignoreResourceUpdatesEnabled: true
               users.anonymous.enabled: true
             params:
               server.insecure: true
