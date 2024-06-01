@@ -2,8 +2,8 @@
   "lockfile_version": "1",
   "packages": {
     "colima@latest": {
-      "last_modified": "2024-05-23T08:10:22Z",
-      "resolved": "github:NixOS/nixpkgs/3305b2b25e4ae4baee872346eae133cf6f611783#colima",
+      "last_modified": "2024-05-29T10:04:41Z",
+      "resolved": "github:NixOS/nixpkgs/ac82a513e55582291805d6f09d35b6d8b60637a1#colima",
       "source": "devbox-search",
       "version": "0.6.9",
       "systems": {
@@ -21,11 +21,11 @@
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/hmm4az0hag1gqqrxfaqd661r7h0lsik0-colima-0.6.9",
+              "path": "/nix/store/nbbfnidysbvxwx501s219a5lwpxggrr7-colima-0.6.9",
               "default": true
             }
           ],
-          "store_path": "/nix/store/hmm4az0hag1gqqrxfaqd661r7h0lsik0-colima-0.6.9"
+          "store_path": "/nix/store/nbbfnidysbvxwx501s219a5lwpxggrr7-colima-0.6.9"
         },
         "x86_64-darwin": {
           "outputs": [
@@ -41,11 +41,11 @@
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/y09zbqf0wardy8jjwraagyn4lb1mbwcv-colima-0.6.9",
+              "path": "/nix/store/p4z5kjymazdf8nh23vr6pgridiwnmbpn-colima-0.6.9",
               "default": true
             }
           ],
-          "store_path": "/nix/store/y09zbqf0wardy8jjwraagyn4lb1mbwcv-colima-0.6.9"
+          "store_path": "/nix/store/p4z5kjymazdf8nh23vr6pgridiwnmbpn-colima-0.6.9"
         }
       }
     },
@@ -393,11 +393,11 @@
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/zb788n615pf1c0bw2xakprmbs95q4nwf-lima-0.21.0",
+              "path": "/nix/store/j48ffli9p0m0v1g3dpv11rc01am01r5b-lima-0.21.0",
               "default": true
             }
           ],
-          "store_path": "/nix/store/zb788n615pf1c0bw2xakprmbs95q4nwf-lima-0.21.0"
+          "store_path": "/nix/store/j48ffli9p0m0v1g3dpv11rc01am01r5b-lima-0.21.0"
         },
         "x86_64-darwin": {
           "outputs": [
@@ -413,11 +413,11 @@
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/g4qmhcwdbqqzjmhkk2pclndmlbd2av46-lima-0.21.0",
+              "path": "/nix/store/f2n0m3g5k9ba9y2l82shq3vzisarppmy-lima-0.21.0",
               "default": true
             }
           ],
-          "store_path": "/nix/store/g4qmhcwdbqqzjmhkk2pclndmlbd2av46-lima-0.21.0"
+          "store_path": "/nix/store/f2n0m3g5k9ba9y2l82shq3vzisarppmy-lima-0.21.0"
         }
       }
     },
