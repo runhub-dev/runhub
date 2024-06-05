@@ -11,7 +11,7 @@ spec:
   project: runhub
   sources:
     - repoURL: https://istio-release.storage.googleapis.com/charts
-      targetRevision: 1.21.2
+      targetRevision: 1.21.3
       chart: base
     - repoURL: "{{ .Values.runhub.repository }}"
       targetRevision: "{{ .Values.runhub.revision }}"
