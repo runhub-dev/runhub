@@ -4,7 +4,7 @@ set -o errexit
 set -o nounset
 
 scripts_dir="$(dirname "$0")"
-version='0.11.0'
+version='0.11.1'
 launcher_version='0.2.2'
 
 get_current_version() {
