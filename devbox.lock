@@ -1,0 +1,149 @@
+{
+  "lockfile_version": "1",
+  "packages": {
+    "colima@latest": {
+      "last_modified": "2024-07-22T04:21:33Z",
+      "resolved": "github:NixOS/nixpkgs/453402b94f39f968a7c27df28e060f69e4a50c3b#colima",
+      "source": "devbox-search",
+      "version": "0.6.10",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/7ka4chpywq62mrh49jidgsapanbc8dqr-colima-0.6.10",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/7ka4chpywq62mrh49jidgsapanbc8dqr-colima-0.6.10"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/pkjfkybnbhjf76yd636ps21aliq0xfgv-colima-0.6.10",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/pkjfkybnbhjf76yd636ps21aliq0xfgv-colima-0.6.10"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/brpx7w7rgxxpmnxzh83cc74zlsk9y5l3-colima-0.6.10",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/brpx7w7rgxxpmnxzh83cc74zlsk9y5l3-colima-0.6.10"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/82ca5hnk21jwm4bsyx8ai723ldyndhn1-colima-0.6.10",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/82ca5hnk21jwm4bsyx8ai723ldyndhn1-colima-0.6.10"
+        }
+      }
+    },
+    "lima-bin@latest": {
+      "last_modified": "2024-07-20T00:34:32Z",
+      "resolved": "github:NixOS/nixpkgs/2d65995365a2a6b05db69e344d3b673c8d541bcd#lima-bin",
+      "source": "devbox-search",
+      "version": "0.22.0",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/lkwck3bjn9pri8a12g2wsxaz34xz19lw-lima-0.22.0",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/lkwck3bjn9pri8a12g2wsxaz34xz19lw-lima-0.22.0"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/9dpwgfwqz1n8f2hkirpq4lj54ackkiz0-lima-0.22.0",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/9dpwgfwqz1n8f2hkirpq4lj54ackkiz0-lima-0.22.0"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/bh81dhbj8hvm6krzivjnlky3v7cnr3d5-lima-0.22.0",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/bh81dhbj8hvm6krzivjnlky3v7cnr3d5-lima-0.22.0"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/har6487y98958rkmsq4pgdqlzqkn6nhk-lima-0.22.0",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/har6487y98958rkmsq4pgdqlzqkn6nhk-lima-0.22.0"
+        }
+      }
+    },
+    "yq-go@latest": {
+      "last_modified": "2024-07-20T09:11:00Z",
+      "resolved": "github:NixOS/nixpkgs/6e14bbce7bea6c4efd7adfa88a40dac750d80100#yq-go",
+      "source": "devbox-search",
+      "version": "4.44.2",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/9ligkp5qi70iw6fkbvwndd4i0q7wsnnm-yq-go-4.44.2",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/9ligkp5qi70iw6fkbvwndd4i0q7wsnnm-yq-go-4.44.2"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/j7q1m9plx6dz6yhqakvm55gdssy9mm77-yq-go-4.44.2",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/j7q1m9plx6dz6yhqakvm55gdssy9mm77-yq-go-4.44.2"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/mjf8z70gc0yd7df26rb685jcrabpv1ai-yq-go-4.44.2",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/mjf8z70gc0yd7df26rb685jcrabpv1ai-yq-go-4.44.2"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/5acb6ayzsgd0s19ic88rgn6x7xaygffn-yq-go-4.44.2",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/5acb6ayzsgd0s19ic88rgn6x7xaygffn-yq-go-4.44.2"
+        }
+      }
+    }
+  }
+}
