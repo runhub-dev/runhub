@@ -3,6 +3,6 @@
 set -o errexit
 set -o nounset
 
-runhub_dir="$(dirname "$0")"
+scripts_dir="$(dirname "$0")"/scripts
 
-"${runhub_dir}"/scripts/install-nix.sh
+"${scripts_dir}"/install-nix.sh
