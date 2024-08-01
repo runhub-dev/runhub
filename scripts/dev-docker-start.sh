@@ -48,10 +48,8 @@ main() (
     fi
   fi
 
-  if ! colima status --profile dev-runhub > /dev/null 2>&1; then
-    colima start --profile dev-runhub --env RUNHUB_COLIMA_VERSION="${colima_version}" \
-      --cpu "${total_number_cpus}" --memory "${half_total_gibibytes_memory}"
-  fi
+  colima start --profile dev-runhub --env RUNHUB_COLIMA_VERSION="${colima_version}" \
+    --cpu "${total_number_cpus}" --memory "${half_total_gibibytes_memory}"
 )
 
 main "$@"
