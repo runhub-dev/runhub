@@ -13,8 +13,14 @@ get_dev_docker() (
     limactl list colima-dev-runhub --format yaml 2> /dev/null || true
 )
 
-get_instance_config() (
-  echo "$1" | yq --exit-status '.instance.config.'"$2"
+is_instance_config_equal() (
+  instance_confg="$(echo "$1" | yq --exit-status '.instance.config.'"$2")"
+
+  if [ "${instance_confg}" = "$3" ]; then
+    echo true
+  else
+    echo false
+  fi
 )
 
 get_colima_version() (
@@ -33,16 +39,15 @@ main() (
   half_total_gibibytes_memory="$(echo "${total_gibibytes_memory}"' / 2' | bc)"
 
   if [ "${dev_docker}" ]; then
-    dev_docker_colima_version="$(get_instance_config "${dev_docker}" 'env.RUNHUB_COLIMA_VERSION')"
+    is_colima_version_equal="$(is_instance_config_equal "${dev_docker}" 'env.RUNHUB_COLIMA_VERSION' "${colima_version}")"
 
-    if [ "${dev_docker_colima_version}" != "${colima_version}" ]; then
+    if ! "${is_colima_version_equal}"; then
       colima delete --force --profile dev-runhub > /dev/null 2>&1
     else
-      dev_docker_total_number_cpus="$(get_instance_config "${dev_docker}" 'cpus')"
-      dev_docker_total_gibibytes_memory="$(get_instance_config "${dev_docker}" 'memory')"
+      is_cpus_equal="$(is_instance_config_equal "${dev_docker}" 'cpus' "${total_number_cpus}")"
+      is_memory_equal="$(is_instance_config_equal "${dev_docker}" 'memory' "${half_total_gibibytes_memory}GiB")"
 
-      if [ "${dev_docker_total_number_cpus}" != "${total_number_cpus}" ] \
-        || [ "${dev_docker_total_gibibytes_memory}" != "${half_total_gibibytes_memory}GiB" ]; then
+      if ! "${is_cpus_equal}" || ! "${is_memory_equal}"; then
         colima stop --profile dev-runhub > /dev/null 2>&1
       fi
     fi
