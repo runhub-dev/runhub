@@ -34,9 +34,9 @@ main() (
   echo 'Starting dev runhub docker.'
   dev_docker="$(get_dev_docker)"
   colima_version="$(get_colima_version)"
-  total_number_cpus="$(getconf _NPROCESSORS_CONF)"
-  total_gibibytes_memory="$("${scripts_dir}"/get-total-gibibytes-memory.sh)"
-  half_total_gibibytes_memory="$(echo "${total_gibibytes_memory}"' / 2' | bc)"
+  host_cpus="$(getconf _NPROCESSORS_CONF)"
+  host_memory_gibibytes="$("${scripts_dir}"/get-memory-gibibytes.sh)"
+  half_host_memory_gibibytes="$(echo "${host_memory_gibibytes}"' / 2' | bc)"
 
   if [ "${dev_docker}" ]; then
     is_colima_version_equal="$(is_instance_config_equal "${dev_docker}" 'env.RUNHUB_COLIMA_VERSION' "${colima_version}")"
@@ -44,8 +44,8 @@ main() (
     if ! "${is_colima_version_equal}"; then
       colima delete --force --profile dev-runhub > /dev/null 2>&1
     else
-      is_cpus_equal="$(is_instance_config_equal "${dev_docker}" 'cpus' "${total_number_cpus}")"
-      is_memory_equal="$(is_instance_config_equal "${dev_docker}" 'memory' "${half_total_gibibytes_memory}GiB")"
+      is_cpus_equal="$(is_instance_config_equal "${dev_docker}" 'cpus' "${host_cpus}")"
+      is_memory_equal="$(is_instance_config_equal "${dev_docker}" 'memory' "${half_host_memory_gibibytes}GiB")"
 
       if ! "${is_cpus_equal}" || ! "${is_memory_equal}"; then
         colima stop --profile dev-runhub > /dev/null 2>&1
@@ -54,7 +54,7 @@ main() (
   fi
 
   colima start --profile dev-runhub --env RUNHUB_COLIMA_VERSION="${colima_version}" \
-    --cpu "${total_number_cpus}" --memory "${half_total_gibibytes_memory}"
+    --cpu "${host_cpus}" --memory "${half_host_memory_gibibytes}"
 )
 
 main "$@"
