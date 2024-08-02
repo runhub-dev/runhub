@@ -26,22 +26,29 @@ install() (
   fi
 )
 
+is_updated() (
+  current_version_output="$(/nix/var/nix/profiles/default/bin/nix --version)"
+  current_version="$(echo "${current_version_output}" | cut -d ' ' -f 3)"
+  "${scripts_dir}"/is-version-greater-equal.sh "${current_version}" "${version}"
+)
+
+is_installer_updated() (
+  current_installer_version_output="$(/nix/nix-installer --version)"
+  current_installer_version="$(echo "${current_installer_version_output}" | cut -d ' ' -f 2)"
+  "${scripts_dir}"/is-version-greater-equal.sh "${current_installer_version}" "${installer_version}"
+)
+
 main() (
   if ! command -v /nix/var/nix/profiles/default/bin/nix > /dev/null; then
     install
   else
-    current_version_output="$(/nix/var/nix/profiles/default/bin/nix --version)"
-    current_version="$(echo "${current_version_output}" | cut -d ' ' -f 3)"
-    is_updated="$("${scripts_dir}"/is-version-greater-equal.sh "${current_version}" "${version}")"
+    is_updated="$(is_updated)"
 
     if ! "${is_updated}"; then
       install
     else
       if command -v /nix/nix-installer > /dev/null; then
-        current_installer_version_output="$(/nix/nix-installer --version)"
-        current_installer_version="$(echo "${current_installer_version_output}" | cut -d ' ' -f 2)"
-        is_installer_updated="$("${scripts_dir}"/is-version-greater-equal.sh \
-          "${current_installer_version}" "${installer_version}")"
+        is_installer_updated="$(is_installer_updated)"
 
         if ! "${is_installer_updated}"; then
           install
