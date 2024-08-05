@@ -14,9 +14,9 @@ get_dev_docker() (
 )
 
 is_instance_config_equal() (
-  instance_confg="$(echo "$1" | yq --exit-status '.instance.config.'"$2")"
+  instance_config="$(echo "$1" | yq --exit-status '.instance.config.'"$2")"
 
-  if [ "${instance_confg}" = "$3" ]; then
+  if [ "${instance_config}" = "$3" ]; then
     echo true
   else
     echo false
