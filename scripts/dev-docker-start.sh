@@ -40,9 +40,11 @@ main() (
     else
       dev_docker_cpus="$(get_instance_config "${dev_docker}" 'cpus')"
       dev_docker_memory="$(get_instance_config "${dev_docker}" 'memory')"
+      docker_context="$(docker context show)"
 
       if [ "${dev_docker_cpus}" != "${host_cpus}" ] || \
-         [ "${dev_docker_memory}" != "${half_host_memory_gib}GiB" ]; then
+         [ "${dev_docker_memory}" != "${half_host_memory_gib}GiB" ] || \
+         [ "${docker_context}" != 'colima-dev-runhub' ]; then
         colima stop --profile dev-runhub > /dev/null 2>&1
       fi
     fi

@@ -49,6 +49,54 @@
         }
       }
     },
+    "docker-client@latest": {
+      "last_modified": "2024-07-31T08:48:38Z",
+      "resolved": "github:NixOS/nixpkgs/c3392ad349a5227f4a3464dce87bcc5046692fce#docker-client",
+      "source": "devbox-search",
+      "version": "27.1.1",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/j93ipdfilh2s9xrdaaqyk1c279k7a29p-docker-27.1.1",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/j93ipdfilh2s9xrdaaqyk1c279k7a29p-docker-27.1.1"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/cxrsy1wmlvkg3yzgdxi701gsb5vajvn9-docker-27.1.1",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/cxrsy1wmlvkg3yzgdxi701gsb5vajvn9-docker-27.1.1"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/s64dz3c6pisvp0y3p79k6f1aq73rzmgm-docker-27.1.1",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/s64dz3c6pisvp0y3p79k6f1aq73rzmgm-docker-27.1.1"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/xilvgm3pri2w3wi0jq2a7lz5qdh94fxv-docker-27.1.1",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/xilvgm3pri2w3wi0jq2a7lz5qdh94fxv-docker-27.1.1"
+        }
+      }
+    },
     "lima-bin@latest": {
       "last_modified": "2024-07-31T08:48:38Z",
       "resolved": "github:NixOS/nixpkgs/c3392ad349a5227f4a3464dce87bcc5046692fce#lima-bin",
