@@ -2,7 +2,6 @@
 
 set -o errexit
 set -o nounset
-set -o xtrace
 
 scripts_dir="$(dirname "$0")"
 
