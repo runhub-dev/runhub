@@ -21,7 +21,7 @@ k3d:
   v1alpha5Simple:
     metadata:
       name: "k3d-${k3d_version}"
-    image: rancher/k3s:v1.30.3-k3s1
+    image: rancher/k3s:v1.30.2-k3s2
     options:
       k3s:
         extraArgs:
