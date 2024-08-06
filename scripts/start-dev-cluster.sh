@@ -33,7 +33,7 @@ END
 
 main() (
   . "${scripts_dir}"/devbox-shellenv.sh
-  "${scripts_dir}"/dev-docker-start.sh
+  "${scripts_dir}"/start-dev-docker.sh
   echo 'Starting dev runhub cluster.'
   dev_cluster="$(k3d cluster get dev-runhub --output yaml 2> /dev/null || true)"
 
