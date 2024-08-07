@@ -4,6 +4,7 @@ set -o errexit
 set -o nounset
 
 scripts_dir="$(dirname "$0")"
+k3s_version='v1.30.2-k3s2'
 
 get_k3d_version() (
   k3d_version_output="$(k3d version --output json)"
@@ -20,8 +21,8 @@ product: k3d
 k3d:
   v1alpha5Simple:
     metadata:
-      name: "k3d-${k3d_version}"
-    image: rancher/k3s:v1.30.2-k3s2
+      name: k3d-${k3d_version}
+    image: rancher/k3s:${k3s_version}
     options:
       k3s:
         extraArgs:
