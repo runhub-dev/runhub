@@ -4,7 +4,9 @@
     "colima@latest",
     "ctlptl@0.8.29",
     "docker-client@latest",
+    "go@latest",
     "k3d@latest",
+    "kubebuilder@latest",
     "kubectl@latest",
     "lima-bin@latest",
     "yq-go@latest"

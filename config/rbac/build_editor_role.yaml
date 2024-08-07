@@ -1,0 +1,27 @@
+# permissions for end users to edit builds.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/name: runhub
+    app.kubernetes.io/managed-by: kustomize
+  name: build-editor-role
+rules:
+- apiGroups:
+  - runhub.dev
+  resources:
+  - builds
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - runhub.dev
+  resources:
+  - builds/status
+  verbs:
+  - get

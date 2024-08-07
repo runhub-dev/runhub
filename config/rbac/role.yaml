@@ -1,0 +1,32 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: manager-role
+rules:
+- apiGroups:
+  - runhub.dev
+  resources:
+  - builds
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - runhub.dev
+  resources:
+  - builds/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - runhub.dev
+  resources:
+  - builds/status
+  verbs:
+  - get
+  - patch
+  - update
