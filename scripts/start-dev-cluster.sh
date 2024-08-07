@@ -3,9 +3,10 @@
 set -o errexit
 set -o nounset
 
-k3s_version='v1.30.2-k3s2'
-
 scripts_dir="$(dirname "$0")"
+. "${scripts_dir}"/devbox-shellenv.sh
+
+k3s_version='v1.30.2-k3s2'
 
 get_k3d_version() (
   k3d_version_output="$(k3d version --output json)"
@@ -34,7 +35,6 @@ END
 )
 
 main() (
-  . "${scripts_dir}"/devbox-shellenv.sh
   "${scripts_dir}"/start-dev-docker.sh
   echo 'Starting dev runhub cluster.'
   dev_cluster="$(k3d cluster get dev-runhub --output yaml 2> /dev/null || true)"

@@ -5,6 +5,7 @@ set -o nounset
 
 scripts_dir="$(dirname "$0")"
 . "${scripts_dir}"/devbox-shellenv.sh
+
 echo 'Stopping dev runhub cluster.'
 k3d cluster stop dev-runhub || true
 kubectl config unset current-context > /dev/null

@@ -4,6 +4,7 @@ set -o errexit
 set -o nounset
 
 scripts_dir="$(dirname "$0")"
+. "${scripts_dir}"/devbox-shellenv.sh
 
 get_dev_docker() (
   colima_template="$(colima template --print)"
@@ -24,7 +25,6 @@ get_host_colima_version() (
 )
 
 main() (
-  . "${scripts_dir}"/devbox-shellenv.sh
   echo 'Starting dev runhub docker.'
   dev_docker="$(get_dev_docker)"
   host_colima_version="$(get_host_colima_version)"
