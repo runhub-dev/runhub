@@ -3,8 +3,9 @@
 set -o errexit
 set -o nounset
 
-scripts_dir="$(dirname "$0")"
 k3s_version='v1.30.2-k3s2'
+
+scripts_dir="$(dirname "$0")"
 
 get_k3d_version() (
   k3d_version_output="$(k3d version --output json)"

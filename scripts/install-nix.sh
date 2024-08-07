@@ -3,9 +3,10 @@
 set -o errexit
 set -o nounset
 
-scripts_dir="$(dirname "$0")"
 version='2.21.2'
 installer_version='0.19.1'
+
+scripts_dir="$(dirname "$0")"
 
 install() (
   if command -v /nix/nix-installer > /dev/null; then
