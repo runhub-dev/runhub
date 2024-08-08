@@ -4,7 +4,8 @@ set -o errexit
 set -o nounset
 
 scripts_dir="$(dirname "$0")"
-. "${scripts_dir}"/devbox-shellenv.sh
+devbox_shellenv="$("${scripts_dir}"/devbox-shellenv.sh)"
+eval "${devbox_shellenv}"
 
 echo 'Stopping dev runhub cluster.'
 k3d cluster stop dev-runhub || true

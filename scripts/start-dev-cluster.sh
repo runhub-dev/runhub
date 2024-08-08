@@ -4,7 +4,8 @@ set -o errexit
 set -o nounset
 
 scripts_dir="$(dirname "$0")"
-. "${scripts_dir}"/devbox-shellenv.sh
+devbox_shellenv="$("${scripts_dir}"/devbox-shellenv.sh)"
+eval "${devbox_shellenv}"
 
 k3s_version='v1.30.2-k3s2'
 
