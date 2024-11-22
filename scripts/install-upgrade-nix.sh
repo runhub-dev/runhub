@@ -27,9 +27,8 @@ is_installed_upgraded() {
     if [ "${is_upgraded}" = 'yes' ]; then
       if command -v /nix/nix-installer > /dev/null; then
         installed_installer_version="$(get_installed_installer_version)"
-        is_installer_upgraded="$("${scripts_dir}"/is-version-greater-equal.sh \
-          "${installed_installer_version}" "${minimum_required_installer_version}")"
-        echo "${is_installer_upgraded}"
+        "${scripts_dir}"/is-version-greater-equal.sh \
+          "${installed_installer_version}" "${minimum_required_installer_version}"
       else
         echo 'yes'
       fi
