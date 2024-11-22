@@ -6,7 +6,7 @@ set -o nounset
 scripts_dir="$(dirname "$0")"
 
 minimum_required_version='2.24.10'
-minimum_required_installer_version='0.29.0'
+minimum_required_installer_version='0.30.0'
 
 get_installed_version() {
   installed_version_stdout="$(nix --version)"
