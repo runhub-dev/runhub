@@ -2,6 +2,7 @@
 
 set -o errexit
 set -o nounset
+set -o monitor
 
 scripts_dir="$(dirname "$0")"
 
