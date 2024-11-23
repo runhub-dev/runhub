@@ -10,3 +10,5 @@ scripts_dir="${runhub_dir}"/scripts
 "${scripts_dir}"/install-upgrade-nix.sh
 . "${scripts_dir}"/run-nix-daemon.sh
 "${scripts_dir}"/install-upgrade-devbox.sh
+"${scripts_dir}"/install-upgrade-direnv.sh
+. "${scripts_dir}"/load-envrc.sh
