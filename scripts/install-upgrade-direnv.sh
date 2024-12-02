@@ -7,7 +7,7 @@ scripts_dir="$(dirname "$0")"
 runhub_dir="${scripts_dir}"/..
 
 minimum_required_version='2.35.0'
-nixpkgs_commit='34a626458d686f1b58139620a8b2793e9e123bba'
+nixpkgs_commit='226216574ada4c3ecefcbbec41f39ce4655f78ef'
 
 is_installed_upgraded() {
   if command -v direnv > /dev/null; then
