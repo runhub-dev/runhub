@@ -1,3 +1,8 @@
 {
-  "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.13.6/.schema/devbox.schema.json"
+  "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.13.6/.schema/devbox.schema.json",
+  "packages": {
+    "docker-client": "latest",
+    "lima": "latest",
+    "yq-go": "latest"
+  }
 }
