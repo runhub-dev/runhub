@@ -5,18 +5,20 @@ set -o nounset
 
 scripts_dir="$(dirname "$0")"
 runhub_dir="${scripts_dir}"/..
+. "${scripts_dir}"/docker-daemon.sh
 
 . "${scripts_dir}"/load-envrc.sh
-echo 'Starting runhub Docker daemon...'
-docker_daemon_status="$("${scripts_dir}"/get-docker-daemon.sh '.instance.status')"
+docker_daemon="$(get_docker_daemon)"
 
+if [ -n "${docker_daemon}" ]; then
+  docker_daemon_status="$(echo "${docker_daemon}" | yq --exit-status '.instance.status')"
 
-if [ -n "${docker_daemon_status}" ]; then
   if [ "${docker_daemon_status}" != 'Running' ]; then
-    limactl start runhub-docker-daemon
+    start_docker_daemon
   fi
 else
-  limactl --tty=false start --name runhub-docker-daemon template://docker-rootful
+  create_docker_daemon
+  start_docker_daemon
 fi
 
 echo 'Creating runhub Docker context...'

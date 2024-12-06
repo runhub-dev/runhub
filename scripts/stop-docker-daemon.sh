@@ -5,13 +5,17 @@ set -o nounset
 
 scripts_dir="$(dirname "$0")"
 runhub_dir="${scripts_dir}"/..
+. "${scripts_dir}"/docker-daemon.sh
 
 . "${scripts_dir}"/load-envrc.sh
-echo 'Stopping runhub Docker daemon...'
-docker_daemon_status="$("${scripts_dir}"/get-docker-daemon.sh '.instance.status')"
+docker_daemon="$(get_docker_daemon)"
 
-if [ -n "${docker_daemon_status}" ] && [ "${docker_daemon_status}" != 'Stopped' ]; then
-  limactl stop runhub-docker-daemon
+if [ -n "${docker_daemon}" ]; then
+  docker_daemon_status="$(echo "${docker_daemon}" | yq --exit-status '.instance.status')"
+
+  if [ "${docker_daemon_status}" != 'Stopped' ]; then
+    stop_docker_daemon
+  fi
 fi
 
 echo 'Removing runhub Docker context...'
