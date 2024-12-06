@@ -4,7 +4,7 @@ set -o errexit
 set -o nounset
 
 get_docker_daemon() {
-  lima_instances=$(limactl --log-level error list --format yaml)
+  lima_instances=$(limactl list --format yaml --log-level error)
 
   if [ -n "${lima_instances}" ]; then
     echo "${lima_instances}" | yq 'select(.instance.name == "runhub-docker-daemon")'
@@ -13,7 +13,7 @@ get_docker_daemon() {
 
 create_docker_daemon() {
   echo 'Creating runhub Docker daemon...'
-  limactl --tty=false create --name runhub-docker-daemon template://docker-rootful
+  limactl create --name runhub-docker-daemon template://docker-rootful --tty=false
 }
 
 start_docker_daemon() {

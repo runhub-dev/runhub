@@ -18,8 +18,8 @@ is_installed_upgraded() {
 }
 
 install_upgrade() {
-  nix profile remove --quiet --quiet devbox
-  nix profile install --override-flake nixpkgs github:NixOS/nixpkgs/"${nixpkgs_commit}" nixpkgs#devbox
+  nix profile remove devbox --quiet --quiet
+  nix profile install nixpkgs#devbox --override-flake nixpkgs github:NixOS/nixpkgs/"${nixpkgs_commit}"
 }
 
 main() {

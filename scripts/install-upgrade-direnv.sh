@@ -19,8 +19,8 @@ is_installed_upgraded() {
 }
 
 install_upgrade() {
-  nix profile remove --quiet --quiet direnv
-  nix profile install --override-flake nixpkgs github:NixOS/nixpkgs/"${nixpkgs_commit}" nixpkgs#direnv
+  nix profile remove direnv --quiet --quiet
+  nix profile install nixpkgs#direnv --override-flake nixpkgs github:NixOS/nixpkgs/"${nixpkgs_commit}"
 }
 
 append_if_not_found() {

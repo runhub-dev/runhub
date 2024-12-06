@@ -12,7 +12,7 @@ runhub_dir="${scripts_dir}"/..
 docker_daemon="$(get_docker_daemon)"
 
 if [ -n "${docker_daemon}" ]; then
-  docker_daemon_status="$(echo "${docker_daemon}" | yq --exit-status '.instance.status')"
+  docker_daemon_status="$(echo "${docker_daemon}" | yq '.instance.status' --exit-status)"
 
   if [ "${docker_daemon_status}" != 'Running' ]; then
     start_docker_daemon

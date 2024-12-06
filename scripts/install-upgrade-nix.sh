@@ -49,7 +49,7 @@ install_upgrade() {
 
     if [ "${can_installer_spilt_receipt}" = 'yes' ]; then
       /nix/nix-installer split-receipt --no-confirm
-      /nix/nix-installer uninstall --no-confirm /nix/uninstall-phase1.json
+      /nix/nix-installer uninstall /nix/uninstall-phase1.json --no-confirm
     else
       /nix/nix-installer uninstall --no-confirm
     fi
