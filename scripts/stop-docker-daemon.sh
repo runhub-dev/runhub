@@ -15,4 +15,4 @@ if [ -n "${docker_daemon_status}" ] && [ "${docker_daemon_status}" != 'Stopped' 
 fi
 
 echo 'Removing Docker context...'
-docker context remove --force runhub-docker-daemon
+docker context remove --force runhub
