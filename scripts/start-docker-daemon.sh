@@ -21,6 +21,6 @@ fi
 
 echo 'Creating Docker context...'
 docker context create runhub-docker-daemon \
-  --docker host=unix:///Users/Mike/.lima/runhub-docker-daemon/sock/docker.sock || true
+  --docker host=unix://"${HOME}"/.lima/runhub-docker-daemon/sock/docker.sock || true
 echo 'Setting current Docker context...'
 docker context use runhub-docker-daemon
