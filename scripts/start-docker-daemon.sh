@@ -7,7 +7,7 @@ scripts_dir="$(dirname "$0")"
 runhub_dir="${scripts_dir}"/..
 
 . "${scripts_dir}"/load-envrc.sh
-echo 'Starting Docker daemon...'
+echo 'Starting runhub Docker daemon...'
 docker_daemon_status="$("${scripts_dir}"/get-docker-daemon.sh '.instance.status')"
 
 
@@ -19,8 +19,8 @@ else
   limactl --tty=false start --name runhub-docker-daemon template://docker-rootful
 fi
 
-echo 'Creating Docker context...'
+echo 'Creating runhub Docker context...'
 docker context create runhub \
   --docker host=unix://"${HOME}"/.lima/runhub-docker-daemon/sock/docker.sock || true
-echo 'Setting current Docker context...'
+echo 'Setting current Docker context to runhub...'
 docker context use runhub
