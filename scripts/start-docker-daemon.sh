@@ -6,6 +6,7 @@ set -o nounset
 scripts_dir="$(dirname "$0")"
 runhub_dir="${scripts_dir}"/..
 . "${scripts_dir}"/docker-daemon.sh
+. "${scripts_dir}"/docker-context.sh
 
 . "${scripts_dir}"/load-envrc.sh
 docker_daemon="$(get_docker_daemon)"
@@ -21,8 +22,14 @@ else
   start_docker_daemon
 fi
 
-echo 'Creating runhub Docker context...'
-docker context create runhub \
-  --docker host=unix://"${HOME}"/.lima/runhub-docker-daemon/sock/docker.sock || true
-echo 'Setting current Docker context to runhub...'
-docker context use runhub
+has_docker_context="$(has_docker_context)"
+
+if [ "${has_docker_context}" = 'no' ]; then
+  create_docker_context
+fi
+
+is_current_docker_context_set="$(is_current_docker_context_set)"
+
+if [ "${is_current_docker_context_set}" = 'no' ]; then
+  set_current_docker_context
+fi

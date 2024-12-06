@@ -6,6 +6,7 @@ set -o nounset
 scripts_dir="$(dirname "$0")"
 runhub_dir="${scripts_dir}"/..
 . "${scripts_dir}"/docker-daemon.sh
+. "${scripts_dir}"/docker-context.sh
 
 . "${scripts_dir}"/load-envrc.sh
 docker_daemon="$(get_docker_daemon)"
@@ -18,5 +19,14 @@ if [ -n "${docker_daemon}" ]; then
   fi
 fi
 
-echo 'Removing runhub Docker context...'
-docker context remove --force runhub
+is_current_docker_context_set="$(is_current_docker_context_set)"
+
+if [ "${is_current_docker_context_set}" = 'yes' ]; then
+  unset_current_docker_context
+fi
+
+has_docker_context="$(has_docker_context)"
+
+if [ "${has_docker_context}" = 'yes' ]; then
+  remove_docker_context
+fi
