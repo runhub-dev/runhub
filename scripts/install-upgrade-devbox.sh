@@ -11,7 +11,8 @@ nixpkgs_commit='226216574ada4c3ecefcbbec41f39ce4655f78ef'
 is_installed_upgraded() {
   if command -v devbox > /dev/null; then
     installed_version="$(devbox version)"
-    "${scripts_dir}"/is-version-greater-equal.sh "${installed_version}" "${minimum_required_version}"
+    "${scripts_dir}"/is-version-greater-equal.sh \
+      "${installed_version}" "${minimum_required_version}"
   else
     echo 'no'
   fi
@@ -19,7 +20,8 @@ is_installed_upgraded() {
 
 install_upgrade() {
   nix profile remove devbox --quiet --quiet
-  nix profile install nixpkgs#devbox --override-flake nixpkgs github:NixOS/nixpkgs/"${nixpkgs_commit}"
+  nix profile install nixpkgs#devbox \
+    --override-flake nixpkgs github:NixOS/nixpkgs/"${nixpkgs_commit}"
 }
 
 main() {
