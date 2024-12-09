@@ -7,7 +7,7 @@ set -o monitor
 scripts_dir="$(dirname "$0")"
 
 minimum_required_version='2.25.3'
-minimum_required_installer_version='0.32.0'
+minimum_required_installer_version='0.32.1'
 
 get_installed_version() {
   installed_version_stdout="$(nix --version)"
