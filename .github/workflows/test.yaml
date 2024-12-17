@@ -1,0 +1,16 @@
+on: push
+jobs:
+  test:
+    strategy:
+      matrix:
+        os:
+          - macos-13
+          - macos-14
+          - macos-15
+          - ubuntu-20.04
+          - ubuntu-22.04
+          - ubuntu-24.04
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4.2.2
+      - run: ./test.sh
