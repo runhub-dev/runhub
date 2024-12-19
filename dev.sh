@@ -15,3 +15,4 @@ scripts_dir="${runhub_dir}"/scripts
 "${scripts_dir}"/install-upgrade-direnv.sh
 . "${scripts_dir}"/load-envrc.sh
 "${scripts_dir}"/run-shellcheck.sh
+"${scripts_dir}"/run-shfmt.sh
