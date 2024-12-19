@@ -47,7 +47,7 @@ add_to_shells() {
 run_allow() {
   status="$(cd "${runhub_dir}" && direnv status)"
 
-  if echo "${status}" | grep -q '^Found RC allowed 1$'; then
+  if echo "${status}" | grep -Eq '^Found RC allowed 1$'; then
     echo 'Running `direnv allow`...'
     direnv allow "${runhub_dir}"
   fi
