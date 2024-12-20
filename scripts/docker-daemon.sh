@@ -18,7 +18,7 @@ create_docker_daemon() {
 
 start_docker_daemon() {
   echo 'Starting runhub Docker daemon...'
-  limactl start runhub-docker-daemon
+  LIMA_SSH_PORT_FORWARDER=true limactl start runhub-docker-daemon
 }
 
 stop_docker_daemon() {
