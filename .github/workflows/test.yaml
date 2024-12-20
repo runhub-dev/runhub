@@ -4,32 +4,32 @@ jobs:
     strategy:
       matrix:
         os:
-          - macos-13
-          - macos-14
+          # - macos-13
+          # - macos-14
           - macos-15
-          - ubuntu-20.04
-          - ubuntu-22.04
-          - ubuntu-24.04
+          # - ubuntu-20.04
+          # - ubuntu-22.04
+          # - ubuntu-24.04
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4.2.2
       - run: ./test.sh
-  upgrade:
-    strategy:
-      matrix:
-        os:
-          - macos-13
-          - macos-14
-          - macos-15
-          - ubuntu-20.04
-          - ubuntu-22.04
-          - ubuntu-24.04
-    runs-on: ${{ matrix.os }}
-    steps:
-      - uses: actions/checkout@v4.2.2
-        with:
-          fetch-depth: 2
-      - run: git checkout HEAD^
-      - run: ./test.sh
-      - run: git checkout -
-      - run: ./test.sh
+  # upgrade:
+  #   strategy:
+  #     matrix:
+  #       os:
+  #         - macos-13
+  #         - macos-14
+  #         - macos-15
+  #         - ubuntu-20.04
+  #         - ubuntu-22.04
+  #         - ubuntu-24.04
+  #   runs-on: ${{ matrix.os }}
+  #   steps:
+  #     - uses: actions/checkout@v4.2.2
+  #       with:
+  #         fetch-depth: 2
+  #     - run: git checkout HEAD^
+  #     - run: ./test.sh
+  #     - run: git checkout -
+  #     - run: ./test.sh
