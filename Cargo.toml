@@ -6,3 +6,7 @@ license = "MIT OR Apache-2.0"
 
 [dependencies]
 clap = { version = "4.5.53", features = ["derive"] }
+
+[profile.release]
+codegen-units = 1
+lto = true
